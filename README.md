@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/andela/ah-kgl-wakanda-backend.svg?branch=develop)](https://travis-ci.com/andela/ah-kgl-wakanda-backend)
+
 Authors Haven - A Social platform for the creative at heart.
 =======
 
