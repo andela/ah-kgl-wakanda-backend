@@ -1,10 +1,8 @@
+[![Build Status](https://travis-ci.com/andela/ah-kgl-wakanda-backend.svg?branch=develop)](https://travis-ci.com/andela/ah-kgl-wakanda-backend)
+
 [![Reviewed by Hound](https://img.shields.io/badge/Reviewed_by-Hound-8E64B0.svg)](https://houndci.com)
 
 # Authors Haven - A Social platform for the creative at heart.
-[![Build Status](https://travis-ci.com/andela/ah-kgl-wakanda-backend.svg?branch=develop)](https://travis-ci.com/andela/ah-kgl-wakanda-backend)
-
-Authors Haven - A Social platform for the creative at heart.
-=======
 
 ## Vision
 
