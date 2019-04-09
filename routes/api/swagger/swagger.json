@@ -1,0 +1,215 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Create a community of like minded authors to foster inspiration and innovation by leveraging the modern web.",
+    "version": "1.0.0",
+    "title": "Authors Haven - A Social platform for the creative at heart"
+  },
+  "host": "localhost:3000",
+  "basePath": "/api",
+  "tags": [
+    {
+      "name": "profile",
+      "description": "user profiles' routes",
+      "externalDocs": {
+        "description": "Find out more",
+        "url": "http://swagger.io"
+      }
+    },
+    {
+      "name": "article",
+      "description": "articles' information routes"
+    },
+    {
+      "name": "user",
+      "description": "Operations about user",
+      "externalDocs": {
+        "description": "Find out more about our store",
+        "url": "http://swagger.io"
+      }
+    }
+  ],
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "paths": {
+    "/profiles/:username": {
+      "get": {
+        "tags": [
+          "profile"
+        ],
+        "summary": "Retrive a user profile",
+        "description": "Authentication optional, returns a Profile",
+        "operationId": " ",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "description": "The name that needs to be displayed",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          },
+          "400": {
+            "description": "Invalid parameter"
+          }
+        }
+      }
+    },
+    "profiles/:username/follow": {
+      "post": {
+        "tags": [
+          "profile"
+        ],
+        "summary": "Follow user",
+        "description": "Authentication required, returns a Profile. No additional parameters required",
+        "operationId": "",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "description": "The username of the user that needs to be followed",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid username supplied"
+          },
+          "404": {
+            "description": "The user not found"
+          },
+          "405": {
+            "description": "Validation exception"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "profile"
+        ],
+        "summary": "Unfollow user",
+        "description": "Authentication required, returns a Profile. No additional parameters required",
+        "operationId": null,
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "description": "The username of the user to unfollow",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid username"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": null,
+  "definitions": {
+    "Articles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "properties": {
+        "slug": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "tagList": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "favorited": {
+          "type": "boolean"
+        },
+        "favoritesCount": {
+          "type": "integer"
+        },
+        "author": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string"
+            },
+            "bio": {
+              "type": "string"
+            },
+            "image": {
+              "type": "string",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "ApiResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "type": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "More about Authors Haven",
+    "url": "https://github.com/andela/ah-kgl-wakanda-backend/edit/develop/README.md"
+  }
+}
