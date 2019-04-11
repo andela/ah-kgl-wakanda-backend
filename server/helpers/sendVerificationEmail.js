@@ -1,4 +1,4 @@
-import mailer from "./mailer";
+import mailer from './mailer';
 
 /**
  * Send a link containing a token,
@@ -8,7 +8,7 @@ import mailer from "./mailer";
  * @param {string} email
  * @param {string} name
  * @param {string} token
- * @returns
+ * @returns {object} {sent,error}
  */
 const sendToken = async (email, name, token) => {
   const link = `app.heroku.com/api/v1/auth/verification/${token}`;
@@ -21,12 +21,12 @@ const sendToken = async (email, name, token) => {
   try {
     const response = await mailer({
       email,
-      subject: "Email verification",
+      subject: 'Email verification',
       text: `${name}`,
       link,
-      link_text: "VERIFY MY ACCOUNT",
+      linkText: 'VERIFY MY ACCOUNT',
       name,
-      title: "Welcome to Authors Haven",
+      title: 'Welcome to Authors Haven',
       body
     });
 
