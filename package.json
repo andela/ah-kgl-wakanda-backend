@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "babel-watch app.js",
-    "test": "nyc --report=text ./node_modules/.bin/mocha server/test/ --require @babel/register",
+    "test": "nyc --report=text npx mocha server/test/ --require @babel/register",
     "build": "babel app.js --out-dir build",
     "dev": "NODE_ENV=development nodemon  --require @babel/register index.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls"

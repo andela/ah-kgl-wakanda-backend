@@ -50,7 +50,7 @@ const mailer = async ({
       }
     ],
     from: { email: "noreply@authorshaven.com" },
-    template_id: "d-4ad9fd7a535c46eebc7da978a710f9ff"
+    template_id: "d-aea0cb09b07540dab8b103e17a6d8e0a"
   };
 
   req.type("json");
