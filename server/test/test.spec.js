@@ -7,6 +7,6 @@ chai.use(chaiHttp);
 
 describe('Testing tests settings', () => {
   it('Should Pass', () => {
-    expect(true).to.be.true;
+    expect(1).to.equal(1);
   });
 });

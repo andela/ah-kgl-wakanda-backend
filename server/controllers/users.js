@@ -1,16 +1,16 @@
 import { User } from '../models/index';
 
+
+/**
+ * The class handle everything about the user
+ */
 class Users {
   /**
-   * @param  {} req
-   * @param  {} res
-   * @param  {} {try{awaitUser.create(req.user
-   * @param  {} ;}catch(error
-   * @param  {} {returnres.status(400
-   * @param  {400} .json({status
-   * @param  {'errormessage'} message
-   * @param  {} }
-   */
+   * The controller to create a user.
+   * @param {req} req the request.
+   * @param {res} res the response.
+   * @returns {void}
+  */
   static async create(req, res) {
     try {
       await User.create(req.user);
