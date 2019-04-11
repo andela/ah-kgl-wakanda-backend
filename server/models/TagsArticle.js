@@ -1,4 +1,4 @@
-'use strict';
+
 module.exports = (sequelize, DataTypes) => {
   const TagsArticle = sequelize.define('TagsArticle', {
     articleid: {
@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
   }, {});
-  TagsArticle.associate = function(models) {
+  TagsArticle.associate = function (models) {
     // associations can be defined here
   };
   return TagsArticle;
