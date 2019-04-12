@@ -26,6 +26,22 @@ class errorHandler {
       message: e.message
     });
   }
+
+  /**
+*
+*
+* @static
+* @param {*} res
+* @param {*} e
+* @returns {object} error
+* @memberof Articles
+*/
+  static joiErrorResponse(res, e) {
+    return res.status(400).json({
+      status: 400,
+      message: e.details[0].message.replace(/[^a-zA-Z0-9 ]/g, ''),
+    });
+  }
 }
 
 export default errorHandler;

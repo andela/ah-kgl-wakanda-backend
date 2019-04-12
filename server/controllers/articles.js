@@ -11,61 +11,21 @@ class Articles {
    *
    *
    * @static
-   * @param {*} res
-   * @param {*} title
-   * @param {*} description
-   * @returns {string} slug
-   * @memberof Articles
-   */
-  static async getSlug(res, title, description) {
-    try {
-      let slug = slugify(title);
-      const result = await Article.findAll({ where: { slug } });
-
-      if (result.length > 0) {
-        slug = slugify([title, description.split(' ')[0]].join());
-        return slug;
-      }
-
-      return slug;
-    } catch (e) {
-      if (e.name === 'SequelizeValidationError') {
-        return res.status(400).json({
-          status: 400,
-          message: e.message
-        });
-      }
-
-      return res.status(500).json({
-        status: 500,
-        message: e.message
-      });
-    }
-  }
-
-  /**
-   *
-   *
-   * @static
    * @param {object} req
    * @param {object} res
    * @returns {object} response
    * @memberof Articles
    */
   static async create(req, res) {
-    const { body } = req;
+    const { article } = req.body;
+    article.slug = `${slugify(article.title)}-${Math.floor(Math.random() * 999999999) + 100000000}`;
 
     try {
-      body.slug = await Articles.getSlug(res, body.title, body.description);
-    } catch (e) {
-      errorHandler.errorResponse(res, e);
-    }
+      const result = await Article.create(article, { include: [{ model: Tags }] });
 
-    try {
-      const result = await Article.create(body);
       return res.status(201).json({
         status: 201,
-        message: result
+        data: { article: result }
       });
     } catch (e) {
       errorHandler.errorResponse(res, e);
@@ -91,7 +51,102 @@ class Articles {
 
       return res.status(200).json({
         status: 200,
-        message: result
+        data: { articles: result }
+      });
+    } catch (e) {
+      errorHandler.errorResponse(res, e);
+    }
+  }
+
+  /**
+   *
+   *
+   * @static
+   * @param {*} req
+   * @param {*} res
+   * @returns {object} response
+   * @memberof Articles
+   */
+  static async get(req, res) {
+    try {
+      const result = await Article.findOne({
+        include: [{
+          model: Tags
+        }],
+        where: { slug: req.params.slug }
+      });
+
+      if (result) {
+        return res.status(200).json({
+          status: 200,
+          data: { article: result }
+        });
+      }
+
+      return res.status(404).json({
+        status: 404,
+        message: 'Article not found'
+      });
+    } catch (e) {
+      errorHandler.errorResponse(res, e);
+    }
+  }
+
+  /**
+   *
+   *
+   * @static
+   * @param {*} req
+   * @param {*} res
+   * @returns {object} response
+   * @memberof Articles
+   */
+  static async update(req, res) {
+    try {
+      const { title } = req.body.article;
+      const { UserId } = req.body.user;
+      const result = await Article.update({ title, }, { where: { UserId, }, returning: true });
+
+      if (result) {
+        return res.status(200).json({
+          status: 200,
+          data: { article: result }
+        });
+      }
+
+      return res.status(404).json({
+        status: 404,
+        message: 'Article not found'
+      });
+    } catch (e) {
+      errorHandler.errorResponse(res, e);
+    }
+  }
+
+  /**
+ *
+ *
+ * @static
+ * @param {*} req
+ * @param {*} res
+ * @returns {object} response
+ * @memberof Articles
+ */
+  static async delete(req, res) {
+    try {
+      const { slug } = req.params;
+      const result = await Article.destroy({ where: { slug, }, returning: true });
+
+      if (result > 0) {
+        return res.status(200).json({
+          status: 200,
+          data: 'Article successfully deleted'
+        });
+      }
+
+      return res.status(404).json({
+        status: 404,
+        message: 'Article not found'
       });
     } catch (e) {
       errorHandler.errorResponse(res, e);
