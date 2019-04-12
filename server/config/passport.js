@@ -1,6 +1,10 @@
 import passport from 'passport';
 import { ExtractJwt, Strategy as JwtStrategy } from 'passport-jwt';
+import FacebookTokenStrategy from 'passport-facebook-token';
+import dotenv from 'dotenv';
 import { User } from '../models';
+
+dotenv.config();
 
 const opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
@@ -16,5 +20,16 @@ passport.use(
     }
   }))
 );
+
+passport.use('facebook-token',
+  new FacebookTokenStrategy(
+    {
+      clientID: process.env.FACEBOOK_APP_ID,
+      clientSecret: process.env.FACEBOOK_APP_SECRET,
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      done(null, profile);
+    }
+  ));
 
 export default passport;

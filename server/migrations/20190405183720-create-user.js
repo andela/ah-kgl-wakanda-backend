@@ -14,6 +14,10 @@ module.exports = {
       type: Sequelize.STRING,
       unique:true
     },
+    provider: {
+      type: Sequelize.STRING,
+      defaultValue: 'local',
+    },
     bio: {
       type: Sequelize.TEXT
     },

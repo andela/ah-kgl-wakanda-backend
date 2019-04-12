@@ -88,6 +88,61 @@ class Users {
       }
     );
   }
+
+  /**
+   * The controller to create a user.
+   * @param {req} req the request.
+   * @param {res} res the response.
+   * @returns {void}
+  */
+  static async socialLogin(req, res) {
+    try {
+      const {
+        provider, displayName
+      } = req.user;
+
+      const user = {
+        provider,
+        username: displayName.replace(' ', '_').toLowerCase(),
+        email: req.user.emails[0].value,
+        image: req.user.photos[0].value,
+      };
+      const newUser = await User.findOrCreate({
+        where: { username: user.username },
+        defaults: { ...user }
+      });
+      const {
+        username,
+        email,
+        image,
+        bio
+      } = newUser[0].get();
+
+      const data = {
+        id: newUser[0].get().id,
+        username,
+        email,
+      };
+
+      const status = newUser[1] ? 201 : 200;
+
+      return res.status(status).json({
+        status,
+        user: {
+          username,
+          email,
+          token: await Users.generateToken(data),
+          image,
+          bio,
+        },
+      });
+    } catch (error) {
+      return res.status(400).json({
+        status: 400,
+        message: error,
+      });
+    }
+  }
 }
 
 export default Users;

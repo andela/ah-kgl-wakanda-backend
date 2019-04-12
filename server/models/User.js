@@ -8,12 +8,10 @@ export default (sequelize, DataTypes) => {
     email: {
       type: DataTypes.STRING,
     },
+    provider: DataTypes.STRING,
     bio: DataTypes.TEXT,
     image: {
       type: DataTypes.STRING,
-      validate: {
-        is: ['(http(s?):)([/|.|[A-Za-z0-9_-]| |-])*.(?:jpg|jpeg|gif|png)', 'i']
-      }
     },
     following: {
       type: DataTypes.BOOLEAN,
@@ -22,9 +20,9 @@ export default (sequelize, DataTypes) => {
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
       validate: {
-        min: 8
+        min: 6
       }
     },
   }, {});
