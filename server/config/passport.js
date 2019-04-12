@@ -1,7 +1,10 @@
 import passport from 'passport';
 import { ExtractJwt, Strategy as JwtStrategy } from 'passport-jwt';
 import FacebookTokenStrategy from 'passport-facebook-token';
+<<<<<<< HEAD
 import GoogleTokenStrategy from 'passport-google-plus-token';
+=======
+>>>>>>> [feature #165020122] social login via facebook
 import dotenv from 'dotenv';
 import { User } from '../models';
 
@@ -33,6 +36,7 @@ passport.use('facebook-token',
     }
   ));
 
+<<<<<<< HEAD
 passport.use('google-token',
   new GoogleTokenStrategy(
     {
@@ -45,4 +49,6 @@ passport.use('google-token',
     }
   ));
 
+=======
+>>>>>>> [feature #165020122] social login via facebook
 export default passport;
