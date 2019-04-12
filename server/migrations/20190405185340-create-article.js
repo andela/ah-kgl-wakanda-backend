@@ -1,6 +1,6 @@
 
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('articles', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Articles', {
     id: {
       allowNull: false,
       autoIncrement: true,
@@ -19,13 +19,16 @@ module.exports = {
     body: {
       type: Sequelize.TEXT
     },
+    images: {
+      type: Sequelize.ARRAY(Sequelize.STRING)
+    },
     favorited: {
       type: Sequelize.BOOLEAN
     },
     favoritesCount: {
       type: Sequelize.INTEGER
     },
-    userId: {
+    UserId: {
       type: Sequelize.INTEGER
     },
     createdAt: {
@@ -37,5 +40,5 @@ module.exports = {
       type: Sequelize.DATE
     }
   }),
-  down: (queryInterface, Sequelize) => queryInterface.dropTable('articles')
+  down: (queryInterface, Sequelize) => queryInterface.dropTable('Articles')
 };
