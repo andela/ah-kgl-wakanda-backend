@@ -30,6 +30,31 @@ class Password {
     }
     next();
   }
+
+  /**
+   * @description Validate password in the body
+   * @static
+   * @param {object} req
+   * @param {object} res
+   * @param {callback} next
+   * @returns {void}
+   */
+  static validatePassword(req, res, next) {
+    const emailSchema = {
+      password: Joi.string()
+        .min(8)
+        .alphanum()
+        .required(),
+    };
+
+    const result = Joi.validate(req.body, emailSchema);
+    if (result.error) {
+      return res.status(400).json({
+        message: result.error.details[0].message.replace(/[^a-zA-Z0-9 ]/g, ''),
+      });
+    }
+    next();
+  }
 }
 
 export default Password;
