@@ -5,14 +5,14 @@
  */
 class errorHandler {
   /**
- *
- *
- * @static
- * @param {*} res
- * @param {*} e
- * @returns {object} error
- * @memberof Articles
- */
+   *
+   *
+   * @static
+   * @param {*} res
+   * @param {*} e
+   * @returns {object} error
+   * @memberof Articles
+   */
   static errorResponse(res, e) {
     if (e.name === 'SequelizeValidationError') {
       return res.status(400).json({
