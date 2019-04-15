@@ -2,7 +2,6 @@ import passport from 'passport';
 import { ExtractJwt, Strategy as JwtStrategy } from 'passport-jwt';
 import FacebookTokenStrategy from 'passport-facebook-token';
 import GoogleTokenStrategy from 'passport-google-plus-token';
-import { Strategy as LinkedInStrategy } from 'passport-linkedin-token';
 import dotenv from 'dotenv';
 import { User } from '../models';
 

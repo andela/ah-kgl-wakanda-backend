@@ -11,6 +11,10 @@
     {
       "name": "Article",
       "description": "Information about the articles endpoints"
+    },
+    {
+      "name": "Social login",
+      "description": "Enable users to login using their social accounts"
     }
   ],
   "schemes": [
@@ -324,6 +328,90 @@
           },
           "400": {
             "description": "Invalid username"
+          }
+        }
+      }
+    },
+    "/auth/facebook": {
+      "post": {
+        "tags": [
+          "Facebook login"
+        ],
+        "summary": "Enable login with facebook",
+        "description": "",
+        "operationId": " ",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "access_token": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logged in successfully"
+          },
+          "201": {
+            "description": "User logged in successfully for the first time"
+          },
+          "401": {
+            "description": "Unauthorized request"
+          }
+        }
+      }
+    },
+    "/auth/google": {
+      "post": {
+        "tags": [
+          "Google login"
+        ],
+        "summary": "Enable login with google",
+        "description": "",
+        "operationId": " ",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "access_token": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logged in successfully"
+          },
+          "201": {
+            "description": "User logged in successfully for the first time"
+          },
+          "401": {
+            "description": "Unauthorized request"
           }
         }
       }
