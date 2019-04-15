@@ -4,8 +4,9 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
-    "test": "nyc --report=text ./node_modules/.bin/mocha --require @babel/register",
-    "build": "babel index.js --out-dir build",
+    "start": "babel-watch app.js",
+    "test": "nyc --report=text npx mocha server/test/ --require @babel/register",
+    "build": "babel app.js --out-dir build",
     "dev": "NODE_ENV=development nodemon  --require @babel/register index.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
@@ -22,21 +23,19 @@
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
     "coveralls": "^3.0.3",
-    "dotenv": "^6.0.0",
+    "dotenv": "^6.2.0",
     "ejs": "^2.6.1",
     "errorhandler": "^1.5.0",
     "express": "^4.16.3",
     "express-jwt": "^5.3.1",
     "express-session": "^1.15.6",
-    "jsonwebtoken": "^8.3.0",
     "method-override": "^2.3.10",
     "methods": "^1.1.2",
     "mongoose": "^5.2.2",
     "mongoose-unique-validator": "^2.0.1",
     "morgan": "^1.9.0",
+    "nock": "^10.0.6",
     "nyc": "^13.3.0",
-    "passport": "^0.4.0",
-    "passport-local": "^1.0.0",
     "path": "^0.12.7",
     "pg": "^7.9.0",
     "pg-hstore": "^2.3.2",
@@ -45,16 +44,17 @@
     "sequelize-cli": "^5.4.0",
     "slug": "^0.9.1",
     "swagger-ui-express": "^4.0.2",
-    "underscore": "^1.9.1"
+    "underscore": "^1.9.1",
+    "unirest": "^0.6.0"
   },
   "devDependencies": {
     "babel-watch": "^7.0.0",
     "chai": "^4.2.0",
     "chai-http": "^4.2.1",
-    "mocha": "^6.0.2",
-    "nodemon": "^1.18.10",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.16.0"
+    "eslint-plugin-import": "^2.16.0",
+    "mocha": "^6.0.2",
+    "nodemon": "^1.18.10"
   }
 }

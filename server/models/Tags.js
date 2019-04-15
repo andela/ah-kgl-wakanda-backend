@@ -1,4 +1,4 @@
-'use strict';
+
 module.exports = (sequelize, DataTypes) => {
   const Tags = sequelize.define('Tags', {
     tagName: {
@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
   }, {});
-  Tags.associate = function(models) {
+  Tags.associate = function (models) {
     Tags.belongsToMany(models.Article, {
       through: 'TagsArticle',
       foreignKey: 'tagId',
