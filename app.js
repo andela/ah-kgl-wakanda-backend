@@ -27,8 +27,6 @@ app.use((req, res, next) => {
 // will print stacktrace
 if (!isProduction) {
   app.use((err, req, res) => {
-    console.log(err.stack);
-
     res.status(err.status || 500);
 
     res.json({
@@ -53,6 +51,6 @@ app.use((err, req, res) => {
 });
 
 // finally, let's start our server...
-const server = app.listen(process.env.PORT || 3000, () => {
-  console.log(`Listening on port ${server.address().port}`);
-});
+const server = app.listen(process.env.PORT || 3000, () => { });
+
+export default server;
