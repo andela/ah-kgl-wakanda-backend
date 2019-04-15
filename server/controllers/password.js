@@ -111,11 +111,11 @@ class Password {
    * @param {object} res response
    * @returns {object} response
    */
-  static async updatePassword(req, res) {
+  static updatePassword(req, res) {
     const { token } = req.params;
     const { password } = req.body;
     try {
-      await jwt.verify(token, process.env.JWT_SECRET_KEY, async (error, decoded) => {
+      jwt.verify(token, process.env.JWT_SECRET_KEY, async (error, decoded) => {
         if (error) {
           return res.status(400).json({
             message: 'The link appears to be invalid or already expired'
@@ -123,34 +123,35 @@ class Password {
         }
 
         // check if the email exist in the DB
-        User.findOne({
+        const result = await User.findOne({
           where: {
             email: decoded.email,
           }
-        }).then(async (result) => {
-          if (!result) {
-            return res.status(404).json({
-              message: 'No user found with this email address'
-            });
-          }
+        });
 
-          // encrypt the new password
-          const hashNewPassword = await bcrypt.hashSync(password, bcrypt.genSaltSync(8));
-
-          // compare the new pwd with the hash version of the old pwd
-          const matchPasswords = await bcrypt.compareSync(
-            password, result.password
-          );
-
-          if (matchPasswords) {
-            return res.status(400).json({
-              message: 'New password must be different from the current'
-            });
-          }
-          await result.update({ password: hashNewPassword });
-          return res.status(200).json({
-            message: 'Password updated successfully'
+        if (!result) {
+          return res.status(404).json({
+            message: 'No user found with this email address'
           });
+        }
+
+        // encrypt the new password
+        const hashNewPassword = await bcrypt.hashSync(password, bcrypt.genSaltSync(8));
+
+        // compare the new pwd with the hash version of the old pwd
+        const matchPasswords = await bcrypt.compareSync(
+          password, result.password
+        );
+
+        if (matchPasswords) {
+          return res.status(400).json({
+            message: 'New password must be different from the current'
+          });
+        }
+        await result.update({ password: hashNewPassword });
+
+        return res.status(200).json({
+          message: 'Password updated successfully'
         });
       });
     } catch (error) {
