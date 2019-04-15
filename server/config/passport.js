@@ -12,7 +12,6 @@ opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 opts.secretOrKey = process.env.SECRET;
 passport.use(
   new JwtStrategy(opts, (async (jwtPayload, done) => {
-    console.log(jwtPayload);
     try {
       const user = await User.findOne({ where: { id: jwtPayload.id } });
       done(null, user);
@@ -22,7 +21,8 @@ passport.use(
   }))
 );
 
-passport.use('facebook-token',
+passport.use(
+  'facebook-token',
   new FacebookTokenStrategy(
     {
       clientID: process.env.FACEBOOK_APP_ID,
@@ -31,9 +31,11 @@ passport.use('facebook-token',
     async (accessToken, refreshToken, profile, done) => {
       done(null, profile);
     }
-  ));
+  )
+);
 
-passport.use('google-token',
+passport.use(
+  'google-token',
   new GoogleTokenStrategy(
     {
       clientID: process.env.GOOGLE_APP_ID,
@@ -43,6 +45,7 @@ passport.use('google-token',
     async (accessToken, refreshToken, profile, done) => {
       done(null, profile);
     }
-  ));
+  )
+);
 
 export default passport;
