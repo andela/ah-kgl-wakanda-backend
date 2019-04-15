@@ -24,7 +24,6 @@ describe('Social login', () => {
     };
     sinon.stub(res, 'status').returnsThis();
     await User.socialLogin(req, res);
-    console.log(res.body);
     expect(res.status).to.have.been.calledWith(200);
   });
   it('should not create a new user with a bad req', async () => {

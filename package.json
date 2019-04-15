@@ -6,13 +6,9 @@
   "scripts": {
     "db-migrate": "npx sequelize db:migrate",
     "start": "babel-watch app.js",
-<<<<<<< HEAD
     "start:heroku": "npm run db-migrate && babel-node app.js",
     "seed": "NODE_ENV=test npx sequelize db:seed:all",
     "test": "npm run seed seed && NODE_ENV=test nyc --report=text npx mocha server/test/ --require @babel/register",
-=======
-    "test": "NODE_ENV=test nyc --report=text npx mocha server/test/ --require @babel/register",
->>>>>>> [feature #165020122] social login with google
     "build": "babel app.js --out-dir build",
     "dev": "NODE_ENV=development nodemon  --require @babel/register index.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
@@ -41,11 +37,8 @@
     "express": "^4.16.3",
     "express-jwt": "^5.3.1",
     "express-session": "^1.15.6",
-<<<<<<< HEAD
     "joi": "^14.3.1",
-=======
     "jsonwebtoken": "^8.5.1",
->>>>>>> [feature #165020122] social login with google
     "method-override": "^2.3.10",
     "methods": "^1.1.2",
     "mongoose": "^5.2.2",
@@ -67,12 +60,9 @@
     "request": "^2.87.0",
     "sequelize": "^5.2.12",
     "sequelize-cli": "^5.4.0",
-<<<<<<< HEAD
-=======
     "sinon": "^7.3.1",
     "sinon-chai": "^3.3.0",
     "slug": "^0.9.1",
->>>>>>> [feature #165020122] social login with google
     "swagger-ui-express": "^4.0.2",
     "underscore": "^1.9.1",
     "unirest": "^0.6.0"

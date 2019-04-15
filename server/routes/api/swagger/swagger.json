@@ -419,8 +419,8 @@
   },
   "securityDefinitions": null,
   "definitions": {
-    "User": {
-      "type": "object",
+    "Users": {
+      "type": "array",
       "items": {
         "type": "string"
       },
