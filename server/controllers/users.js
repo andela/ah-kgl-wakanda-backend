@@ -145,6 +145,28 @@ class Users {
       });
     }
   }
+
+  /**
+   * The controller to sign out.
+   * @param  {req} req the request.
+   * @param  {res} res the response.
+   * @returns {void}
+   */
+  static async signout(req, res) {
+    try {
+      const { id } = req.user;
+      await User.update({ isLoggedIn: false }, { where: { id, } });
+      return res.status(200).json({
+        status: 200,
+        message: 'Successfully signs out.',
+      });
+    } catch (error) {
+      return res.status(200).json({
+        status: 500,
+        message: error.message,
+      });
+    }
+  }
 }
 
 export default Users;
