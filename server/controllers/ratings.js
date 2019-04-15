@@ -14,13 +14,14 @@ class Ratings {
   */
   static async create(req, res) {
     // get userId from jwt middleware
-    const { userId } = req.userId;
-    const { slug } = req.params;
+    const { userId } = req.body;
     const { rate } = req.body;
+    const { slug } = req.params;
 
     try {
       // check if the article exist in the DB
       const article = await Article.findOne({
+        attributes: ['id'],
         where: {
           slug,
         }
@@ -30,9 +31,10 @@ class Ratings {
           message: 'Article was not found',
         });
       }
+
       const ratingInfo = await Rating.create({
-        userId,
         articleId: article.id,
+        userId,
         rate,
       });
       return res.status(201).json({
