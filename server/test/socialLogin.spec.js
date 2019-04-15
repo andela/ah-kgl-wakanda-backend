@@ -7,7 +7,9 @@ const { expect } = chai;
 chai.use(sinonChai);
 
 describe('Social login', () => {
-  afterEach(sinon.restore);
+  afterEach(() => {
+    sinon.restore();
+  });
   it('should create a new user', async () => {
     const req = {
       user: {
@@ -26,8 +28,9 @@ describe('Social login', () => {
     await User.socialLogin(req, res);
     expect(res.status).to.have.been.calledWith(200);
   });
+
   it('should not create a new user with a bad req', async () => {
-    const req = {
+   const req = {
       user: {
         provider: 'facebook',
         displayName: 'Karl Musingo',
