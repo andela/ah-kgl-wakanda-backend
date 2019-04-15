@@ -4,6 +4,7 @@ node_js:
   - "stable"
 before_script:
   - NODE_ENV=test npx sequelize db:migrate
+  - NODE_ENV=test npx sequelize db:seed:all
 script:
   - npm test
 after_success:
