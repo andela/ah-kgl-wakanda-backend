@@ -1,6 +1,13 @@
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 import { User } from '../models/index';
+<<<<<<< HEAD
 import encrypt from '../helpers/encrypt';
 import sendMail from '../helpers/sendVerificationEmail';
+=======
+
+dotenv.config();
+>>>>>>> [feature #165020122] social login with google
 
 /**
  * The class handle everything about the user
@@ -12,6 +19,7 @@ class Users {
    * @param {res} res the response.
    * @returns {void}
   */
+<<<<<<< HEAD
   static async signUp(req, res) {
     try {
       const hashedPassword = encrypt.hashPassword(req.body.password);
@@ -95,6 +103,8 @@ class Users {
    * @param {res} res the response.
    * @returns {void}
   */
+=======
+>>>>>>> [feature #165020122] social login with google
   static async socialLogin(req, res) {
     try {
       const {
@@ -131,7 +141,11 @@ class Users {
         user: {
           username,
           email,
+<<<<<<< HEAD
           token: await Users.generateToken(data),
+=======
+          token: jwt.sign(data, process.env.SECRET_KEY, { expiresIn: '1d' }),
+>>>>>>> [feature #165020122] social login with google
           image,
           bio,
         },
