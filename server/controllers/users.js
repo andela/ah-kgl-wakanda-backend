@@ -147,10 +147,10 @@ class Users {
   }
 
   /**
-   * The controller to sign out.
-   * @param  {req} req the request.
-   * @param  {res} res the response.
-   * @returns {void}
+   * The controller for signing out
+   * @param {req} req the request
+   * @param {res} res the response
+   * @return {void}
    */
   static async signout(req, res) {
     try {
@@ -161,7 +161,7 @@ class Users {
         message: 'Successfully signs out.',
       });
     } catch (error) {
-      return res.status(200).json({
+      return res.status(500).json({
         status: 500,
         message: error.message,
       });
