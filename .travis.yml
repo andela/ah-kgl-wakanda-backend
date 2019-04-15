@@ -6,7 +6,7 @@ cache:
   directories:
     - node_modules
 before_script:
-  - NODE_ENV=test npx sequelize sequelize db:migrate
+  - NODE_ENV=test npx sequelize db:migrate
 script:
   - npm test
 after_success:
