@@ -30,7 +30,7 @@ describe('Social login', () => {
   });
 
   it('should not create a new user with a bad req', async () => {
-   const req = {
+    const req = {
       user: {
         provider: 'facebook',
         displayName: 'Karl Musingo',
