@@ -72,7 +72,9 @@ class articles {
   static update(req, res, next) {
     const articleSchema = Joi.object().keys({
       article: {
-        title: Joi.string().required(),
+        title: Joi.string(),
+        description: Joi.string(),
+        body: Joi.string()
       }
     });
 

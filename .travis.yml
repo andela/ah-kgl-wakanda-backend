@@ -5,7 +5,18 @@ node_js:
 cache:
   directories:
     - node_modules
+before_script:
+  - npm run dbInit-test
 script:
   - npm test
 after_success:
   - npm run coverage
+services:
+  - postgresql
+env:
+  - PGHOST : 'localhost'
+  - PGUSER : 'travis'
+  - PGDATABASE_TEST : 'travis'
+  - PGPASSWORD : '1234'
+  - PGPORT : '5432'
+  - SENDGRID_API_KEY : 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

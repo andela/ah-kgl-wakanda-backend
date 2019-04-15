@@ -11,16 +11,33 @@ class Articles {
    *
    *
    * @static
+   * @param {object} res
+   * @param {string} string
+   * @returns {string} slug
+   * @memberof Articles
+   */
+  static async createSlug(res, string) {
+    try {
+      const slug = `${await slugify(string)}-${Math.floor(Math.random() * 999999999) + 100000000}`;
+      return slug;
+    } catch (e) {
+      errorHandler.errorResponse(res, e);
+    }
+  }
+
+  /**
+   *
+   *
+   * @static
    * @param {object} req
    * @param {object} res
    * @returns {object} response
    * @memberof Articles
    */
   static async create(req, res) {
-    const { article } = req.body;
-    article.slug = `${slugify(article.title)}-${Math.floor(Math.random() * 999999999) + 100000000}`;
-
     try {
+      const { article } = req.body;
+      article.slug = await Articles.createSlug(res, article.title);
       const result = await Article.create(article, { include: [{ model: Tags }] });
 
       return res.status(201).json({
@@ -103,16 +120,25 @@ class Articles {
    */
   static async update(req, res) {
     try {
-      const { title } = req.body.article;
-      const { UserId } = req.body.user;
-      const result = await Article.update({ title, }, { where: { UserId, }, returning: true });
+      const { article } = req.body;
 
+      if (article.title) {
+        article.slug = await Articles.createSlug(res, article.title);
+      }
+
+      const { slug } = req.params;
+      const result = await Article.update(article, {
+        where: { slug, },
+        returning: true,
+        plain: true
+      });
       if (result) {
         return res.status(200).json({
           status: 200,
-          data: { article: result }
+          data: { article: result[1].get() }
         });
       }
+
 
       return res.status(404).json({
         status: 404,
@@ -140,7 +166,7 @@ class Articles {
       if (result > 0) {
         return res.status(200).json({
           status: 200,
-          data: 'Article successfully deleted'
+          message: 'Article successfully deleted'
         });
       }
 

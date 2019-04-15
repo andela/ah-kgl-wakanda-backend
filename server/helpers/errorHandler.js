@@ -21,6 +21,13 @@ class errorHandler {
       });
     }
 
+    if (e.message === 'Cannot read property \'length\' of null') {
+      return res.status(404).json({
+        status: 404,
+        message: 'Article not found'
+      });
+    }
+
     return res.status(500).json({
       status: 500,
       message: e.message
