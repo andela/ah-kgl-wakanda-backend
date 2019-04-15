@@ -1,10 +1,11 @@
 import express from 'express';
+import passport from 'passport';
 import bodyParser from 'body-parser';
 import routes from './server/routes';
 
 // Create global app object
 const app = express();
-
+app.use(passport.initialize());
 // Normal express config defaults
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

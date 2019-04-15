@@ -27,6 +27,7 @@
     "@sindresorhus/slugify": "^0.9.1",
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
+    "bcrypt": "^3.0.5",
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
     "coveralls": "^3.0.3",

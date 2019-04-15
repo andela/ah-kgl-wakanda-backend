@@ -7,7 +7,6 @@ export default (sequelize, DataTypes) => {
     },
     email: {
       type: DataTypes.STRING,
-      unique: true,
     },
     bio: DataTypes.TEXT,
     image: {
