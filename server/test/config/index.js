@@ -14,12 +14,10 @@ class dbTest {
     db.sequelize
       .authenticate()
       .then()
-      .catch((err) => {
-        return {
-          type: 'testDbConnection',
-          error: err,
-        };
-      });
+      .catch(err => ({
+        type: 'testDbConnection',
+        error: err,
+      }));
   }
 
   /**
