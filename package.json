@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "babel-watch app.js",
-    "test": "NODE_ENV=test npx sequelize db:seed:all && NODE_ENV=test nyc --report=text npx mocha server/test/ --require @babel/register",
+    "seed": "NODE_ENV=test npx sequelize db:seed:all",
+    "test": "npm run seed seed && NODE_ENV=test nyc --report=text npx mocha server/test/ --require @babel/register",
     "build": "babel app.js --out-dir build",
     "dev": "NODE_ENV=development nodemon  --require @babel/register index.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls",

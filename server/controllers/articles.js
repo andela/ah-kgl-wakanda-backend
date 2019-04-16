@@ -132,17 +132,9 @@ class Articles {
         returning: true,
         plain: true
       });
-      if (result) {
-        return res.status(200).json({
-          status: 200,
-          data: { article: result[1].get() }
-        });
-      }
-
-
-      return res.status(404).json({
-        status: 404,
-        message: 'Article not found'
+      return res.status(200).json({
+        status: 200,
+        data: { article: result[1].get() }
       });
     } catch (e) {
       errorHandler.errorResponse(res, e);

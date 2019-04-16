@@ -40,17 +40,31 @@
             "schema": {
               "type": "object",
               "properties": {
-                "title": {
-                  "type": "string"
-                },
-                "description": {
-                  "type": "string"
-                },
-                "body": {
-                  "type": "string"
-                },
-                "tags": {
-                  "type": "array"
+                "article": {
+                  "properties": {
+                    "title": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "body": {
+                      "type": "string"
+                    },
+                    "images": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "Tags": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "type": "object"
                 }
               }
             }
@@ -143,14 +157,19 @@
             "schema": {
               "type": "object",
               "properties": {
-                "title": {
-                  "type": "string"
-                },
-                "description": {
-                  "type": "string"
-                },
-                "body": {
-                  "type": "string"
+                "article": {
+                  "properties": {
+                    "title": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "body": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
                 }
               }
             }
