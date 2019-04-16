@@ -2,6 +2,8 @@ import express from 'express';
 import passport from 'passport';
 import bodyParser from 'body-parser';
 import routes from './server/routes';
+import './server/config/passport';
+
 
 import './server/config/passport';
 
