@@ -20,6 +20,9 @@ class Rating {
         .integer()
         .min(1)
         .max(5)
+        .required(),
+      userId: Joi.number()
+        .integer()
         .required()
     };
 
