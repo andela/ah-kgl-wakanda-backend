@@ -209,29 +209,150 @@
           }
         }
       }
+    },
+    "/api/auth/signup": {
+      "post": {
+        "tags": [
+          "signup"
+        ],
+        "summary": "User Registration",
+        "description": "Username, Email, password required, returns a Profile. No additional parameters required",
+        "operationId": "",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "description": "The username of the user",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "in": "path",
+            "description": "The email of the user",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "path",
+            "description": "Password should contain at least 1 Uppercase, 1 lowercase and a number",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid Email supplied"
+          },
+          "409": {
+            "description": "Email already exists"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "login"
+        ],
+        "summary": "User login",
+        "description": "Email, password required, returns a Profile. No additional parameters required",
+        "operationId": "",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "description": "The email of the user",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "path",
+            "description": "Password of the User",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Email and Password required"
+          },
+          "401": {
+            "description": "The credentials you provided is incorrect"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "profile"
+        ],
+        "summary": "Unfollow user",
+        "description": "Authentication required, returns a Profile. No additional parameters required",
+        "operationId": null,
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "description": "The username of the user to unfollow",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid username"
+          }
+        }
+      }
     }
   },
   "securityDefinitions": null,
   "definitions": {
-    "Articles": {
-      "type": "array",
+    "User": {
+      "type": "object",
       "items": {
         "type": "string"
       },
       "properties": {
-        "slug": {
+        "username": {
           "type": "string"
         },
-        "title": {
+        "email": {
+          "type": "email"
+        },
+        "bio": {
           "type": "string"
         },
-        "description": {
+        "password": {
           "type": "string"
         },
-        "body": {
+        "image": {
           "type": "string"
         },
-        "tagList": {
+        "provider": {
           "type": "string"
         },
         "createdAt": {
@@ -241,28 +362,8 @@
         "updatedAt": {
           "type": "string"
         },
-        "favorited": {
+        "following": {
           "type": "boolean"
-        },
-        "favoritesCount": {
-          "type": "integer"
-        },
-        "author": {
-          "type": "object",
-          "properties": {
-            "username": {
-              "type": "string"
-            },
-            "bio": {
-              "type": "string"
-            },
-            "image": {
-              "type": "string",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
         }
       }
     },

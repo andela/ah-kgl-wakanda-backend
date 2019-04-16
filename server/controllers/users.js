@@ -45,7 +45,7 @@ class Users {
     if (!user || !encrypt.comparePassword(user.get().password, body.password)) {
       return res.status(401).json({
         status: 401,
-        error: 'The credentials you provided is incorrect',
+        message: 'The credentials you provided is incorrect',
       });
     }
     const token = await Users.generateToken(user.get());
