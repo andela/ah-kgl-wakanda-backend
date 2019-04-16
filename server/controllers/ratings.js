@@ -32,11 +32,30 @@ class Ratings {
         });
       }
 
+      const ratedArticle = await Rating.findOne({
+        where: {
+          articleId: article.id,
+          userId,
+        }
+      });
+
+      // if the article is already rated. We should edit it only
+      if (ratedArticle) {
+        const updateRate = await ratedArticle.update({
+          rate,
+        });
+
+        return res.status(200).json({
+          message: 'The article rating was successfully edited',
+          data: updateRate,
+        });
+      }
       const ratingInfo = await Rating.create({
         articleId: article.id,
         userId,
         rate,
       });
+
       return res.status(201).json({
         message: 'The article was successfully rated',
         data: ratingInfo,

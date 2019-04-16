@@ -4,6 +4,6 @@ import Validation from '../../middlewares/validations/ratings';
 
 const router = express.Router();
 
-router.post('/articles/rate/:slug', Validation.validateRating, Ratings.create);
+router.post('/articles/rate/:slug', Ratings.create);
 
 export default router;
