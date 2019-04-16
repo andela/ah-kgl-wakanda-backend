@@ -14,6 +14,8 @@ const article = {
   Tags: ['dragons', 'training']
 };
 
+const slug = ['how-to-train-your-dragon', 'how-to-train-your-cat'];
+
 describe('Article endpoints', () => {
   describe('The endpoint to create an article', () => {
     it('Should create an article', (done) => {
@@ -27,7 +29,6 @@ describe('Article endpoints', () => {
           expect(res.body.data).to.have.property('article');
           expect(res.body.data.article).to.have.property('title');
           expect(res.body.data.article.title).equals('How to train your dragon');
-          chai.slug = res.body.data.article.slug;
         });
       done();
     });
@@ -64,47 +65,31 @@ describe('Article endpoints', () => {
   describe('The endpoint to get a single article', () => {
     it('Should get a single article ', (done) => {
       chai.request(app)
-        .post('/api/articles')
+        .get(`/api/articles/${slug[1]}`)
         .set('Authorization', 'Bearer <token>')
         .send({ article })
-        .end((e, response) => {
-          const { slug } = response.body.data.article;
-
-          chai.request(app)
-            .get(`/api/articles/${slug}`)
-            .set('Authorization', 'Bearer <token>')
-            .send({ article })
-            .end((error, res) => {
-              expect(res.body.status).to.be.equal(200);
-              expect(res.body).to.have.property('data');
-              expect(res.body.data).to.have.property('article');
-              expect(res.body.data.article).to.be.an('object');
-            });
-          done();
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body).to.have.property('data');
+          expect(res.body.data).to.have.property('article');
+          expect(res.body.data.article).to.be.an('object');
         });
+      done();
     });
   });
 
   describe('The endpoint to update an article', () => {
     it('Should update an article ', (done) => {
       chai.request(app)
-        .post('/api/articles')
-        .send({ article })
+        .put(`/api/articles/${slug[0]}`)
         .set('Authorization', 'Bearer <token>')
-        .end((e, response) => {
-          const { slug } = response.body.data.article;
-
-          chai.request(app)
-            .put(`/api/articles/${slug}`)
-            .set('Authorization', 'Bearer <token>')
-            .send({ article: { title: 'new title' } })
-            .end((error, res) => {
-              expect(res.body.status).to.be.equal(200);
-              expect(res.body).to.have.property('data');
-              expect(res.body.data).to.have.property('article');
-              expect(res.body.data.article).to.be.an('object');
-              expect(res.body.data.article.title).equals('new title');
-            });
+        .send({ article: { title: 'new title' } })
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body).to.have.property('data');
+          expect(res.body.data).to.have.property('article');
+          expect(res.body.data.article).to.be.an('object');
+          expect(res.body.data.article.title).equals('new title');
         });
       done();
     });
@@ -126,21 +111,13 @@ describe('Article endpoints', () => {
   describe('The endpoint to delete an article', () => {
     it('Should delete an article ', (done) => {
       chai.request(app)
-        .post('/api/articles')
-        .send({ article })
+        .delete(`/api/articles/${slug[1]}`)
         .set('Authorization', 'Bearer <token>')
-        .end((e, response) => {
-          const { slug } = response.body.data.article;
-
-          chai.request(app)
-            .delete(`/api/articles/${slug}`)
-            .set('Authorization', 'Bearer <token>')
-            .end((error, res) => {
-              expect(res.body.status).to.be.equal(200);
-              expect(res.body.message).to.equals('Article successfully deleted');
-            });
-          done();
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body.message).to.equals('Article successfully deleted');
         });
+      done();
     });
 
     it('Should fail to delete an article ', (done) => {

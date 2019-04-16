@@ -2,3 +2,4 @@ server/config/config.js
 server/models
 server/migrations
 build/
+server/seeders
