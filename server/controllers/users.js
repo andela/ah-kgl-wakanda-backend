@@ -1,5 +1,6 @@
 import { User } from '../models/index';
 import encrypt from '../helpers/encrypt';
+import sendMail from '../helpers/sendVerificationEmail';
 
 /**
  * The class handle everything about the user
@@ -17,6 +18,7 @@ class Users {
       const { username, email } = req.body;
       const newUser = await User.create({ username, email, password: hashedPassword });
       const token = await Users.generateToken(newUser.get());
+      if (process.env.NODE_ENV !== 'test') await sendMail(email, username, token);
       return Users.send(res, newUser, token);
     } catch (error) {
       if (error.errors[0].message === 'email must be unique') {

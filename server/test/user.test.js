@@ -13,7 +13,10 @@ describe('User ', () => {
     try {
       await Database.testDbConnection();
     } catch (error) {
-      console.log('>>>>>># Connection Error', error);
+      return {
+        type: 'connection',
+        error,
+      };
     }
   });
 
@@ -21,7 +24,10 @@ describe('User ', () => {
     try {
       await Database.truncateUser();
     } catch (error) {
-      console.log('>>>>>># Truncate Error', error);
+      return {
+        type: 'truncate',
+        error,
+      };
     }
   });
 
