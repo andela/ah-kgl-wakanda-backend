@@ -10,6 +10,7 @@ chai.use(chaiHttp);
 
 const email = 'sigmacool@gmail.com';
 let tokenResetPassword;
+const authScheme = 'Bearer';
 
 describe('Password reset', () => {
   beforeEach(async () => {
@@ -27,7 +28,7 @@ describe('Password reset', () => {
       .send({ email })
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
-        tokenResetPassword = res.body.data.token;
+        tokenResetPassword = `${authScheme} ${res.body.data.token}`;
         done();
       });
   });
@@ -70,7 +71,8 @@ describe('Update the password', () => {
   before((done) => {
     chai
       .request(app)
-      .put(`/api/users/password/${tokenResetPassword}`)
+      .put('/api/users/password')
+      .set('Authorization', tokenResetPassword)
       .send({ password: '1234567890old' })
       .end(() => {
         done();
@@ -80,7 +82,8 @@ describe('Update the password', () => {
   it('Should successfully update user password', (done) => {
     chai
       .request(app)
-      .put(`/api/users/password/${tokenResetPassword}`)
+      .put('/api/users/password')
+      .set('Authorization', tokenResetPassword)
       .send({ password: '1234567890update' })
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
@@ -91,7 +94,8 @@ describe('Update the password', () => {
   it('Should fail when new password match with the old', (done) => {
     chai
       .request(app)
-      .put(`/api/users/password/${tokenResetPassword}`)
+      .put('/api/users/password')
+      .set('Authorization', tokenResetPassword)
       .send({ password: '1234567890update' })
       .end((err, res) => {
         expect(res.status).to.be.equal(400);
@@ -102,7 +106,31 @@ describe('Update the password', () => {
   it('Should fail on invalid token', (done) => {
     chai
       .request(app)
-      .put('/api/users/password/invalidToken')
+      .put('/api/users/password')
+      .set('Authorization', 'Bearer invalid-token')
+      .send({ password: '1234567890update' })
+      .end((err, res) => {
+        expect(res.status).to.be.equal(400);
+        done();
+      });
+  });
+
+  it('Should fail on empty authorization header', (done) => {
+    chai
+      .request(app)
+      .put('/api/users/password')
+      .send({ password: '1234567890update' })
+      .end((err, res) => {
+        expect(res.status).to.be.equal(401);
+        done();
+      });
+  });
+
+  it('Should fail on empty token', (done) => {
+    chai
+      .request(app)
+      .put('/api/users/password')
+      .set('Authorization', 'Bearer ')
       .send({ password: '1234567890update' })
       .end((err, res) => {
         expect(res.status).to.be.equal(400);
@@ -113,7 +141,8 @@ describe('Update the password', () => {
   it('Should validate empty password', (done) => {
     chai
       .request(app)
-      .put(`/api/users/password/${tokenResetPassword}`)
+      .put('/api/users/password')
+      .set('Authorization', tokenResetPassword)
       .send({})
       .end((err, res) => {
         expect(res.status).to.be.equal(400);
@@ -124,7 +153,8 @@ describe('Update the password', () => {
   it('Should validate minimum password length', (done) => {
     chai
       .request(app)
-      .put(`/api/users/password/${tokenResetPassword}`)
+      .put('/api/users/password')
+      .set('Authorization', tokenResetPassword)
       .send({ password: '123' })
       .end((err, res) => {
         expect(res.status).to.be.equal(400);
@@ -135,7 +165,8 @@ describe('Update the password', () => {
   it('Should validate alphanumeric password', (done) => {
     chai
       .request(app)
-      .put(`/api/users/password/${tokenResetPassword}`)
+      .put('/api/users/password')
+      .set('Authorization', tokenResetPassword)
       .send({ password: '!@#$%' })
       .end((err, res) => {
         expect(res.status).to.be.equal(400);

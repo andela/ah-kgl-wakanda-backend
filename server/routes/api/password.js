@@ -5,6 +5,6 @@ import Validation from '../../middlewares/validations/password';
 const router = express.Router();
 
 router.post('/users/reset_password', Validation.validateEmail, Password.resetPassword);
-router.put('/users/password/:token', Validation.validatePassword, Password.updatePassword);
+router.put('/users/password', Validation.validatePassword, Password.updatePassword);
 
 export default router;

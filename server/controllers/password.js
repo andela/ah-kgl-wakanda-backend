@@ -112,8 +112,23 @@ class Password {
    * @returns {object} response
    */
   static updatePassword(req, res) {
-    const { token } = req.params;
+    // authorization = Bearer token
+    const { authorization } = req.headers;
     const { password } = req.body;
+
+    if (!authorization) {
+      return res.status(401).json({
+        message: 'Not authorized to update password'
+      });
+    }
+    const token = authorization.split(' ')[1];
+
+    if (!token) {
+      return res.status(400).json({
+        message: 'The password reset token is required'
+      });
+    }
+
     try {
       jwt.verify(token, process.env.JWT_SECRET_KEY, async (error, decoded) => {
         if (error) {

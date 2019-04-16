@@ -1,5 +1,3 @@
-
-import Articles from '../controllers/articles';
 module.exports = (sequelize, DataTypes) => {
 	let Rating = sequelize.define(
 		'Rating',
