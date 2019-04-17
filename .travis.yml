@@ -5,7 +5,13 @@ node_js:
 cache:
   directories:
     - node_modules
+before_script:
+  - NODE_ENV=test npx sequelize db:migrate
 script:
   - npm test
 after_success:
   - npm run coverage
+services:
+  - postgresql
+env:
+  - SENDGRID_API_KEY : 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

@@ -1,7 +1,7 @@
 
 module.exports = (sequelize, DataTypes) => {
   const TagsArticle = sequelize.define('TagsArticle', {
-    articleid: {
+    articleId: {
       type: DataTypes.INTEGER,
       allowNull: false
     },

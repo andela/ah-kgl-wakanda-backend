@@ -9,24 +9,8 @@
   "basePath": "/api",
   "tags": [
     {
-      "name": "profile",
-      "description": "user profiles' routes",
-      "externalDocs": {
-        "description": "Find out more",
-        "url": "http://swagger.io"
-      }
-    },
-    {
-      "name": "article",
-      "description": "articles' information routes"
-    },
-    {
-      "name": "user",
-      "description": "Operations about user",
-      "externalDocs": {
-        "description": "Find out more about our store",
-        "url": "http://swagger.io"
-      }
+      "name": "Article",
+      "description": "Information about the articles endpoints"
     }
   ],
   "schemes": [
@@ -34,29 +18,56 @@
     "http"
   ],
   "paths": {
-    "/profiles/:username": {
-      "get": {
+    "/articles": {
+      "post": {
         "tags": [
-          "profile"
+          "Articles"
         ],
-        "summary": "Retrive a user profile",
-        "description": "Authentication optional, returns a Profile",
+        "summary": "Create an article",
+        "description": "Authentication required, returns an article",
         "operationId": " ",
         "consumes": [
-          "application/json",
-          "application/xml"
+          "application/json"
         ],
         "produces": [
-          "application/xml",
           "application/json"
         ],
         "parameters": [
           {
-            "name": "username",
-            "in": "path",
-            "description": "The name that needs to be displayed",
+            "in": "body",
+            "name": "body",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "object",
+              "properties": {
+                "article": {
+                  "properties": {
+                    "title": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "body": {
+                      "type": "string"
+                    },
+                    "images": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "Tags": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
           }
         ],
         "responses": {
@@ -65,73 +76,136 @@
           },
           "400": {
             "description": "Invalid parameter"
+          },
+          "401": {
+            "description": "Unauthorized request"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Articles"
+        ],
+        "summary": "Get all articles",
+        "description": "Authentication required, returns articles. No additional parameters required",
+        "operationId": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "401": {
+            "description": "Unauthorized request"
           }
         }
       }
     },
-    "profiles/:username/follow": {
-      "post": {
+    "articles/:slug": {
+      "get": {
         "tags": [
-          "profile"
+          "Articles"
         ],
-        "summary": "Follow user",
-        "description": "Authentication required, returns a Profile. No additional parameters required",
+        "summary": "Get a single article",
+        "description": "Authentication required, returns a article. No additional parameters required",
         "operationId": "",
         "consumes": [
-          "application/json",
-          "application/xml"
+          "application/json"
         ],
         "produces": [
-          "application/xml",
           "application/json"
         ],
         "parameters": [
           {
-            "name": "username",
-            "in": "path",
-            "description": "The username of the user that needs to be followed",
-            "required": true,
-            "type": "string"
+            "name": "slug",
+            "description": "The slug of the article"
           }
         ],
         "responses": {
-          "400": {
-            "description": "Invalid username supplied"
+          "200": {
+            "description": "The article object"
           },
           "404": {
-            "description": "The user not found"
+            "description": "The article was not found"
           },
-          "405": {
-            "description": "Validation exception"
+          "401": {
+            "description": "Unauthorized request"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Articles"
+        ],
+        "summary": "Update the article",
+        "description": "Authentication required, returns the updated article. No additional parameters required",
+        "operationId": null,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "slug",
+            "description": "The slug of the article"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "article": {
+                  "properties": {
+                    "title": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "body": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The updated article"
+          },
+          "404": {
+            "description": "The article was not found"
           }
         }
       },
       "delete": {
         "tags": [
-          "profile"
+          "Articles"
         ],
-        "summary": "Unfollow user",
-        "description": "Authentication required, returns a Profile. No additional parameters required",
+        "summary": "Delete an article",
+        "description": "Authentication required, returns the updated article. No additional parameters required",
         "operationId": null,
         "produces": [
-          "application/xml",
           "application/json"
         ],
         "parameters": [
           {
-            "name": "username",
-            "in": "path",
-            "description": "The username of the user to unfollow",
-            "required": true,
-            "type": "string"
+            "name": "slug",
+            "description": "The slug of the article"
           }
         ],
         "responses": {
           "200": {
-            "description": "successful operation"
+            "description": "The success message"
           },
-          "400": {
-            "description": "Invalid username"
+          "404": {
+            "description": "The article was not found"
           }
         }
       }

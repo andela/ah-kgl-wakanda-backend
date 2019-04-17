@@ -1,6 +1,6 @@
 
 module.exports = (sequelize, DataTypes) => {
-  const Article = sequelize.define(
+  let Article = sequelize.define(
     'Article',
     {
       slug: {
@@ -20,6 +20,13 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: false,
       },
+      images: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        allowNull: true,
+        validate: {
+          is: ['(http(s?):)([/|.|[A-Za-z0-9_-]| |-])*.(?:jpg|jpeg|gif|png)', 'i']
+        }
+      },
       favorited: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
@@ -30,17 +37,19 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: 0
       },
-      userId: DataTypes.INTEGER
+      UserId: DataTypes.INTEGER
     },
     {}
   );
+
   Article.associate = function (models) {
-    Article.belongsTo(models.User, { foreignKey: 'userId' });
+    Article.belongsTo(models.User, { foreignKey: 'UserId' });
     Article.hasMany(models.Comment);
     Article.belongsToMany(models.Tags, {
       through: 'TagsArticle',
       foreignKey: 'articleId'
     });
   };
+
   return Article;
 };
