@@ -130,7 +130,7 @@ describe('Update the password', () => {
       .request(app)
       .put('/api/users/password')
       .set('Authorization', tokenResetPassword)
-      .send({ password: '1234567890old' })
+      .send({ password: '123456Mutombo' })
       .end(() => {
         done();
       });
@@ -141,7 +141,7 @@ describe('Update the password', () => {
       .request(app)
       .put('/api/users/password')
       .set('Authorization', tokenResetPassword)
-      .send({ password: '1234567890update' })
+      .send({ password: '123456MutomboUpdate' })
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
         expect(res.status).to.be.a('number');
@@ -158,7 +158,7 @@ describe('Update the password', () => {
       .request(app)
       .put('/api/users/password')
       .set('Authorization', tokenResetPassword)
-      .send({ password: '1234567890update' })
+      .send({ password: '123456MutomboUpdate' })
       .end((err, res) => {
         expect(res.status).to.be.equal(400);
         expect(res.status).to.be.a('number');
@@ -175,7 +175,7 @@ describe('Update the password', () => {
       .request(app)
       .put('/api/users/password')
       .set('Authorization', 'Bearer invalid-token')
-      .send({ password: '1234567890update' })
+      .send({ password: '123456MutomboUpdate' })
       .end((err, res) => {
         expect(res.status).to.be.equal(400);
         expect(res.status).to.be.a('number');
@@ -191,7 +191,7 @@ describe('Update the password', () => {
     chai
       .request(app)
       .put('/api/users/password')
-      .send({ password: '1234567890update' })
+      .send({ password: '123456MutomboUpdate' })
       .end((err, res) => {
         expect(res.status).to.be.equal(401);
         expect(res.status).to.be.a('number');
@@ -208,7 +208,7 @@ describe('Update the password', () => {
       .request(app)
       .put('/api/users/password')
       .set('Authorization', 'Bearer ')
-      .send({ password: '1234567890update' })
+      .send({ password: '123456MutomboUpdate' })
       .end((err, res) => {
         expect(res.status).to.be.equal(400);
         expect(res.status).to.be.a('number');
@@ -286,6 +286,24 @@ describe('Update the password', () => {
         expect(res.body).to.have.property('message');
         expect(res.body.message).to.be.a('string');
         expect(res.body.message).equals('password must only contain alphanumeric characters');
+        done();
+      });
+  });
+
+  it('Should validate regex password', (done) => {
+    chai
+      .request(app)
+      .put('/api/users/password')
+      .set('Authorization', tokenResetPassword)
+      .send({ password: 'noregexrespect' })
+      .end((err, res) => {
+        expect(res.status).to.be.equal(400);
+        expect(res.status).to.be.a('number');
+        expect(res.body).to.be.an('object');
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.be.a('string');
+        expect(res.body.message)
+          .equals('Your password must have at least 6 digits and contain 1 Uppercase, 1 Lowercase, 1 number');
         done();
       });
   });
