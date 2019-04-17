@@ -458,7 +458,7 @@
 				}
 			}
 		},
-		"/users/password/{token}": {
+		"/users/password": {
 			"put": {
 				"tags": [
 					"Forgot password"
@@ -472,14 +472,12 @@
 				"produces": [
 					"application/json"
 				],
-				"parameters": [
+				"security": [
 					{
-						"name": "token",
-						"in": "path",
-						"description": "token from the password reset link",
-						"required": true,
-						"type": "string"
-					},
+						"bearerToken": []
+					}
+				],
+				"parameters": [
 					{
 						"in": "body",
 						"name": "body",
@@ -500,6 +498,9 @@
 					"404": {
 						"description": "No user found with this email address"
 					},
+					"401": {
+						"description": "Not authorized to update password"
+					},
 					"500": {
 						"description": "Failed to update the password"
 					},
@@ -510,7 +511,14 @@
 			}
 		}
 	},
-	"securityDefinitions": null,
+	"securityDefinitions": {
+		"bearerToken": {
+			"type": "apiKey",
+			"name": "Authorization",
+			"description": "The authorization header must contain a Bearer token",
+			"in": "header"
+		}
+	},
 	"definitions": {
 		"Users": {
 			"type": "array",

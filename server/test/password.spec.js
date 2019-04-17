@@ -1,9 +1,9 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import sinon from 'sinon';
-import Password from '../controllers/password';
 import app from '../../app';
 import mailer from '../helpers/mailer';
+import Password from '../controllers/password';
 
 // Chai configuration
 const { expect } = chai;
@@ -15,9 +15,15 @@ const authScheme = 'Bearer';
 
 describe('mailer helper', () => {
   it('Should test mailer function', () => {
-		expect(mailer).to.be.a('function');
-		expect(mailer).to.be.a('function');
-		
+    expect(mailer).to.be.a('function');
+  });
+});
+
+describe('Passport controller', () => {
+  it('should be a method', () => {
+    expect(Password.resetPassword).to.be.a('function');
+    expect(Password.sendEmail).to.be.a('function');
+    expect(Password.updatePassword).to.be.a('function');
   });
 });
 
