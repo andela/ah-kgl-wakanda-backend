@@ -3,6 +3,7 @@ import chaiHttp from 'chai-http';
 import sinon from 'sinon';
 import Password from '../controllers/password';
 import app from '../../app';
+import mailer from '../helpers/mailer';
 
 // Chai configuration
 const { expect } = chai;
@@ -11,6 +12,14 @@ chai.use(chaiHttp);
 const email = 'sigmacool@gmail.com';
 let tokenResetPassword;
 const authScheme = 'Bearer';
+
+describe('mailer helper', () => {
+  it('Should test mailer function', () => {
+		expect(mailer).to.be.a('function');
+		expect(mailer).to.be.a('function');
+		
+  });
+});
 
 describe('Password reset', () => {
   beforeEach(async () => {
@@ -28,6 +37,12 @@ describe('Password reset', () => {
       .send({ email })
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
+        expect(res.body).to.have.property('data');
+        expect(res.body).to.have.property('message');
+        expect(res.body.data).to.have.property('email');
+        expect(res.body.data).to.have.property('token');
+        expect(res.body.data.email).equals(email);
+        expect(res.body.message).equals('Reset Password email successfully delivered');
         tokenResetPassword = `${authScheme} ${res.body.data.token}`;
         done();
       });
@@ -40,6 +55,21 @@ describe('Password reset', () => {
       .send({ email: 'fake@gmail.com' })
       .end((err, res) => {
         expect(res.status).to.be.equal(404);
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).equals('No user found with this email address');
+        done();
+      });
+  });
+
+  it('Should validate an empty body', (done) => {
+    chai
+      .request(app)
+      .post('/api/users/reset_password')
+      .send({})
+      .end((err, res) => {
+        expect(res.status).to.be.equal(400);
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).equals('email is required');
         done();
       });
   });
@@ -48,9 +78,13 @@ describe('Password reset', () => {
     chai
       .request(app)
       .post('/api/users/reset_password')
-      .send({})
+      .send({
+        email: ''
+      })
       .end((err, res) => {
         expect(res.status).to.be.equal(400);
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).equals('email is not allowed to be empty');
         done();
       });
   });
@@ -62,6 +96,8 @@ describe('Password reset', () => {
       .send({ email: 'badFormat' })
       .end((err, res) => {
         expect(res.status).to.be.equal(400);
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).equals('email must be a valid email');
         done();
       });
   });
@@ -87,6 +123,8 @@ describe('Update the password', () => {
       .send({ password: '1234567890update' })
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).equals('Password updated successfully');
         done();
       });
   });
@@ -99,6 +137,8 @@ describe('Update the password', () => {
       .send({ password: '1234567890update' })
       .end((err, res) => {
         expect(res.status).to.be.equal(400);
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).equals('New password must be different from the current');
         done();
       });
   });
@@ -111,6 +151,8 @@ describe('Update the password', () => {
       .send({ password: '1234567890update' })
       .end((err, res) => {
         expect(res.status).to.be.equal(400);
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).equals('The link appears to be invalid or already expired');
         done();
       });
   });
@@ -122,6 +164,8 @@ describe('Update the password', () => {
       .send({ password: '1234567890update' })
       .end((err, res) => {
         expect(res.status).to.be.equal(401);
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).equals('Not authorized to update password');
         done();
       });
   });
@@ -134,6 +178,22 @@ describe('Update the password', () => {
       .send({ password: '1234567890update' })
       .end((err, res) => {
         expect(res.status).to.be.equal(400);
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).equals('The password reset token is required');
+        done();
+      });
+  });
+
+  it('Should validate empty body', (done) => {
+    chai
+      .request(app)
+      .put('/api/users/password')
+      .set('Authorization', tokenResetPassword)
+      .send({})
+      .end((err, res) => {
+        expect(res.status).to.be.equal(400);
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).equals('password is required');
         done();
       });
   });
@@ -143,9 +203,13 @@ describe('Update the password', () => {
       .request(app)
       .put('/api/users/password')
       .set('Authorization', tokenResetPassword)
-      .send({})
+      .send({
+        password: ''
+      })
       .end((err, res) => {
         expect(res.status).to.be.equal(400);
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).equals('password is not allowed to be empty');
         done();
       });
   });
@@ -158,6 +222,8 @@ describe('Update the password', () => {
       .send({ password: '123' })
       .end((err, res) => {
         expect(res.status).to.be.equal(400);
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).equals('password length must be at least 8 characters long');
         done();
       });
   });
@@ -167,9 +233,11 @@ describe('Update the password', () => {
       .request(app)
       .put('/api/users/password')
       .set('Authorization', tokenResetPassword)
-      .send({ password: '!@#$%' })
+      .send({ password: '!@#$%moreandmore' })
       .end((err, res) => {
         expect(res.status).to.be.equal(400);
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).equals('password must only contain alphanumeric characters');
         done();
       });
   });
