@@ -1,6 +1,7 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../../app';
+import { Rating } from '../models';
 
 // Chai configuration
 const { expect } = chai;
@@ -9,6 +10,9 @@ chai.use(chaiHttp);
 const userId = 1;
 const rate = 2;
 const slug = 'how-to-train-your-dragon-177804958';
+before(() => {
+  Rating.destroy({ truncate: true });
+});
 describe('User Rate articles', () => {
   it('Should successfully create new rate on article', (done) => {
     chai
