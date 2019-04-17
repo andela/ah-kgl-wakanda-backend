@@ -168,6 +168,41 @@ class Users {
       });
     }
   }
+
+  /**
+   *
+   *
+   * @static
+   * @param {*} req
+   * @param {*} res
+   * @returns {object} response
+   * @memberof User
+   */
+  static async update(req, res) {
+    try {
+      const { username } = req.params;
+      const result = await User.update(
+        {
+          email: req.body.email,
+          bio: req.body.bio,
+          image: req.body.image,
+        },
+        {
+          where: { username },
+          returning: true
+        }
+      );
+      return res.status(200).json({
+        status: 200,
+        user: result[1][0],
+      });
+    } catch (e) {
+      return res.status(400).json({
+        status: 400,
+        error: e
+      });
+    }
+  }
 }
 
 export default Users;

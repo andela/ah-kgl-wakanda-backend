@@ -72,4 +72,25 @@ describe('Enable the user to Sign out ', () => {
         done();
       });
   });
+  const user = {
+    email: 'gisele.iradukunda@andela.com',
+    bio: 'I am not afraid',
+    image: 'https://image.jpg'
+  };
+
+  const username = 'mutombo';
+  it('Should update user information', (done) => {
+    chai.request(app)
+      .put(`/api/user/${username}`)
+      .send({ user })
+      .end((error, res) => {
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body).to.have.property('user');
+        expect(res.body.user).to.have.property('email');
+        expect(res.body.user).to.have.property('bio');
+        expect(res.body.user).to.have.property('image');
+        expect(res.body.user.image).equals('https://image.jpg');
+      });
+    done();
+  });
 });

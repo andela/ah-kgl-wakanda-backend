@@ -340,176 +340,13 @@
 				}
 			}
 		},
-		"/auth/facebook": {
-			"post": {
-				"tags": [
-					"Facebook login"
-				],
-				"summary": "Enable login with facebook",
-				"description": "",
-				"operationId": " ",
-				"consumes": [
-					"application/json"
-				],
-				"produces": [
-					"application/json"
-				],
-				"parameters": [
-					{
-						"in": "body",
-						"name": "body",
-						"required": true,
-						"schema": {
-							"type": "object",
-							"properties": {
-								"access_token": {
-									"type": "string"
-								}
-							}
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Logged in successfully"
-					},
-					"201": {
-						"description": "User logged in successfully for the first time"
-					},
-					"401": {
-						"description": "Unauthorized request"
-					}
-				}
-			}
-		},
-		"users/signout": {
-			"delete": {
-				"tags": [
-					"user"
-				],
-				"summary": "sign the user out",
-				"description": "Authentication required",
-				"operationId": " ",
-				"consumes": [
-					"application/json",
-					"application/xml"
-				],
-				"produces": [
-					"application/xml",
-					"application/json"
-				],
-				"parameters": [
-					{
-						"in": "headers",
-						"name": "Authorization",
-						"required": true,
-						"schema": {
-							"type": "object",
-							"properties": {
-								"Authorization": {
-									"type": "string"
-								}
-							}
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Ok"
-					},
-					"401": {
-						"description": "Unauthorized"
-					}
-				}
-			}
-		},
-		"/auth/google": {
-			"post": {
-				"tags": [
-					"Google login"
-				],
-				"summary": "Enable login with google",
-				"description": "",
-				"operationId": " ",
-				"consumes": [
-					"application/json"
-				],
-				"produces": [
-					"application/json"
-				],
-				"parameters": [
-					{
-						"in": "body",
-						"name": "body",
-						"required": true,
-						"schema": {
-							"type": "object",
-							"properties": {
-								"access_token": {
-									"type": "string"
-								}
-							}
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Logged in successfully"
-					},
-					"201": {
-						"description": "User logged in successfully for the first time"
-					},
-					"401": {
-						"description": "Unauthorized request"
-					}
-				}
-			}
-		},
-		"/users/reset_password": {
-			"post": {
-				"tags": [
-					"Forgot password"
-				],
-				"summary": "Enable sending reset password link to the user",
-				"description": "",
-				"operationId": " ",
-				"consumes": [
-					"application/json"
-				],
-				"produces": [
-					"application/json"
-				],
-				"parameters": [
-					{
-						"in": "body",
-						"name": "body",
-						"required": true,
-						"schema": {
-							"type": "object",
-							"$ref": "#/definitions/reset-email-info"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Reset Password email successfully delivered"
-					},
-					"404": {
-						"description": "No user found with this email address"
-					},
-					"500": {
-						"description": "Fail to send the reset email"
-					}
-				}
-			}
-		},
-		"/users/password": {
+		"users/:username": {
 			"put": {
 				"tags": [
-					"Forgot password"
+					"Profiles"
 				],
-				"summary": "Enable the user to update password",
-				"description": "",
+				"summary": "Update the user profile",
+				"description": "Authentication required, returns the updated user. No additional parameters required",
 				"operationId": "",
 				"consumes": [
 					"application/json"
@@ -517,187 +354,407 @@
 				"produces": [
 					"application/json"
 				],
-				"security": [
-					{
-						"bearerToken": []
-					}
-				],
 				"parameters": [
+					{
+						"name": "username",
+						"description": "The user's username"
+					},
 					{
 						"in": "body",
 						"name": "body",
 						"required": true,
 						"schema": {
 							"type": "object",
-							"$ref": "#/definitions/update-password-info"
+							"properties": {
+								"user": {
+									"properties": {
+										"email": {
+											"type": "string"
+										},
+										"bio": {
+											"type": "string"
+										},
+										"image": {
+											"type": "string"
+										}
+									},
+									"type": "object"
+								}
+							}
 						}
 					}
 				],
 				"responses": {
 					"200": {
-						"description": "Password updated successfully"
-					},
-					"400": {
-						"description": "New password must be different from the current"
+						"description": "Updated user object"
 					},
 					"404": {
-						"description": "No user found with this email address"
+						"description": "User was not found"
 					},
 					"401": {
-						"description": "Not authorized to update password"
-					},
-					"500": {
-						"description": "Failed to update the password"
-					},
-					"default": {
-						"description": "The link appears to be invalid or already expired"
+						"description": "Unauthorized request"
 					}
 				}
-			}
-		},
-		"/articles/rate/{slug}": {
-			"post": {
-				"tags": [
-					"Rate articles"
-				],
-				"summary": "Create and post rate on articles",
-				"description": "",
-				"operationId": " ",
-				"consumes": [
-					"application/json"
-				],
-				"produces": [
-					"application/json"
-				],
-				"parameters": [
-					{
-						"in": "body",
-						"name": "body",
-						"required": true,
-						"schema": {
-							"type": "object",
-							"$ref": "#/definitions/post-rate-info"
-						}
-					},
-					{
-						"in": "path",
-						"name": "slug",
-						"required": true,
-						"schema": {
-							"type": "string"
-						},
-						"description": "Alphanumeric id that uniquely identify an article"
-					}
-				],
-				"responses": {
-					"201": {
-						"description": "The article was successfully rated"
-					},
-					"200": {
-						"description": "The article rating was successfully edited"
-					},
-					"404": {
-						"description": "Article was not found"
-					},
-					"500": {
-						"description": "Fail to rate the article"
-					}
-				}
-			}
-		}
-	},
-	"securityDefinitions": {
-		"bearerToken": {
-			"type": "apiKey",
-			"name": "Authorization",
-			"description": "The authorization header must contain a Bearer token",
-			"in": "header"
-		}
-	},
-	"definitions": {
-		"Users": {
-			"type": "array",
-			"items": {
-				"type": "string"
 			},
-			"properties": {
-				"username": {
-					"type": "string"
-				},
-				"email": {
-					"type": "email"
-				},
-				"bio": {
-					"type": "string"
-				},
-				"password": {
-					"type": "string"
-				},
-				"image": {
-					"type": "string"
-				},
-				"provider": {
-					"type": "string"
-				},
-				"createdAt": {
-					"type": "string",
-					"format": "date-time"
-				},
-				"updatedAt": {
-					"type": "string"
-				},
-				"following": {
-					"type": "boolean"
+			"/auth/facebook": {
+				"post": {
+					"tags": [
+						"Facebook login"
+					],
+					"summary": "Enable login with facebook",
+					"description": "",
+					"operationId": " ",
+					"consumes": [
+						"application/json"
+					],
+					"produces": [
+						"application/json"
+					],
+					"parameters": [
+						{
+							"in": "body",
+							"name": "body",
+							"required": true,
+							"schema": {
+								"type": "object",
+								"properties": {
+									"access_token": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					],
+					"responses": {
+						"200": {
+							"description": "Logged in successfully"
+						},
+						"201": {
+							"description": "User logged in successfully for the first time"
+						},
+						"401": {
+							"description": "Unauthorized request"
+						}
+					}
+				}
+			},
+			"users/signout": {
+				"delete": {
+					"tags": [
+						"user"
+					],
+					"summary": "sign the user out",
+					"description": "Authentication required",
+					"operationId": " ",
+					"consumes": [
+						"application/json",
+						"application/xml"
+					],
+					"produces": [
+						"application/xml",
+						"application/json"
+					],
+					"parameters": [
+						{
+							"in": "headers",
+							"name": "Authorization",
+							"required": true,
+							"schema": {
+								"type": "object",
+								"properties": {
+									"Authorization": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					],
+					"responses": {
+						"200": {
+							"description": "Ok"
+						},
+						"401": {
+							"description": "Unauthorized"
+						}
+					}
+				}
+			},
+			"/auth/google": {
+				"post": {
+					"tags": [
+						"Google login"
+					],
+					"summary": "Enable login with google",
+					"description": "",
+					"operationId": " ",
+					"consumes": [
+						"application/json"
+					],
+					"produces": [
+						"application/json"
+					],
+					"parameters": [
+						{
+							"in": "body",
+							"name": "body",
+							"required": true,
+							"schema": {
+								"type": "object",
+								"properties": {
+									"access_token": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					],
+					"responses": {
+						"200": {
+							"description": "Logged in successfully"
+						},
+						"201": {
+							"description": "User logged in successfully for the first time"
+						},
+						"401": {
+							"description": "Unauthorized request"
+						}
+					}
+				}
+			},
+			"/users/reset_password": {
+				"post": {
+					"tags": [
+						"Forgot password"
+					],
+					"summary": "Enable sending reset password link to the user",
+					"description": "",
+					"operationId": " ",
+					"consumes": [
+						"application/json"
+					],
+					"produces": [
+						"application/json"
+					],
+					"parameters": [
+						{
+							"in": "body",
+							"name": "body",
+							"required": true,
+							"schema": {
+								"type": "object",
+								"$ref": "#/definitions/reset-email-info"
+							}
+						}
+					],
+					"responses": {
+						"200": {
+							"description": "Reset Password email successfully delivered"
+						},
+						"404": {
+							"description": "No user found with this email address"
+						},
+						"500": {
+							"description": "Fail to send the reset email"
+						}
+					}
+				}
+			},
+			"/users/password": {
+				"put": {
+					"tags": [
+						"Forgot password"
+					],
+					"summary": "Enable the user to update password",
+					"description": "",
+					"operationId": "",
+					"consumes": [
+						"application/json"
+					],
+					"produces": [
+						"application/json"
+					],
+					"security": [
+						{
+							"bearerToken": []
+						}
+					],
+					"parameters": [
+						{
+							"in": "body",
+							"name": "body",
+							"required": true,
+							"schema": {
+								"type": "object",
+								"$ref": "#/definitions/update-password-info"
+							}
+						}
+					],
+					"responses": {
+						"200": {
+							"description": "Password updated successfully"
+						},
+						"400": {
+							"description": "New password must be different from the current"
+						},
+						"404": {
+							"description": "No user found with this email address"
+						},
+						"401": {
+							"description": "Not authorized to update password"
+						},
+						"500": {
+							"description": "Failed to update the password"
+						},
+						"default": {
+							"description": "The link appears to be invalid or already expired"
+						}
+					}
+				}
+			},
+			"/articles/rate/{slug}": {
+				"post": {
+					"tags": [
+						"Rate articles"
+					],
+					"summary": "Create and post rate on articles",
+					"description": "",
+					"operationId": " ",
+					"consumes": [
+						"application/json"
+					],
+					"produces": [
+						"application/json"
+					],
+					"parameters": [
+						{
+							"in": "body",
+							"name": "body",
+							"required": true,
+							"schema": {
+								"type": "object",
+								"$ref": "#/definitions/post-rate-info"
+							}
+						},
+						{
+							"in": "path",
+							"name": "slug",
+							"required": true,
+							"schema": {
+								"type": "string"
+							},
+							"description": "Alphanumeric id that uniquely identify an article"
+						}
+					],
+					"responses": {
+						"201": {
+							"description": "The article was successfully rated"
+						},
+						"200": {
+							"description": "The article rating was successfully edited"
+						},
+						"404": {
+							"description": "Article was not found"
+						},
+						"500": {
+							"description": "Fail to rate the article"
+						}
+					}
 				}
 			}
 		},
-		"ApiResponse": {
-			"type": "object",
-			"properties": {
-				"code": {
-					"type": "integer",
-					"format": "int32"
-				},
-				"type": {
+		"securityDefinitions": {
+			"bearerToken": {
+				"type": "apiKey",
+				"name": "Authorization",
+				"description": "The authorization header must contain a Bearer token",
+				"in": "header"
+			}
+		},
+		"definitions": {
+			"Users": {
+				"type": "array",
+				"items": {
 					"type": "string"
 				},
-				"message": {
-					"type": "string"
+				"properties": {
+					"username": {
+						"type": "string"
+					},
+					"email": {
+						"type": "email"
+					},
+					"bio": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"image": {
+						"type": "string"
+					},
+					"provider": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string"
+					},
+					"following": {
+						"type": "boolean"
+					}
+				}
+			},
+			"ApiResponse": {
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"type": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					}
+				}
+			},
+			"reset-email-info": {
+				"type": "object",
+				"properties": {
+					"email": {
+						"type": "email"
+					}
+				}
+			},
+			"update-password-info": {
+				"type": "object",
+				"properties": {
+					"password": {
+						"type": "string"
+					}
+				}
+			},
+			"post-rate-info": {
+				"type": "object",
+				"properties": {
+					"userId": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"rate": {
+						"type": "integer",
+						"format": "int32"
+					}
 				}
 			}
 		},
-		"reset-email-info": {
-			"type": "object",
-			"properties": {
-				"email": {
-					"type": "email"
-				}
-			}
-		},
-		"update-password-info": {
-			"type": "object",
-			"properties": {
-				"password": {
-					"type": "string"
-				}
-			}
-		},
-		"post-rate-info": {
-			"type": "object",
-			"properties": {
-				"userId": {
-					"type": "integer",
-					"format": "int32"
-				},
-				"rate": {
-					"type": "integer",
-					"format": "int32"
-				}
-			}
+		"externalDocs": {
+			"description": "More about Authors Haven",
+			"url": "https://github.com/andela/ah-kgl-wakanda-backend/edit/develop/README.md"
 		}
-	},
-	"externalDocs": {
-		"description": "More about Authors Haven",
-		"url": "https://github.com/andela/ah-kgl-wakanda-backend/edit/develop/README.md"
 	}
 }

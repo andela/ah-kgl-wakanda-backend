@@ -10,4 +10,6 @@ router.post('/auth/signup', validate(schema.signUp), userController.signUp);
 router.post('/auth/login', validate(schema.logIn), userController.logIn);
 router.delete('/users/signout', checkToken, userController.signout);
 
+router.put('/user/:username', userController.update);
+
 export default router;
