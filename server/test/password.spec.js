@@ -43,11 +43,14 @@ describe('Password reset', () => {
       .send({ email })
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
+        expect(res.status).to.be.a('number');
+        expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('data');
         expect(res.body).to.have.property('message');
         expect(res.body.data).to.have.property('email');
         expect(res.body.data).to.have.property('token');
         expect(res.body.data.email).equals(email);
+        expect(res.body.message).to.be.a('string');
         expect(res.body.message).equals('Reset Password email successfully delivered');
         tokenResetPassword = `${authScheme} ${res.body.data.token}`;
         done();
@@ -61,7 +64,10 @@ describe('Password reset', () => {
       .send({ email: 'fake@gmail.com' })
       .end((err, res) => {
         expect(res.status).to.be.equal(404);
+        expect(res.status).to.be.a('number');
+        expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('message');
+        expect(res.body.message).to.be.a('string');
         expect(res.body.message).equals('No user found with this email address');
         done();
       });
@@ -74,7 +80,10 @@ describe('Password reset', () => {
       .send({})
       .end((err, res) => {
         expect(res.status).to.be.equal(400);
+        expect(res.status).to.be.a('number');
+        expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('message');
+        expect(res.body.message).to.be.a('string');
         expect(res.body.message).equals('email is required');
         done();
       });
@@ -89,7 +98,10 @@ describe('Password reset', () => {
       })
       .end((err, res) => {
         expect(res.status).to.be.equal(400);
+        expect(res.status).to.be.a('number');
+        expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('message');
+        expect(res.body.message).to.be.a('string');
         expect(res.body.message).equals('email is not allowed to be empty');
         done();
       });
@@ -102,7 +114,10 @@ describe('Password reset', () => {
       .send({ email: 'badFormat' })
       .end((err, res) => {
         expect(res.status).to.be.equal(400);
+        expect(res.status).to.be.a('number');
+        expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('message');
+        expect(res.body.message).to.be.a('string');
         expect(res.body.message).equals('email must be a valid email');
         done();
       });
@@ -129,7 +144,10 @@ describe('Update the password', () => {
       .send({ password: '1234567890update' })
       .end((err, res) => {
         expect(res.status).to.be.equal(200);
+        expect(res.status).to.be.a('number');
+        expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('message');
+        expect(res.body.message).to.be.a('string');
         expect(res.body.message).equals('Password updated successfully');
         done();
       });
@@ -143,7 +161,10 @@ describe('Update the password', () => {
       .send({ password: '1234567890update' })
       .end((err, res) => {
         expect(res.status).to.be.equal(400);
+        expect(res.status).to.be.a('number');
+        expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('message');
+        expect(res.body.message).to.be.a('string');
         expect(res.body.message).equals('New password must be different from the current');
         done();
       });
@@ -157,7 +178,10 @@ describe('Update the password', () => {
       .send({ password: '1234567890update' })
       .end((err, res) => {
         expect(res.status).to.be.equal(400);
+        expect(res.status).to.be.a('number');
+        expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('message');
+        expect(res.body.message).to.be.a('string');
         expect(res.body.message).equals('The link appears to be invalid or already expired');
         done();
       });
@@ -170,7 +194,10 @@ describe('Update the password', () => {
       .send({ password: '1234567890update' })
       .end((err, res) => {
         expect(res.status).to.be.equal(401);
+        expect(res.status).to.be.a('number');
+        expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('message');
+        expect(res.body.message).to.be.a('string');
         expect(res.body.message).equals('Not authorized to update password');
         done();
       });
@@ -184,7 +211,10 @@ describe('Update the password', () => {
       .send({ password: '1234567890update' })
       .end((err, res) => {
         expect(res.status).to.be.equal(400);
+        expect(res.status).to.be.a('number');
+        expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('message');
+        expect(res.body.message).to.be.a('string');
         expect(res.body.message).equals('The password reset token is required');
         done();
       });
@@ -198,7 +228,10 @@ describe('Update the password', () => {
       .send({})
       .end((err, res) => {
         expect(res.status).to.be.equal(400);
+        expect(res.status).to.be.a('number');
+        expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('message');
+        expect(res.body.message).to.be.a('string');
         expect(res.body.message).equals('password is required');
         done();
       });
@@ -214,7 +247,10 @@ describe('Update the password', () => {
       })
       .end((err, res) => {
         expect(res.status).to.be.equal(400);
+        expect(res.status).to.be.a('number');
+        expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('message');
+        expect(res.body.message).to.be.a('string');
         expect(res.body.message).equals('password is not allowed to be empty');
         done();
       });
@@ -228,7 +264,10 @@ describe('Update the password', () => {
       .send({ password: '123' })
       .end((err, res) => {
         expect(res.status).to.be.equal(400);
+        expect(res.status).to.be.a('number');
+        expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('message');
+        expect(res.body.message).to.be.a('string');
         expect(res.body.message).equals('password length must be at least 8 characters long');
         done();
       });
@@ -242,7 +281,10 @@ describe('Update the password', () => {
       .send({ password: '!@#$%moreandmore' })
       .end((err, res) => {
         expect(res.status).to.be.equal(400);
+        expect(res.status).to.be.a('number');
+        expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('message');
+        expect(res.body.message).to.be.a('string');
         expect(res.body.message).equals('password must only contain alphanumeric characters');
         done();
       });
