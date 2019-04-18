@@ -46,3 +46,4 @@ package-lock.json
 build
 .env
 server/node_modules
+yarn.lock
