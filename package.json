@@ -4,7 +4,9 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
+    "db-migrate": "npx sequelize db:migrate",
     "start": "babel-watch app.js",
+    "start:heroku": "npm run db-migrate && babel-node app.js",
     "seed": "NODE_ENV=test npx sequelize db:seed:all",
     "test": "npm run seed seed && NODE_ENV=test nyc --report=text npx mocha server/test/ --require @babel/register",
     "build": "babel app.js --out-dir build",
