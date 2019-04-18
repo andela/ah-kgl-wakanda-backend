@@ -5,8 +5,6 @@ import routes from './server/routes';
 
 import './server/config/passport';
 
-const isProduction = process.env.NODE_ENV === 'production';
-
 // Create global app object
 const app = express();
 
