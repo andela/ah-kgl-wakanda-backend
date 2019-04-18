@@ -12,12 +12,12 @@ module.exports = {
       title: 'How to Train Your Dragon',
       description: 'Dragons need to be trained to be more responsive and more friendly',
       body: 'Consectetur qui cupidatat magna dolor. Reprehenderit esse minim labore consectetur Lorem ex veniam. Adipisicing reprehenderit do occaecat id sit incididunt sit amet incididunt. Cupidatat id officia ullamco ad labore cupidatat nostrud proident consequat.',
-      rates: [2,3,4,6],
+      images: ['https://dougie.jpg'],
       favorited: false,
       favoritesCount: 0,
-      userId: 1,
       createdAt: new Date(),
       updatedAt: new Date(),
+      userId: 1,
     }], {});
   },
   down: (queryInterface, Sequelize) =>
