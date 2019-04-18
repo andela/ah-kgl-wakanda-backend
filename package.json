@@ -12,8 +12,8 @@
     "build": "babel app.js --out-dir build",
     "dev": "NODE_ENV=development nodemon  --require @babel/register index.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "dbInit-dev": "NODE_ENV=development sequelize db:create && sequelize db:migrate",
-    "dbInit-test": "NODE_ENV=test sequelize db:create && sequelize db:migrate",
+    "dbInit-dev": "NODE_ENV=development sequelize db:create || sequelize db:migrate",
+    "dbInit-test": "NODE_ENV=test sequelize db:create || sequelize db:migrate",
     "dbInit": "npm run dbInit-dev || npm run dbInit-test"
   },
   "author": "Andela Simulations Programme",
@@ -27,6 +27,7 @@
     "@sindresorhus/slugify": "^0.9.1",
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
+    "bcrypt": "^3.0.5",
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
     "coveralls": "^3.0.3",
