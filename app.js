@@ -5,7 +5,6 @@ import routes from './server/routes';
 
 import './server/config/passport';
 
-
 // Create global app object
 const app = express();
 

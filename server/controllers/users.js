@@ -1,6 +1,9 @@
+import dotenv from 'dotenv';
 import { User } from '../models/index';
 import encrypt from '../helpers/encrypt';
 import sendMail from '../helpers/sendVerificationEmail';
+
+dotenv.config();
 
 /**
  * The class handle everything about the user
@@ -43,7 +46,6 @@ class Users {
   static async logIn(req, res) {
     const { body } = req;
     const user = await User.findOne({ where: { email: body.email } });
-    // if (user) console.log(user.get().password); else console.log('>>>>null');
     if (!user || !encrypt.comparePassword(user.get().password, body.password)) {
       return res.status(401).json({
         status: 401,
@@ -87,6 +89,61 @@ class Users {
         }
       }
     );
+  }
+
+  /**
+   * The controller to create a user.
+   * @param {req} req the request.
+   * @param {res} res the response.
+   * @returns {void}
+  */
+  static async socialLogin(req, res) {
+    try {
+      const {
+        provider, displayName
+      } = req.user;
+
+      const user = {
+        provider,
+        username: displayName.replace(' ', '_').toLowerCase(),
+        email: req.user.emails[0].value,
+        image: req.user.photos[0].value,
+      };
+      const newUser = await User.findOrCreate({
+        where: { username: user.username },
+        defaults: { ...user }
+      });
+      const {
+        username,
+        email,
+        image,
+        bio
+      } = newUser[0].get();
+
+      const data = {
+        id: newUser[0].get().id,
+        username,
+        email,
+      };
+
+      const status = newUser[1] ? 201 : 200;
+
+      return res.status(status).json({
+        status,
+        user: {
+          username,
+          email,
+          token: await Users.generateToken(data),
+          image,
+          bio,
+        },
+      });
+    } catch (error) {
+      return res.status(400).json({
+        status: 400,
+        message: error,
+      });
+    }
   }
 }
 

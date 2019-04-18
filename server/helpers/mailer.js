@@ -12,7 +12,7 @@ dotenv.config();
  *   email,
  *   subject,
  *   link,
- *   link_text,
+ *   linkText,
  *   name,
  *   title,
  *   body

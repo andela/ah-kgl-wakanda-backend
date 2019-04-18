@@ -26,7 +26,6 @@ class dbTest {
   */
   static async truncateUser() {
     await User.destroy({ truncate: true, cascade: true });
-    db.sequelize.close();
   }
 }
 
