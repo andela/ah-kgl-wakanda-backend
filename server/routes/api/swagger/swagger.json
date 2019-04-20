@@ -19,6 +19,10 @@
 		{
 			"name": "Forgot password",
 			"description": "Send Reset password link on email"
+		},
+		{
+			"name": "Rate articles",
+			"description": "Enable users to leave ratings on articles"
 		}
 	],
 	"schemes": [
@@ -509,6 +513,56 @@
 					}
 				}
 			}
+		},
+		"/articles/rate/{slug}": {
+			"post": {
+				"tags": [
+					"Rate articles"
+				],
+				"summary": "Create and post rate on articles",
+				"description": "",
+				"operationId": " ",
+				"consumes": [
+					"application/json"
+				],
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "body",
+						"required": true,
+						"schema": {
+							"type": "object",
+							"$ref": "#/definitions/post-rate-info"
+						}
+					},
+					{
+						"in": "path",
+						"name": "slug",
+						"required": true,
+						"schema": {
+							"type": "string"
+						},
+						"description": "Alphanumeric id that uniquely identify an article"
+					}
+				],
+				"responses": {
+					"201": {
+						"description": "The article was successfully rated"
+					},
+					"200": {
+						"description": "The article rating was successfully edited"
+					},
+					"404": {
+						"description": "Article was not found"
+					},
+					"500": {
+						"description": "Fail to rate the article"
+					}
+				}
+			}
 		}
 	},
 	"securityDefinitions": {
@@ -584,6 +638,19 @@
 			"properties": {
 				"password": {
 					"type": "string"
+				}
+			}
+		},
+		"post-rate-info": {
+			"type": "object",
+			"properties": {
+				"userId": {
+					"type": "integer",
+					"format": "int32"
+				},
+				"rate": {
+					"type": "integer",
+					"format": "int32"
 				}
 			}
 		}
