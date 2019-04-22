@@ -68,7 +68,6 @@ describe('Article endpoints', () => {
           expect(res.body.message).equals('bad is not allowed');
           done();
         });
-      
     });
   });
 
