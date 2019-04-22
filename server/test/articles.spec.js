@@ -42,8 +42,8 @@ describe('Article endpoints', () => {
           expect(res.body.data).to.have.property('article');
           expect(res.body.data.article).to.have.property('title');
           expect(res.body.data.article.title).equals('How to train your dragon');
+          done();
         });
-      done();
     });
 
     it('Should return a sequelize validation error', (done) => {
@@ -54,8 +54,8 @@ describe('Article endpoints', () => {
         .end((error, res) => {
           expect(res.body.status).to.be.equal(400);
           expect(res.body.message).to.equals('Validation error: Validation is on images failed');
+          done();
         });
-      done();
     });
 
     it('Should return a validation error', (done) => {
@@ -66,8 +66,9 @@ describe('Article endpoints', () => {
         .end((error, res) => {
           expect(res.body.status).to.be.equal(400);
           expect(res.body.message).equals('bad is not allowed');
+          done();
         });
-      done();
+      
     });
   });
 
@@ -82,8 +83,8 @@ describe('Article endpoints', () => {
           expect(res.body).to.have.property('data');
           expect(res.body.data).to.have.property('articles');
           expect(res.body.data.articles).to.be.an('array');
+          done();
         });
-      done();
     });
   });
 
@@ -98,8 +99,8 @@ describe('Article endpoints', () => {
           expect(res.body).to.have.property('data');
           expect(res.body.data).to.have.property('article');
           expect(res.body.data.article).to.be.an('object');
+          done();
         });
-      done();
     });
   });
 
@@ -115,8 +116,8 @@ describe('Article endpoints', () => {
           expect(res.body.data).to.have.property('article');
           expect(res.body.data.article).to.be.an('object');
           expect(res.body.data.article.title).equals('new title');
+          done();
         });
-      done();
     });
 
     it('Should fail to update an article ', (done) => {
@@ -128,8 +129,8 @@ describe('Article endpoints', () => {
           expect(res.body.status).to.be.equal(404);
           expect(res.body).to.have.property('message');
           expect(res.body.message).to.equals('Article not found');
+          done();
         });
-      done();
     });
   });
 
@@ -141,8 +142,8 @@ describe('Article endpoints', () => {
         .end((error, res) => {
           expect(res.body.status).to.be.equal(200);
           expect(res.body.message).to.equals('Article successfully deleted');
+          done();
         });
-      done();
     });
 
     it('Should fail to delete an article ', (done) => {
@@ -152,8 +153,8 @@ describe('Article endpoints', () => {
         .end((error, res) => {
           expect(res.body.status).to.be.equal(404);
           expect(res.body.message).to.equals('Article not found');
+          done();
         });
-      done();
     });
   });
 });

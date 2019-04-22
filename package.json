@@ -10,7 +10,7 @@
     "seed": "NODE_ENV=test npx sequelize db:seed:all",
     "test": "npm run seed && NODE_ENV=test nyc --report=text npx mocha server/test/ --require @babel/register",
     "build": "babel app.js --out-dir build",
-    "dev": "NODE_ENV=development nodemon  --require @babel/register index.js",
+    "dev": "NODE_ENV=development nodemon  --require @babel/register app.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "dbInit-dev": "NODE_ENV=development sequelize db:create || NODE_ENV=development sequelize db:migrate",
     "dbInit-test": "NODE_ENV=test npx sequelize db:create || NODE_ENV=test npx sequelize db:migrate",
