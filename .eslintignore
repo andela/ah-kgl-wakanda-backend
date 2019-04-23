@@ -1,5 +1,5 @@
 server/config/config.js
-server/models
-server/migrations
+server/models/
+server/migrations/
+server/seeders/
 build/
-server/seeders
