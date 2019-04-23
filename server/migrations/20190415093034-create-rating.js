@@ -1,20 +1,20 @@
 
-export default {
-	up: (queryInterface, Sequelize) => queryInterface.createTable('Comments', {
+module.exports = {
+	up: (queryInterface, Sequelize) => queryInterface.createTable('Ratings', {
 		id: {
 			allowNull: false,
 			autoIncrement: true,
 			primaryKey: true,
 			type: Sequelize.INTEGER
 		},
-		body: {
-			type: Sequelize.TEXT
-		},
 		userId: {
 			type: Sequelize.INTEGER
 		},
 		articleId: {
 			type: Sequelize.INTEGER
+		},
+		rate: {
+			type: Sequelize.INTEGER,
 		},
 		createdAt: {
 			allowNull: false,
@@ -24,6 +24,7 @@ export default {
 			allowNull: false,
 			type: Sequelize.DATE
 		}
+
 	}),
-	down: queryInterface => queryInterface.dropTable('Comments')
+	down: (queryInterface, Sequelize) => queryInterface.dropTable('Ratings')
 };

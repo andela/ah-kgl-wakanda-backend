@@ -22,13 +22,17 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
       validate: {
-        min: 6
+        min: 8
       }
     },
   }, {});
   User.associate = (models) => {
-    User.hasMany(models.Article);
+    User.hasMany(models.Article, {
+      foreignKey: 'userId',
+      sourceKey: 'id'
+    });
     User.hasMany(models.Comment);
   };
+
   return User;
 };
