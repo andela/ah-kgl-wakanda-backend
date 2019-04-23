@@ -152,9 +152,7 @@ class Password {
       const hashNewPassword = await bcrypt.hashSync(password, bcrypt.genSaltSync(8));
 
       // compare the new pwd with the hash version of the old pwd
-      const matchPasswords = await bcrypt.compareSync(
-        password, result.password
-      );
+      const matchPasswords = await bcrypt.compareSync(password, result.password);
 
       if (matchPasswords) {
         return res.status(400).json({
