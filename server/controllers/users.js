@@ -52,6 +52,7 @@ class Users {
         message: 'The credentials you provided is incorrect',
       });
     }
+    await User.update({ isLoggedIn: true }, { where: { id: user.id } });
     const token = await Users.generateToken(user.get());
     return Users.send(res, user, token);
   }
@@ -142,6 +143,28 @@ class Users {
       return res.status(400).json({
         status: 400,
         message: error,
+      });
+    }
+  }
+
+  /**
+   * The controller for signing out
+   * @param {req} req the request
+   * @param {res} res the response
+   * @return {void}
+   */
+  static async signout(req, res) {
+    try {
+      const { id } = req.user;
+      await User.update({ isLoggedIn: false }, { where: { id, } });
+      return res.status(200).json({
+        status: 200,
+        message: 'Successfully signs out.',
+      });
+    } catch (error) {
+      return res.status(500).json({
+        status: 500,
+        message: error.message,
       });
     }
   }

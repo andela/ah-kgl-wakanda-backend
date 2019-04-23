@@ -382,6 +382,47 @@
 				}
 			}
 		},
+		"users/signout": {
+			"delete": {
+				"tags": [
+					"user"
+				],
+				"summary": "sign the user out",
+				"description": "Authentication required",
+				"operationId": " ",
+				"consumes": [
+					"application/json",
+					"application/xml"
+				],
+				"produces": [
+					"application/xml",
+					"application/json"
+				],
+				"parameters": [
+					{
+						"in": "headers",
+						"name": "Authorization",
+						"required": true,
+						"schema": {
+							"type": "object",
+							"properties": {
+								"Authorization": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Ok"
+					},
+					"401": {
+						"description": "Unauthorized"
+					}
+				}
+			}
+		},
 		"/auth/google": {
 			"post": {
 				"tags": [
