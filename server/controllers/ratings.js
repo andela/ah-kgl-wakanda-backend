@@ -14,6 +14,7 @@ class Ratings {
   */
   static async findArticleRatings(req, res) {
     const { slug } = req.params;
+
     try {
       const article = await Article.findOne({
         attributes: ['id'],
@@ -27,11 +28,16 @@ class Ratings {
           message: 'Article not found',
         });
       }
+
+      const where = {
+        articleId: article.id,
+      };
+
       const ratings = await Rating.findAll({
         attributes: ['rate', 'userId'],
-        where: {
-          articleId: article.id,
-        }
+        where,
+        offset: req.query.offset || null,
+        limit: req.query.limit || null
       });
 
       return res.status(200).json({

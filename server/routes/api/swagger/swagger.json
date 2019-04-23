@@ -214,6 +214,33 @@
         }
       }
     },
+    "articles/{slug}/ratings?offset={value}&limit={value}": {
+      "get": {
+        "tags": [
+          "Ratings"
+        ],
+        "summary": "Get ratings pagination",
+        "description": "Authentication not required, returns ratings. No additional parameters required",
+        "operationId": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "slug",
+            "description": "The slug of the article"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The rating array"
+          }
+        }
+      }
+    },
     "/api/auth/signup": {
       "post": {
         "tags": [
