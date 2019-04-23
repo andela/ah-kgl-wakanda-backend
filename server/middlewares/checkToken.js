@@ -13,7 +13,7 @@ const checkToken = async (req, res, next) => {
   const token = authorization.split(' ')[1];
 
   try {
-    const jwtPayload = jwt.verify(token, process.env.SECRET_KEY);
+    const jwtPayload = jwt.verify(token, process.env.SECRET);
     const user = await User.findOne({ where: { id: jwtPayload.id } });
     if (!user.isLoggedIn) {
       return res.status(403).json({
