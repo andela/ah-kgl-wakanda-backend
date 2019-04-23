@@ -33,9 +33,6 @@ describe('Enable the user to Sign out ', () => {
           .set('Content-Type', 'application/json')
           .set('Authorization', `Bearer ${resp.body.user.token}`)
           .end((error, res) => {
-            if (error) {
-              done(error);
-            }
             expect(res.body.status).to.be.equal(200);
             expect(res.body).to.have.property('message');
             expect(res.body.message).equals('Successfully signs out.');

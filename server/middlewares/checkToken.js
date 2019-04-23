@@ -24,6 +24,8 @@ const checkToken = async (req, res, next) => {
     req.user = jwtPayload;
     next();
   } catch (error) {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>', error);
+
     return res.status(400).json({
       status: 400,
       message: error.message,
