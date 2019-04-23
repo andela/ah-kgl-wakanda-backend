@@ -7,6 +7,12 @@ import './server/config/passport';
 // Create global app object
 const app = express();
 
+<<<<<<< HEAD
+=======
+app.use(passport.initialize());
+
+
+>>>>>>> [feature #165020120] adding the middleware checkToken for authorization
 // Normal express config defaults
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

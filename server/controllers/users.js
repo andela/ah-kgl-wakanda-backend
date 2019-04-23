@@ -52,6 +52,7 @@ class Users {
         message: 'The credentials you provided is incorrect',
       });
     }
+    await User.update({ isLoggedIn: true }, { where: { id: user.id } });
     const token = await Users.generateToken(user.get());
     return Users.send(res, user, token);
   }

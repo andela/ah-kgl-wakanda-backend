@@ -23,6 +23,11 @@ const users = {
     email: 'hadad_test@andela.com',
     password: 'Hadad12@'
   },
+  correctLogout: {
+    username: 'dusmel12',
+    email: 'hadad_test_11@andela.com',
+    password: 'Hadad12@'
+  },
   wrongLogInfo: {
     email: 'hadad_test@andela.com',
     password: 'Hadad12'
