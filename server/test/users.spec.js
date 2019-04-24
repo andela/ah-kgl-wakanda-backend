@@ -102,7 +102,7 @@ describe('Enable the user to Sign out ', () => {
       expect(res.body.status).to.be.equals(200);
       expect(res.body.users).to.be.an('array');
     });
-    it('Should fail to get all users when the authorization is missing', async () => {
+    it('Should fail to get all users when the authorization is missing  ', async () => {
       const res = await chai.request(app)
         .get('/api/users');
       expect(res.body.status).to.be.equals(401);
