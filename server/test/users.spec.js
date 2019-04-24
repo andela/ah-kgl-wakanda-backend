@@ -10,6 +10,26 @@ chai.use(chaiHttp);
 
 let loginToken;
 
+const user = {
+  username: 'dusmel',
+  email: 'hadadio@andela.com',
+  password: 'H234mio@'
+};
+
+const getToken = async () => {
+  try {
+    const resp = await chai.request(app)
+      .post('/api/auth/signup')
+      .set('Authorization', 'Bearer <token>')
+      .send(user);
+
+    const { token } = resp.body.user;
+    return token;
+  } catch (e) {
+    return new Error(e.message);
+  }
+};
+
 describe('Enable the user to Sign out ', () => {
   after(async () => {
     try {
@@ -71,5 +91,22 @@ describe('Enable the user to Sign out ', () => {
         expect(res.body.message).equals('Authorization is missing');
         done();
       });
+  });
+
+  describe('Endpoint to get the list of users', () => {
+    it('Gets all the users', async () => {
+      const token = await getToken();
+      const res = await chai.request(app)
+        .get('/api/users')
+        .set('Authorization', `Bearer ${token}`);
+      expect(res.body.status).to.be.equals(200);
+      expect(res.body.users).to.be.an('array');
+    });
+    it('Should fail to get all users when the authorization is missing', async () => {
+      const res = await chai.request(app)
+        .get('/api/users');
+      expect(res.body.status).to.be.equals(401);
+      expect(res.body.message).to.be.equal('Authorization is missing');
+    });
   });
 });

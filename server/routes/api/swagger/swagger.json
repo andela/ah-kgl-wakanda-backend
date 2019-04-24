@@ -479,6 +479,47 @@
 					}
 				}
 			},
+			"users": {
+				"get": {
+					"tags": [
+						"user"
+					],
+					"summary": "Gets the list of users",
+					"description": "Authentication required",
+					"operationId": " ",
+					"consumes": [
+						"application/json",
+						"application/xml"
+					],
+					"produces": [
+						"application/xml",
+						"application/json"
+					],
+					"parameters": [
+						{
+							"in": "headers",
+							"name": "Authorization",
+							"required": true,
+							"schema": {
+								"type": "object",
+								"properties": {
+									"Authorization": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					],
+					"responses": {
+						"200": {
+							"description": "Ok"
+						},
+						"401": {
+							"description": "Unauthorized"
+						}
+					}
+				}
+			},
 			"/auth/google": {
 				"post": {
 					"tags": [
@@ -706,46 +747,45 @@
 						"type": "boolean"
 					}
 				}
-      }
-    },
-    "/articles/{slug}/ratings": {
-      "get": {
-        "tags": [
-          "Rate articles"
-        ],
-        "summary": "Fetch article's ratings with the User who rated",
-        "description": "Authentication not required, returns all the ratings and the users who rated. This enpoint needs the article slug to fetch it's ratings",
-        "operationId": " ",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "slug",
-            "in": "params",
-            "description": "The slug of the article to fetch rates for",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "400": {
-            "description": "Invalid slug supplied"
-          },
-          "404": {
-            "description": "The article not found"
-          },
-          "200": {
-            "description": "The ratings and the users who rated are displayed"
-          }
-        }
-  
+			}
+		},
+		"/articles/{slug}/ratings": {
+			"get": {
+				"tags": [
+					"Rate articles"
+				],
+				"summary": "Fetch article's ratings with the User who rated",
+				"description": "Authentication not required, returns all the ratings and the users who rated. This enpoint needs the article slug to fetch it's ratings",
+				"operationId": " ",
+				"consumes": [
+					"application/json"
+				],
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "slug",
+						"in": "params",
+						"description": "The slug of the article to fetch rates for",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"400": {
+						"description": "Invalid slug supplied"
+					},
+					"404": {
+						"description": "The article not found"
+					},
+					"200": {
+						"description": "The ratings and the users who rated are displayed"
+					}
+				}
+			}
 		}
-  }
-},
+	},
 	"securityDefinitions": {
 		"bearerToken": {
 			"type": "apiKey",
