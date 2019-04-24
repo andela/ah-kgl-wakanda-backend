@@ -101,6 +101,18 @@ describe('Article endpoints', () => {
           done();
         });
     });
+
+    it('Should fail to get an article that does not exist ', (done) => {
+      chai.request(app)
+        .get('/api/articles/wrong_slug')
+        .set('Authorization', 'Bearer <token>')
+        .send({ article })
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(404);
+          expect(res.body.message).to.be.equals('Article not found');
+          done();
+        });
+    });
   });
 
   describe('The endpoint to update an article', () => {
