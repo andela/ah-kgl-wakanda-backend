@@ -58,5 +58,5 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
 
-  return Article;
+	return Article;
 };

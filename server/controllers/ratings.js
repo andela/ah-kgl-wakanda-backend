@@ -10,7 +10,7 @@ class Ratings {
    * @static
    * @param {req} req the request.
    * @param {res} res the response.
-   * @returns {Object} the average.
+   * @returns {Object} .
   */
   static async create(req, res) {
     // get userId from jwt middleware

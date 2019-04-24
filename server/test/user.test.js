@@ -104,7 +104,6 @@ describe('User ', () => {
           done();
         });
     });
-
     it('should be able to login', (done) => {
       chai.request(app)
         .post('/api/auth/login')
@@ -113,6 +112,26 @@ describe('User ', () => {
           expect(res.status).to.equal(200);
           expect(res).to.be.an('object');
           expect(res.body).to.have.property('user');
+          done();
+        });
+    });
+    const user = {
+      email: 'gisele.iradukunda@andela.com',
+      bio: 'I am not afraid',
+      image: 'https://image.jpg'
+    };
+    // const username = 'mutombo';
+    it('Should update user information', (done) => {
+      chai.request(app)
+        .put(`/api/user/${dummyUsers.correct.username}`)
+        .send(user)
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body).to.have.property('user');
+          expect(res.body.user).to.have.property('email');
+          expect(res.body.user).to.have.property('bio');
+          expect(res.body.user).to.have.property('image');
+          expect(res.body.user.image).equals('https://image.jpg');
           done();
         });
     });
