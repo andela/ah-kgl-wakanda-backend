@@ -49,7 +49,7 @@ const rater = async () => {
   }
 };
 
-after(() => {
+before(() => {
   Rating.destroy({ truncate: true });
 });
 
