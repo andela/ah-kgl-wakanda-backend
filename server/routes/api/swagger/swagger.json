@@ -17,6 +17,10 @@
 			"description": "Enable users to login using their social accounts"
 		},
 		{
+			"name": "Comment",
+			"description": "Information about the comment endpoints"
+		},
+		{
 			"name": "Forgot password",
 			"description": "Send Reset password link on email"
 		},
@@ -302,6 +306,155 @@
 				}
 			}
 		},
+		"/articles/{slug}/comments": {
+			"post": {
+				"tags": [
+					"Comment"
+				],
+				"summary": "Post a comment on an article",
+				"description": "Authentication required, returns the comment",
+				"operationId": " ",
+				"consumes": [
+					"application/json"
+				],
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "body",
+						"required": true,
+						"schema": {
+							"type": "object",
+							"properties": {
+								"comment": {
+									"properties": {
+										"body": {
+											"type": "string"
+										}
+									},
+									"type": "object"
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"201": {
+						"description": "Ok"
+					},
+					"400": {
+						"description": "Invalid parameter"
+					},
+					"401": {
+						"description": "Unauthorized request"
+					}
+				}
+			},
+			"get": {
+				"tags": [
+					"Comment"
+				],
+				"summary": "Get all comments for an article",
+				"description": "Returns comments for an article. No additional parameters required",
+				"operationId": "",
+				"consumes": [
+					"application/json"
+				],
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "slug",
+						"description": "The slug of the article"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Ok"
+					},
+					"404": {
+						"description": "Article not found"
+					}
+				}
+			}
+		},
+		"articles/{slug}/comments/{id}": {
+			"put": {
+				"tags": [
+					"Comment"
+				],
+				"summary": "Update a comment",
+				"description": "Authentication required, returns the updated comment. No additional parameters required",
+				"operationId": null,
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "slug",
+						"description": "The slug of the article"
+					},
+					{
+						"in": "body",
+						"name": "body",
+						"required": true,
+						"schema": {
+							"type": "object",
+							"properties": {
+								"comment": {
+									"properties": {
+										"body": {
+											"type": "string"
+										}
+									},
+									"type": "object"
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "The updated article"
+					},
+					"404": {
+						"description": "The article was not found or The comment was not found"
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"Comment"
+				],
+				"summary": "Delete a comment",
+				"description": "Authentication required. No additional parameters required",
+				"operationId": null,
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "slug",
+						"description": "The slug of the article"
+					},
+					{
+						"name": "id",
+						"description": "The id of the comment"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "The success message"
+					},
+					"404": {
+						"description": "The article was not found or The comment was not found"
+					}
+				}
+			}
+		},
 		"/api/auth/signup": {
 			"post": {
 				"tags": [
@@ -380,7 +533,7 @@
 				}
 			}
 		},
-		"/api/auth/login":{
+		"/api/auth/login": {
 			"post": {
 				"tags": [
 					"login"

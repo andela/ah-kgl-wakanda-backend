@@ -1,6 +1,6 @@
 import db from '../../models';
 
-const { User } = db;
+const { User, Comment } = db;
 
 /**
  * The class handle everything about the user
@@ -26,6 +26,14 @@ class dbTest {
   */
   static async truncateUser() {
     await User.destroy({ truncate: true, cascade: true });
+  }
+
+  /**
+   * A function to truncate the Comments table after test.
+   * @returns {void}
+  */
+  static async truncateComment() {
+    await Comment.destroy({ truncate: true, cascade: true });
   }
 }
 

@@ -1,0 +1,103 @@
+import chai from 'chai';
+import chaiHttp from 'chai-http';
+import app from '../../app';
+import dummyUsers from './config/users';
+import Database from './config';
+
+// Chai configuration
+const { expect } = chai;
+chai.use(chaiHttp);
+
+let loginToken;
+
+const comment = {
+  body: 'Good job',
+};
+const commentWithoutBody = {
+  body: '',
+};
+
+describe('Comments endpoints ', () => {
+  after(async () => {
+    try {
+      await Database.truncateUser();
+      await Database.truncateComment();
+    } catch (error) {
+      return {
+        type: 'truncate',
+        error,
+      };
+    }
+  });
+  describe('The endpoint to post a comment', () => {
+    it('Should post a comment', (done) => {
+      chai.request(app)
+        .post('/api/auth/signup')
+        .send(dummyUsers.correct)
+        .end((err, resp) => {
+          loginToken = `Bearer ${resp.body.user.token}`;
+          chai.request(app)
+            .post('/api/articles/how-to-dougie-177804958/comments')
+            .set('Content-Type', 'application/json')
+            .set('Authorization', `Bearer ${resp.body.user.token}`)
+            .send({ comment })
+            .end((error, res) => {
+              expect(res.body.status).to.be.equal(201);
+              expect(res.body).to.have.property('data');
+              expect(res.body.data.comment.body).equals('Good job');
+              done();
+            });
+        });
+    });
+    it('Should not post a comment with an empty body', (done) => {
+      chai.request(app)
+        .post('/api/articles/how-to-dougie-177804958/comments')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', loginToken)
+        .send({ comment: commentWithoutBody })
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(400);
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).equals('body is not allowed to be empty');
+          done();
+        });
+    });
+    it('Should not post a comment when the the slug is not found', (done) => {
+      chai.request(app)
+        .post('/api/articles/how-to-dougie-177804958a/comments')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', loginToken)
+        .send({ comment })
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(404);
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).equals('Article is not found.');
+          done();
+        });
+    });
+    it('Should not post a comment without body', (done) => {
+      chai.request(app)
+        .post('/api/articles/how-to-dougie-177804958/comments')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', loginToken)
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(500);
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).equals("Cannot read property 'body' of undefined");
+          done();
+        });
+    });
+    it('Should not post a comment without Authorization', (done) => {
+      chai.request(app)
+        .post('/api/articles/how-to-dougie-177804958/comments')
+        .set('Content-Type', 'application/json')
+        .send({ comment })
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(401);
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).equals('Authorization is missing');
+          done();
+        });
+    });
+  });
+});
