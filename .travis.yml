@@ -4,6 +4,8 @@ node_js:
   - "stable"
 before_script:
   - NODE_ENV=test npx sequelize db:migrate
+  - rm -rf node_modules/bcrypt
+  - npm i
 script:
   - npm test
 after_success:
