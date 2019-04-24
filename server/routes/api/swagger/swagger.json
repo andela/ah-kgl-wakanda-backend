@@ -603,46 +603,45 @@
 						"description": "Fail to rate the article"
 					}
 				}
-      }
-    },
-    "/articles/{slug}/ratings": {
-      "get": {
-        "tags": [
-          "Rate articles"
-        ],
-        "summary": "Fetch article's ratings with the User who rated",
-        "description": "Authentication not required, returns all the ratings and the users who rated. This enpoint needs the article slug to fetch it's ratings",
-        "operationId": " ",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "slug",
-            "in": "params",
-            "description": "The slug of the article to fetch rates for",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "400": {
-            "description": "Invalid slug supplied"
-          },
-          "404": {
-            "description": "The article not found"
-          },
-          "200": {
-            "description": "The ratings and the users who rated are displayed"
-          }
-        }
-  
+			}
+		},
+		"/articles/{slug}/ratings?offset={value}&limit={value}": {
+			"get": {
+				"tags": [
+					"Rate articles"
+				],
+				"summary": "Fetch article's ratings with the User who rated",
+				"description": "Authentication not required, returns all the ratings and the users who rated. This enpoint needs the article slug to fetch it's ratings",
+				"operationId": " ",
+				"consumes": [
+					"application/json"
+				],
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "slug",
+						"in": "params",
+						"description": "The slug of the article to fetch rates for",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"400": {
+						"description": "Invalid slug supplied"
+					},
+					"404": {
+						"description": "The article not found"
+					},
+					"200": {
+						"description": "The ratings and the users who rated are displayed"
+					}
+				}
+			}
 		}
-  }
-},
+	},
 	"securityDefinitions": {
 		"bearerToken": {
 			"type": "apiKey",

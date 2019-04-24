@@ -9,6 +9,6 @@ router.post(
   Validation.validateRating,
   Ratings.create
 );
-router.get('/articles/:slug/ratings', Ratings.findArticleRatings);
+router.get('/articles/:slug/ratings', Validation.queries, Ratings.findArticleRatings);
 
 export default router;

@@ -11,9 +11,48 @@ const userId = 1;
 const rate = 2;
 const slug = 'how-to-dougie-177804958';
 
-before(() => {
+const article = {
+  title: 'How to train your dragon',
+  description: 'Ever wonder how?',
+  body: 'It takes a Jacobian',
+  Tags: ['dragons', 'training']
+};
+
+const rater = async () => {
+  try {
+    const resp = await chai.request(app)
+      .post('/api/articles')
+      .set('Authorization', 'Bearer <token>')
+      .send({ article });
+
+    const { id } = resp.body.data.article;
+
+    await Rating.create({
+      articleId: id,
+      rate: 3,
+      userId: 1,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    });
+
+    await Rating.create({
+      articleId: id,
+      rate: 4,
+      userId: 2,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    });
+
+    return resp.body.data.article;
+  } catch (e) {
+    return new Error(e.message);
+  }
+};
+
+after(() => {
   Rating.destroy({ truncate: true });
 });
+
 describe('User Rate articles', () => {
   it('Should successfully create new rate on article', (done) => {
     chai
@@ -205,6 +244,33 @@ describe('User Rate articles', () => {
         expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('message');
         expect(res.body.message).equals('rate must be larger than or equal to 1');
+        done();
+      });
+  });
+
+  it('Should fetch article ratings with offset and limit queries', async () => {
+    try {
+      const result = await rater();
+
+      const res = await chai
+        .request(app)
+        .get(`/api/articles/${result.slug}/ratings?offset=0&limit=2`);
+
+      expect(res.status).to.be.equal(200);
+      expect(res.body.ratings).to.be.an('array');
+      expect(res.body.ratings.length).to.be.equals(2);
+    } catch (e) {
+      return new Error(e.message);
+    }
+  });
+
+  it('Should fail to fetch ratings', (done) => {
+    chai
+      .request(app)
+      .get(`/api/articles/${slug}/ratings?offset=0&limit=o`)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(400);
+        expect(res.body.message).to.be.equals('limit must be a number');
         done();
       });
   });
