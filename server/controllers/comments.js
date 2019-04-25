@@ -79,7 +79,8 @@ class Comments {
         include: [{
           model: User,
           attributes: ['username', 'bio', 'image', 'following'],
-        }]
+        }],
+        order: [['createdAt', 'DESC']]
       });
       return res.status(200).json({
         status: 200,
@@ -117,6 +118,40 @@ class Comments {
         message: 'Comment not found'
       });
     } catch (e) {
+      errorHandler.errorResponse(res, e);
+    }
+  }
+
+  /**
+     *
+     * update a comment.
+     * @static
+     * @param {object} req
+     * @param {object} res
+     * @returns {id} article id
+     * @memberof Comments
+     */
+  static async update(req, res) {
+    try {
+      await Comments.checkSlug(req, res);
+      const { id } = req.params;
+      const { body } = req.body.comment;
+      const result = await Comment.update({ body, }, {
+        where: { id, },
+        returning: true,
+        plain: true
+      });
+      return res.status(200).json({
+        status: 200,
+        data: { comment: result[1].get() }
+      });
+    } catch (e) {
+      if (e.message === 'Cannot read property \'length\' of null') {
+        return res.status(404).json({
+          status: 404,
+          message: 'Comment not found'
+        });
+      }
       errorHandler.errorResponse(res, e);
     }
   }

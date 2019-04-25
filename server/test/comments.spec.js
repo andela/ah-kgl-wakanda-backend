@@ -20,14 +20,14 @@ const commentWithoutBody = {
 
 describe('Comments endpoints ', () => {
   after(async () => {
-    await Database.truncateUser();
-    await Database.truncateComment();
+    // await Database.truncateUser();
+    // await Database.truncateComment();
   });
   describe('The endpoint to post a comment', () => {
     it('Should post a comment', (done) => {
       chai.request(app)
         .post('/api/auth/signup')
-        .send(dummyUsers.correct)
+        .send(dummyUsers.correctUserForComment)
         .end((err, resp) => {
           loginToken = `Bearer ${resp.body.user.token}`;
           chai.request(app)
@@ -106,6 +106,34 @@ describe('Comments endpoints ', () => {
           expect(res.body).to.have.property('data');
           expect(res.body.data.comments).to.be.an('array');
           expect(res.body.data.comments.length).to.be.equal(1);
+          done();
+        });
+    });
+  });
+  describe('Enpoint to update a comment', () => {
+    it('should update the comment', (done) => {
+      chai.request(app)
+        .put(`/api/articles/how-to-dougie-177804958/comments/${commentId}`)
+        .set('Content-Type', 'application/json')
+        .set('Authorization', loginToken)
+        .send({ comment })
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body).to.have.property('data');
+          expect(res.body.data.comment.body).equals('Good job');
+          done();
+        });
+    });
+    it('should not update a comment when its id does not exist', (done) => {
+      chai.request(app)
+        .put(`/api/articles/how-to-dougie-177804958/comments/${commentId + 1}`)
+        .set('Content-Type', 'application/json')
+        .set('Authorization', loginToken)
+        .send({ comment })
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(404);
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).to.be.equal('Comment not found');
           done();
         });
     });
