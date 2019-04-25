@@ -100,10 +100,10 @@
 			},
 			"get": {
 				"tags": [
-					"Articles"
+					"Comment"
 				],
-				"summary": "Get all articles",
-				"description": "Authentication required, returns articles. No additional parameters required",
+				"summary": "Get all comments for an article",
+				"description": "Returns comments for an article. No additional parameters required",
 				"operationId": "",
 				"consumes": [
 					"application/json"
@@ -113,8 +113,11 @@
 				],
 				"parameters": [],
 				"responses": {
-					"401": {
-						"description": "Unauthorized request"
+					"200": {
+						"description": "Ok"
+					},
+					"404": {
+						"description": "Article not found"
 					}
 				}
 			}

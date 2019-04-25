@@ -7,5 +7,6 @@ import schema from '../../middlewares/validations/comments.schema';
 const router = express.Router();
 
 router.post('/articles/:slug/comments', checkToken, validate(schema.comment), Comments.create);
+router.get('/articles/:slug/comments', Comments.getAll);
 
 export default router;

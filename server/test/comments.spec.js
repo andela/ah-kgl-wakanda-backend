@@ -100,4 +100,19 @@ describe('Comments endpoints ', () => {
         });
     });
   });
+
+  describe('Endpoint to get all comments for an article', () => {
+    it('should get all comment for one article', (done) => {
+      chai.request(app)
+        .get('/api/articles/how-to-dougie-177804958/comments')
+        .set('Content-Type', 'application/json')
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body).to.have.property('data');
+          expect(res.body.data.comments).to.be.an('array');
+          expect(res.body.data.comments.length).to.be.equal(1);
+          done();
+        });
+    });
+  });
 });
