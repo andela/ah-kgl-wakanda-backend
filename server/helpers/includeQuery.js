@@ -1,6 +1,4 @@
-import {
-  User, Tags, Rating
-} from '../models';
+import { User, Tags, Rating } from '../models';
 
 /**
  * list of Models to include when fetching articles
