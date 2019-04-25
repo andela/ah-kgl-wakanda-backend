@@ -16,21 +16,17 @@ class Comments {
      * @memberof Comments
      */
   static async checkSlug(req, res) {
-    try {
-      const articleId = await Article.findOne({
-        where: { slug: req.params.slug },
-        attributes: ['id']
+    const articleId = await Article.findOne({
+      where: { slug: req.params.slug },
+      attributes: ['id']
+    });
+    if (!articleId) {
+      return res.status(404).json({
+        status: 404,
+        message: 'Article is not found.'
       });
-      if (!articleId) {
-        return res.status(404).json({
-          status: 404,
-          message: 'Article is not found.'
-        });
-      }
-      return articleId.id;
-    } catch (e) {
-      errorHandler.errorResponse(res, e);
     }
+    return articleId.id;
   }
 
   /**
@@ -88,6 +84,37 @@ class Comments {
       return res.status(200).json({
         status: 200,
         data: { comments: result }
+      });
+    } catch (e) {
+      errorHandler.errorResponse(res, e);
+    }
+  }
+
+  /**
+     *
+     * delete a comment.
+     * @static
+     * @param {object} req
+     * @param {object} res
+     * @returns {id} article id
+     * @memberof Comments
+     */
+  static async delete(req, res) {
+    try {
+      await Comments.checkSlug(req, res);
+      const { id } = req.params;
+      const result = await Comment.destroy({ where: { id, }, returning: true });
+
+      if (result > 0) {
+        return res.status(200).json({
+          status: 200,
+          message: 'Comment successfully deleted'
+        });
+      }
+
+      return res.status(404).json({
+        status: 404,
+        message: 'Comment not found'
       });
     } catch (e) {
       errorHandler.errorResponse(res, e);

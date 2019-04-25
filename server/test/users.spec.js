@@ -12,14 +12,7 @@ let loginToken;
 
 describe('Enable the user to Sign out ', () => {
   after(async () => {
-    try {
-      await Database.truncateUser();
-    } catch (error) {
-      return {
-        type: 'truncate',
-        error,
-      };
-    }
+    await Database.truncateUser();
   });
 
   it('Should sign the user out', (done) => {

@@ -8,5 +8,5 @@ const router = express.Router();
 
 router.post('/articles/:slug/comments', checkToken, validate(schema.comment), Comments.create);
 router.get('/articles/:slug/comments', Comments.getAll);
-
+router.delete('/articles/:slug/comments/:id', checkToken, validate(schema.idParam, true), Comments.delete);
 export default router;
