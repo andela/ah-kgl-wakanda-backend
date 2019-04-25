@@ -2,7 +2,6 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../../app';
 import dummyUsers from './config/users';
-import Database from './config';
 
 // Chai configuration
 const { expect } = chai;
@@ -19,10 +18,6 @@ const commentWithoutBody = {
 };
 
 describe('Comments endpoints ', () => {
-  after(async () => {
-    // await Database.truncateUser();
-    // await Database.truncateComment();
-  });
   describe('The endpoint to post a comment', () => {
     it('Should post a comment', (done) => {
       chai.request(app)
