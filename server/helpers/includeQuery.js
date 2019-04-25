@@ -2,6 +2,10 @@ import {
   User, Tags, Rating
 } from '../models';
 
+/**
+ * list of Models to include when fetching articles
+ * It may grow as the need
+ */
 const includeQuery = [
   {
     model: User,
