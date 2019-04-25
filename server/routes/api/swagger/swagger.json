@@ -115,7 +115,7 @@
 				}
 			}
 		},
-		"/articles?offset={value}?limit={value}": {
+		"/articles?offset={value}&limit={value}": {
 			"get": {
 				"tags": [
 					"Articles"
