@@ -1,7 +1,7 @@
 import Joi from 'joi';
 
-export default schema => (req, res, next) => {
-  const result = Joi.validate(req.body, schema);
+export default (schema, param = false) => (req, res, next) => {
+  const result = Joi.validate(param ? req.params : req.body, schema);
   if (result.error) {
     if (result.error.details[0].type === 'string.regex.base') {
       return res.status(400).json({

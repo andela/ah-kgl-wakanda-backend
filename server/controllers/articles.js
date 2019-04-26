@@ -1,5 +1,5 @@
 import slugify from '@sindresorhus/slugify';
-import { Article, Tags } from '../models';
+import { Article, Tags, ArticleLikes } from '../models';
 import errorHandler from '../helpers/errorHandler';
 /**
  *
@@ -170,6 +170,148 @@ class Articles {
       errorHandler.errorResponse(res, e);
     }
   }
-}
 
+  /**
+ *
+ *
+ * @static
+ * @param {*} req
+ * @param {*} res
+ * @returns {object} response
+ * @memberof Articles
+ */
+  static async like(req, res) {
+    try {
+      const result = await Article.findOne({
+        include: [{
+          model: Tags
+        }],
+        where: { slug: req.params.slug }
+      });
+
+      if (!result) {
+        return res.status(404).json({
+          status: 404,
+          message: 'Article not found'
+        });
+      }
+
+      const { user } = req;
+      await ArticleLikes.findOrCreate({
+        where: {
+          articleId: result.id,
+          userId: user.id,
+        },
+        defaults: {
+          articleId: result.id,
+          userId: user.id,
+        },
+      });
+      const totOfLikes = await ArticleLikes.findAndCountAll({
+        where: { articleId: result.id }
+      });
+      const { slug } = req.params;
+      const updateArticle = await Article.update(
+        {
+          favorited: true,
+          favoritesCount: totOfLikes.count,
+        },
+        {
+          where: { slug, },
+          returning: true,
+          plain: true
+        }
+      );
+      return res.status(200).json({
+        status: 200,
+        data: { article: updateArticle[1].get() }
+      });
+    } catch (e) {
+      errorHandler.errorResponse(res, e);
+    }
+  }
+
+  /**
+ *
+ *
+ * @static
+ * @param {*} req
+ * @param {*} res
+ * @returns {object} response
+ * @memberof Articles
+ */
+  static async unlike(req, res) {
+    try {
+      const { user } = req;
+      const { slug } = req.params;
+      const article = await Article.findOne({
+        include: [{
+          model: Tags
+        }],
+        where: { slug }
+      });
+
+      if (!article) {
+        return res.status(404).json({
+          status: 404,
+          message: 'Article not found'
+        });
+      }
+      const isLiked = await ArticleLikes.findOne({
+        where: {
+          articleId: article.id,
+          userId: user.id,
+        }
+      });
+      if (isLiked) {
+        await ArticleLikes.destroy({
+          where: {
+            articleId: article.id,
+            userId: user.id,
+          },
+          returning: true,
+        });
+
+        const totOfLikes = await ArticleLikes.findAndCountAll({
+          where: { articleId: article.id }
+        });
+        let updateArticle;
+        if (totOfLikes.count > 0) {
+          updateArticle = await Article.update(
+            {
+              favoritesCount: totOfLikes.count,
+            },
+            {
+              where: { slug, },
+              returning: true,
+              plain: true
+            }
+          );
+        } else {
+          updateArticle = await Article.update(
+            {
+              favorited: false,
+              favoritesCount: totOfLikes.count,
+            },
+            {
+              where: { slug, },
+              returning: true,
+              plain: true
+            }
+          );
+        }
+        return res.status(200).json({
+          status: 200,
+          data: { article: updateArticle }
+        });
+      }
+      return res.status(404).json({
+        status: 404,
+        message: 'Article has to be favorited first'
+      });
+    } catch (error) {
+      errorHandler.errorResponse(res, error);
+    }
+  }
+}
 export default Articles;
