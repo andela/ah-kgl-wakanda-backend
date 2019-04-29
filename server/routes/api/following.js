@@ -1,12 +1,18 @@
 import express from 'express';
-import Following from '../../controllers/following';
+import Follows from '../../controllers/following';
+import checkToken from '../../middlewares/checkToken';
 
 const router = express.Router();
 
 router.post(
-  '/user/:id/follow',
-  Following.follow
+  '/profiles/:username/follow',
+  checkToken,
+  Follows.follow
 );
-router.delete('/user/:id/follow', Following.follow);
+router.delete(
+  '/profiles/:username/follow',
+  checkToken,
+  Follows.unfollow
+);
 
 export default router;

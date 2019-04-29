@@ -1,88 +1,35 @@
-import { Users, Follows } from '../models';
+import { User, Following } from '../models';
 import errorHandler from '../helpers/errorHandler';
 /**
  *
  *
- * @class Following
+ * @class Follows
  */
-class Following {
-  //   static async existance(req, res) {
-  //     try {
-  //       const followed = await Users.findOne({
-  //         where: { id: req.body.id }
-  //       });
-  //       const follower = await Users.findOne({
-  //         where: { id: req.body.id }
-  //       });
-
-  //       if (!followed) {
-  //         return res.status(404).json({
-  //           status: 404,
-  //           message: 'We don\'t find who you want to follow/unfollow'
-  //         });
-  //       } if (!follower) {
-  //         return res.status(404).json({
-  //           status: 404,
-  //           message: 'You\'re not a user to follow'
-  //         });
-  //       }
-  //       return res.status(200).json({
-  //         followed,
-  //         follower,
-  //       });
-  //     } catch (e) {
-  //       errorHandler.errorResponse(res, e);
-  //     }
-  //   }
-
+class Follows {
   /**
        *
        *
        * @static
-        * @param {object} req
-        * @param {object} res
-       * @param {int} int
+       * @param {object} req
+       * @param {object} res
+       * @param {string} string
        * @returns {object} response
-       * @memberof Following
+       * @memberof Follows
        */
-  static async follow(req, res) {
+  static async followingInfo(req, res) {
     try {
-      const user = await Users.findOne({
-        where: { id: req.body.id }
+      const follower = req.user;
+      const user = await User.findOne({
+        where: { username: req.params.username }
       });
-      const follower = await Users.findOne({
-        where: { id: req.body.id }
-      });
-
       if (!user) {
         return res.status(404).json({
           status: 404,
           message: 'We don\'t find who you want to follow'
         });
-      } if (!follower) {
-        return res.status(404).json({
-          status: 404,
-          message: 'You\'re not a user to follow'
-        });
       }
-      const followed = await Follows.findOne({
-        where: {
-          user, follower
-        },
-      });
-      if (!followed) {
-        const follow = await Follows.create({
-          user, followed
-        });
-        return res.status(201).json({
-          status: 201,
-          data: follow,
-        });
-      }
-      return res.status(201).json({
-        status: 201,
-        message: 'You\'re alredy a follower of this user',
-      });
+
+      return { follower, user };
     } catch (e) {
       errorHandler.errorResponse(res, e);
     }
@@ -94,52 +41,83 @@ class Following {
        * @static
        * @param {object} req
        * @param {object} res
+       * @param {string} string
        * @returns {object} response
-       * @memberof Following
+       * @memberof Follows
+       */
+  static async follow(req, res) {
+    try {
+      if (await Follows.followingInfo(req, res)) {
+        const response = await Follows.followingInfo(req, res);
+        const followedId = response.user.id;
+        const followerId = response.follower.id;
+        const followed = await Following.findOrCreate({
+          where: {
+            followedId,
+            followerId
+          },
+        });
+        if (!followed[1]) {
+          return res.status(400).json({
+            status: 400,
+            message: 'You\'re alredy a follower of this user',
+          });
+        }
+        return res.status(200).json({
+          status: 200,
+          message: `Successfully followed user ${req.params.username}`,
+          profile: response.user,
+        });
+      }
+    } catch (e) {
+      errorHandler.errorResponse(res, e);
+    }
+  }
+
+  /**
+       *
+       *
+       * @param {object} req
+       *  @param {object} res
+       * @param {string} string
+       * @returns {object} response
+       * @memberof Follows
        */
   static async unfollow(req, res) {
     try {
-      const user = await Users.findOne({
-        where: { id: req.body.id }
-      });
-      const follower = await Users.findOne({
-        where: { id: req.body.id }
-      });
-
-      if (!user) {
-        return res.status(404).json({
-          status: 404,
-          message: 'We don\'t find who you want to unfollow'
-        });
-      } if (!follower) {
-        return res.status(404).json({
-          status: 404,
-          message: 'You\'re not a user to unfollow'
-        });
-      }
-      const followed = await Follows.findOne({
-        where: {
-          user, follower
-        },
-      });
-      if (followed) {
-        const unfollow = await Follows.delete({
+      if (await Follows.followingInfo(req, res)) {
+        const response = await Follows.followingInfo(req, res);
+        const followed = await Following.findOne({
           where: {
-            followed,
-          }
+            followedId: response.user.id,
+            followerId: response.follower.id
+          },
         });
+        if (followed) {
+          const followedInfo = await User.findOne({
+            where: { username: req.params.username },
+          });
+          await Following.destroy({
+            where: {
+              followedId: response.user.id,
+              followerId: response.follower.id
+            }
+
+          });
+          return res.status(200).json({
+            status: 200,
+            message: `Successfully unfollowed user ${req.params.username}`,
+            profile: followedInfo,
+          });
+        }
         return res.status(200).json({
           status: 200,
-          data: unfollow,
+          message: 'You\'re not a follower of this user',
         });
       }
-      return res.status(200).json({
-        status: 200,
-        message: 'You\'re not a follower of this user',
-      });
     } catch (e) {
       errorHandler.errorResponse(res, e);
     }
   }
 }
-export default Following;
+export default Follows;

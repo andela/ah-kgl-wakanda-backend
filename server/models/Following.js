@@ -1,7 +1,7 @@
 'use strict';
 export default (sequelize, DataTypes) => {
-	const Follows = sequelize.define(
-        'Follows', 
+	const Following = sequelize.define(
+        'Following', 
         {
             followedId: DataTypes.INTEGER,
             followerId: DataTypes.INTEGER
@@ -17,5 +17,5 @@ export default (sequelize, DataTypes) => {
 			targetKey: 'id'
 		});
 	};
-	return Follows;
+	return Following;
 };
