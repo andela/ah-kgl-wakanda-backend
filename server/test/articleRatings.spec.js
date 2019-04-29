@@ -7,7 +7,6 @@ const { expect } = chai;
 chai.use(chaiHttp);
 
 const slug = 'how-to-train-your-dragon';
-// let tokenResetPassword;
 
 describe('Fetch Ratings', () => {
   it('Should give an error message', (done) => {

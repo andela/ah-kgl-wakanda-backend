@@ -7,6 +7,7 @@ import app from '../../app';
 const { expect } = chai;
 chai.use(chaiHttp);
 
+let userToken;
 
 describe('User ', () => {
   before(async () => {
@@ -30,6 +31,7 @@ describe('User ', () => {
       };
     }
   });
+
 
   describe('when signing up a new user', () => {
     it('should not create a new user when username is missing', (done) => {
@@ -109,18 +111,21 @@ describe('User ', () => {
         .post('/api/auth/login')
         .send(dummyUsers.correctLogInfo)
         .end((err, res) => {
+          userToken = `Bearer ${res.body.user.token}`;
           expect(res.status).to.equal(200);
           expect(res).to.be.an('object');
           expect(res.body).to.have.property('user');
           done();
         });
     });
+
+    // Profile updating test
+
     const user = {
       email: 'gisele.iradukunda@andela.com',
       bio: 'I am not afraid',
       image: 'https://image.jpg'
     };
-    // const username = 'mutombo';
     it('Should update user information', (done) => {
       chai.request(app)
         .put(`/api/user/${dummyUsers.correct.username}`)
@@ -134,6 +139,38 @@ describe('User ', () => {
           expect(res.body.user.image).equals('https://image.jpg');
           done();
         });
+    });
+  });
+
+  // Following a user
+
+
+  describe('User', () => {
+    describe('Follow', () => {
+      it('should successfully allow to follow a user', (done) => {
+        chai.request(app)
+          .post('/api/profiles/mutombo/follow')
+          .set('Content-Type', 'application/json')
+          .set('Authorization', userToken)
+          .end((err, res) => {
+            expect(res.status).to.equal(200);
+            expect(res.body.message).to.equal('Successfully followed user mutombo');
+            expect(res.body).to.have.property('profile');
+            done();
+          });
+      });
+      it('should successfully allow to unfollow a user', (done) => {
+        chai.request(app)
+          .delete('/api/profiles/mutombo/follow')
+          .set('Content-Type', 'application/json')
+          .set('Authorization', userToken)
+          .end((err, res) => {
+            expect(res.status).to.equal(200);
+            expect(res.body.message).to.equal('Successfully unfollowed user mutombo');
+            expect(res.body).to.have.property('profile');
+            done();
+          });
+      });
     });
   });
 });
