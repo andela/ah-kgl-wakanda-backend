@@ -101,6 +101,7 @@ describe('Comments endpoints ', () => {
           expect(res.body).to.have.property('data');
           expect(res.body.data.comments).to.be.an('array');
           expect(res.body.data.comments.length).to.be.equal(1);
+          expect(res.body.data.commentsCount).to.be.equal(1);
           done();
         });
     });
