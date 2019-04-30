@@ -216,7 +216,11 @@ class Users {
    */
   static async listUsers(req, res) {
     try {
-      const result = await User.findAll();
+      const result = await User.findAll({
+        attributes: {
+          exclude: ['password', 'provider', 'isLoggedIn', 'createdAt', 'updatedAt']
+        }
+      });
       return res.status(200).json({
         status: 200,
         users: result,
