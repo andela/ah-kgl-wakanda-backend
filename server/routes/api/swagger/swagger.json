@@ -979,12 +979,90 @@
 				}
 			}
 		},
-		"securityDefinitions": {
-			"bearerToken": {
-				"type": "apiKey",
-				"name": "Authorization",
-				"description": "The authorization header must contain a Bearer token",
-				"in": "header"
+		"/profiles/:username/follow": {
+			"post": {
+				"tags": [
+					"Profiles"
+				],
+				"summary": "Follow user",
+				"description": "Authentication required, returns a Profile. No additional parameters required",
+				"operationId": null,
+				"produces": [
+					"application/xml",
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "username",
+						"in": "path",
+						"description": "The username of the user will be followed",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation"
+					},
+					"404": {
+						"description": "User not found"
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"Profiles"
+				],
+				"summary": "Unfollow user",
+				"description": "Authentication required, returns a Profile. No additional parameters required",
+				"operationId": null,
+				"produces": [
+					"application/xml",
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "username",
+						"in": "path",
+						"description": "The username of the user will be unfollowed",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"404": {
+						"description": "User not found"
+					}
+				}
+			}
+		},
+		"/profiles/follow": {
+			"get": {
+				"tags": [
+					"Profiles"
+				],
+				"summary": "View followers and followees",
+				"description": "Authentication required, returns the followers and followees of the authenticated user. No additional parameters required",
+				"operationId": null,
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation"
+					},
+					"401": {
+						"description": "Unauthorized access"
+					}
+				}
 			}
 		},
 		"definitions": {
