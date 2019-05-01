@@ -14,5 +14,10 @@ router.delete(
   checkToken,
   Follows.unfollow
 );
+router.get(
+  '/profiles/follow',
+  checkToken,
+  Follows.follows
+);
 
 export default router;

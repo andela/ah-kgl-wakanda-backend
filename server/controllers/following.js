@@ -66,7 +66,12 @@ class Follows {
         return res.status(200).json({
           status: 200,
           message: `Successfully followed user ${req.params.username}`,
-          profile: response.user,
+          profile: {
+            username: response.user.username,
+            email: response.user.email,
+            bio: response.user.bio,
+            image: response.user.image
+          }
         });
       }
     } catch (e) {
@@ -95,6 +100,7 @@ class Follows {
         });
         if (followed) {
           const followedInfo = await User.findOne({
+            attributes: ['username', 'email', 'bio', 'image'],
             where: { username: req.params.username },
           });
           await Following.destroy({
@@ -115,6 +121,44 @@ class Follows {
           message: 'You\'re not a follower of this user',
         });
       }
+    } catch (e) {
+      errorHandler.errorResponse(res, e);
+    }
+  }
+
+  /**
+       *
+       *
+       * @param {object} req
+       *  @param {object} res
+       * @param {string} string
+       * @returns {object} response
+       * @memberof Follows
+       */
+  static async follows(req, res) {
+    try {
+      const followers = await Following.findAll({
+        include: [{
+          model: User,
+          as: 'followers',
+          attributes: ['id', 'username', 'email', 'bio']
+        }],
+        where: {
+          followedId: req.user.id,
+        },
+      });
+
+      const followees = await Following.findAll({
+        include: [{
+          model: User,
+          as: 'followees',
+          attributes: ['id', 'username', 'email', 'bio']
+        }],
+        where: {
+          followerId: req.user.id,
+        },
+      });
+      return res.json({ followees, followers });
     } catch (e) {
       errorHandler.errorResponse(res, e);
     }

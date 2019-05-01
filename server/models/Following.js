@@ -7,14 +7,13 @@ export default (sequelize, DataTypes) => {
             followerId: DataTypes.INTEGER
         }, {});
 	Following.associate = (models) => {
-		// associations can be defined here
 		Following.belongsTo(models.User, {
 			foreignKey: 'followedId',
-			targetKey: 'id'
+			as: 'followees'
 		});
 		Following.belongsTo(models.User, {
 			foreignKey: 'followerId',
-			targetKey: 'id'
+			as: 'followers'
 		});
 	};
 	return Following;
