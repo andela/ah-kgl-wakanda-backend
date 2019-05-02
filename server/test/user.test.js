@@ -146,7 +146,7 @@ describe('User ', () => {
 
 
   describe('User', () => {
-    describe('Follow', () => {
+    describe('Following', () => {
       it('should successfully allow to follow a user', (done) => {
         chai.request(app)
           .post('/api/profiles/mutombo/follow')
@@ -159,6 +159,7 @@ describe('User ', () => {
             done();
           });
       });
+      // Unfollow a user
       it('should successfully allow to unfollow a user', (done) => {
         chai.request(app)
           .delete('/api/profiles/mutombo/follow')
@@ -168,6 +169,19 @@ describe('User ', () => {
             expect(res.status).to.equal(200);
             expect(res.body.message).to.equal('Successfully unfollowed user mutombo');
             expect(res.body).to.have.property('profile');
+            done();
+          });
+      });
+      // User view of follows
+      it('Should allow the user to view followers and followees', (done) => {
+        chai.request(app)
+          .get('/api/profiles/follow')
+          .set('Content-Type', 'application/json')
+          .set('Authorization', userToken)
+          .end((err, res) => {
+            expect(res.status).to.equal(200);
+            expect(res.body).to.have.property('followees').be.an('array');
+            expect(res.body).to.have.property('followers').be.an('array');
             done();
           });
       });
