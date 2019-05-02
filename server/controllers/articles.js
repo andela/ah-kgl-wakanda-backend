@@ -1,6 +1,7 @@
 import slugify from '@sindresorhus/slugify';
 import { Article, Tags, ArticleLikes } from '../models';
 import errorHandler from '../helpers/errorHandler';
+import includeQuery from '../helpers/includeQuery';
 /**
  *
  *
@@ -59,11 +60,14 @@ class Articles {
    * @memberof Articles
    */
   static async getAll(req, res) {
+    // get query string
+    const { limit = 20, offset = 0 } = req.query;
     try {
       const result = await Article.findAll({
-        include: [{
-          model: Tags
-        }]
+        order: [['createdAt', 'DESC']],
+        limit,
+        offset,
+        include: includeQuery
       });
 
       return res.status(200).json({

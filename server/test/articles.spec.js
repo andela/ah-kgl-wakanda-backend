@@ -85,6 +85,133 @@ describe('Article endpoints', () => {
           done();
         });
     });
+
+    it('Should return offset must be a number', (done) => {
+      chai.request(app)
+        .get('/api/articles?offset=')
+        .set('Authorization', 'Bearer <token>')
+        .send({ article })
+        .end((error, res) => {
+          expect(res.status).to.be.equal(400);
+          expect(res.status).to.be.a('number');
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).to.be.a('string');
+          expect(res.body.message).equals('offset must be a number');
+          done();
+        });
+    });
+
+    it('Should return offset must be an integer', (done) => {
+      chai.request(app)
+        .get('/api/articles?offset=1.2')
+        .set('Authorization', 'Bearer <token>')
+        .send({ article })
+        .end((error, res) => {
+          expect(res.status).to.be.equal(400);
+          expect(res.status).to.be.a('number');
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).to.be.a('string');
+          expect(res.body.message).equals('offset must be an integer');
+          done();
+        });
+    });
+
+    it('Should validate offset minimum', (done) => {
+      chai.request(app)
+        .get('/api/articles?offset=-1')
+        .set('Authorization', 'Bearer <token>')
+        .send({ article })
+        .end((error, res) => {
+          expect(res.status).to.be.equal(400);
+          expect(res.status).to.be.a('number');
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).to.be.a('string');
+          expect(res.body.message).equals('offset must be larger than or equal to 0');
+          done();
+        });
+    });
+
+    it('Should return limit must be a number', (done) => {
+      chai.request(app)
+        .get('/api/articles?limit=')
+        .set('Authorization', 'Bearer <token>')
+        .send({ article })
+        .end((error, res) => {
+          expect(res.status).to.be.equal(400);
+          expect(res.status).to.be.a('number');
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).to.be.a('string');
+          expect(res.body.message).equals('limit must be a number');
+          done();
+        });
+    });
+
+    it('Should return limit must be an integer', (done) => {
+      chai.request(app)
+        .get('/api/articles?limit=1.2')
+        .set('Authorization', 'Bearer <token>')
+        .send({ article })
+        .end((error, res) => {
+          expect(res.status).to.be.equal(400);
+          expect(res.status).to.be.a('number');
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).to.be.a('string');
+          expect(res.body.message).equals('limit must be an integer');
+          done();
+        });
+    });
+
+    it('Should validate limit minimum', (done) => {
+      chai.request(app)
+        .get('/api/articles?limit=0')
+        .set('Authorization', 'Bearer <token>')
+        .send({ article })
+        .end((error, res) => {
+          expect(res.status).to.be.equal(400);
+          expect(res.status).to.be.a('number');
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).to.be.a('string');
+          expect(res.body.message).equals('limit must be larger than or equal to 1');
+          done();
+        });
+    });
+
+    it('Should validate limit maximum', (done) => {
+      chai.request(app)
+        .get('/api/articles?limit=40')
+        .set('Authorization', 'Bearer <token>')
+        .send({ article })
+        .end((error, res) => {
+          expect(res.status).to.be.equal(400);
+          expect(res.status).to.be.a('number');
+          expect(res.body).to.be.an('object');
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).to.be.a('string');
+          expect(res.body.message).equals('limit must be less than or equal to 20');
+          done();
+        });
+    });
+
+    it('Should display one article only', (done) => {
+      chai.request(app)
+        .get('/api/articles?limit=1')
+        .set('Authorization', 'Bearer <token>')
+        .send({ article })
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body).to.have.property('data');
+          expect(res.body.data).to.have.property('articles');
+          expect(res.body.data.articles).to.be.an('array');
+          expect(res.body.data.articles).lengthOf(1);
+          done();
+        });
+    });
   });
 
   describe('The endpoint to get a single article', () => {
@@ -109,6 +236,20 @@ describe('Article endpoints', () => {
         .send({ article })
         .end((error, res) => {
           expect(res.body.status).to.be.equal(404);
+          expect(res.body.message).to.be.equals('Article not found');
+          done();
+        });
+    });
+
+    it('Should return article not found', (done) => {
+      chai.request(app)
+        .get('/api/articles/slug-doesnt-exist')
+        .set('Authorization', 'Bearer <token>')
+        .send({ article })
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(404);
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).to.be.an('string');
           expect(res.body.message).to.be.equals('Article not found');
           done();
         });
