@@ -749,7 +749,7 @@
 				}
 			}
 		},
-		"/articles/{slug}/ratings": {
+		"/articles/{slug}/ratings?offset={value}&limit={value}": {
 			"get": {
 				"tags": [
 					"Rate articles"
