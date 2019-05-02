@@ -105,6 +105,17 @@ describe('Comments endpoints ', () => {
           done();
         });
     });
+    it('should not get all comment when the slug does not exist', (done) => {
+      chai.request(app)
+        .get('/api/articles/how-to-dougie-1774958/comments')
+        .set('Content-Type', 'application/json')
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(404);
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).to.be.equal('Article is not found.');
+          done();
+        });
+    });
   });
   describe('Enpoint to update a comment', () => {
     it('should update the comment', (done) => {
@@ -133,6 +144,19 @@ describe('Comments endpoints ', () => {
           done();
         });
     });
+    it('should not update a comment when the slug does not exist', (done) => {
+      chai.request(app)
+        .put(`/api/articles/how-to-dougie-1778958/comments/${commentId}`)
+        .set('Content-Type', 'application/json')
+        .set('Authorization', loginToken)
+        .send({ comment })
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(404);
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).to.be.equal('Article is not found.');
+          done();
+        });
+    });
   });
   describe('Endpoint to delete a comment', () => {
     it('should delete a comment', (done) => {
@@ -156,6 +180,18 @@ describe('Comments endpoints ', () => {
           expect(res.body.status).to.be.equal(404);
           expect(res.body).to.have.property('message');
           expect(res.body.message).to.be.equal('Comment not found');
+          done();
+        });
+    });
+    it('should not delete a comment when the slug is not found', (done) => {
+      chai.request(app)
+        .delete(`/api/articles/how-to-dougie-1804958/comments/${commentId}`)
+        .set('Content-Type', 'application/json')
+        .set('Authorization', loginToken)
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(404);
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).to.be.equal('Article is not found.');
           done();
         });
     });
