@@ -36,6 +36,11 @@ export default (sequelize, DataTypes) => {
       sourceKey: 'id'
     });
     User.hasMany(models.Comment);
+    User.belongsToMany(models.Article, {
+      through: 'ArticleLikes',
+      foreignKey: 'userId',
+      targetKey: 'id',
+    });
   };
 
 	return User;

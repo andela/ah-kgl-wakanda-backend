@@ -56,6 +56,11 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'articleId',
       targetKey: 'id',
     });
+    Article.belongsToMany(models.User, {
+      through: 'ArticleLikes',
+      foreignKey: 'articleId',
+      targetKey: 'id',
+    });
   };
 
 	return Article;
