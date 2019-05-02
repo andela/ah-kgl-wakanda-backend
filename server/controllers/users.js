@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import { User } from '../models/index';
 import encrypt from '../helpers/encrypt';
 import sendMail from '../helpers/sendVerificationEmail';
+import errorHandler from '../helpers/errorHandler';
 
 dotenv.config();
 
@@ -201,6 +202,31 @@ class Users {
         status: 400,
         error: e
       });
+    }
+  }
+
+  /**
+   *
+   *
+   * @static
+   * @param {*} req
+   * @param {*} res
+   * @returns {object} response
+   * @memberof User
+   */
+  static async listUsers(req, res) {
+    try {
+      const result = await User.findAll({
+        attributes: {
+          exclude: ['password', 'provider', 'isLoggedIn', 'createdAt', 'updatedAt']
+        }
+      });
+      return res.status(200).json({
+        status: 200,
+        users: result,
+      });
+    } catch (e) {
+      errorHandler.errorResponse(res, e);
     }
   }
 }
