@@ -9,24 +9,16 @@
 	"basePath": "/api",
 	"tags": [
 		{
-			"name": "Article",
+			"name": "Articles",
 			"description": "Information about the articles endpoints"
-		},
-		{
-			"name": "Social login",
-			"description": "Enable users to login using their social accounts"
 		},
 		{
 			"name": "Comment",
 			"description": "Information about the comment endpoints"
 		},
 		{
-			"name": "Forgot password",
-			"description": "Send Reset password link on email"
-		},
-		{
-			"name": "Rate articles",
-			"description": "Enable users to leave ratings on articles"
+			"name": "User",
+			"description": "Information about the user"
 		}
 	],
 	"schemes": [
@@ -97,29 +89,6 @@
 						"description": "Unauthorized request"
 					}
 				}
-			},
-			"get": {
-				"tags": [
-					"Comment"
-				],
-				"summary": "Get all comments for an article",
-				"description": "Returns comments for an article. No additional parameters required",
-				"operationId": "",
-				"consumes": [
-					"application/json"
-				],
-				"produces": [
-					"application/json"
-				],
-				"parameters": [],
-				"responses": {
-					"200": {
-						"description": "Ok"
-					},
-					"404": {
-						"description": "Article not found"
-					}
-				}
 			}
 		},
 		"/articles?offset={value}&limit={value}": {
@@ -160,7 +129,7 @@
 				}
 			}
 		},
-		"articles/:slug": {
+		"articles/{slug}": {
 			"get": {
 				"tags": [
 					"Articles"
@@ -499,7 +468,7 @@
 		"/api/auth/signup": {
 			"post": {
 				"tags": [
-					"signup"
+					"User"
 				],
 				"summary": "User Registration",
 				"description": "Username, Email, password required, returns a Profile. No additional parameters required",
@@ -543,41 +512,12 @@
 						"description": "Email already exists"
 					}
 				}
-			},
-			"delete": {
-				"tags": [
-					"profile"
-				],
-				"summary": "Unfollow user",
-				"description": "Authentication required, returns a Profile. No additional parameters required",
-				"operationId": null,
-				"produces": [
-					"application/xml",
-					"application/json"
-				],
-				"parameters": [
-					{
-						"name": "username",
-						"in": "path",
-						"description": "The username of the user to unfollow",
-						"required": true,
-						"type": "string"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "successful operation"
-					},
-					"400": {
-						"description": "Invalid username"
-					}
-				}
 			}
 		},
 		"/api/auth/login": {
 			"post": {
 				"tags": [
-					"login"
+					"User"
 				],
 				"summary": "User login",
 				"description": "Email, password required, returns a Profile. No additional parameters required",
@@ -616,7 +556,7 @@
 				}
 			}
 		},
-		"users/:username": {
+		"/users/{username}": {
 			"put": {
 				"tags": [
 					"Profiles"
@@ -671,356 +611,397 @@
 						"description": "Unauthorized request"
 					}
 				}
-			},
-			"/auth/facebook": {
-				"post": {
-					"tags": [
-						"Facebook login"
-					],
-					"summary": "Enable login with facebook",
-					"description": "",
-					"operationId": " ",
-					"consumes": [
-						"application/json"
-					],
-					"produces": [
-						"application/json"
-					],
-					"parameters": [
-						{
-							"in": "body",
-							"name": "body",
-							"required": true,
-							"schema": {
-								"type": "object",
-								"properties": {
-									"access_token": {
-										"type": "string"
-									}
+			}
+		},
+		"/users": {
+			"get": {
+				"tags": [
+					"User"
+				],
+				"summary": "Gets the list of users",
+				"description": "Authentication required",
+				"operationId": " ",
+				"consumes": [
+					"application/json",
+					"application/xml"
+				],
+				"produces": [
+					"application/xml",
+					"application/json"
+				],
+				"parameters": [
+					{
+						"in": "headers",
+						"name": "Authorization",
+						"required": true,
+						"schema": {
+							"type": "object",
+							"properties": {
+								"Authorization": {
+									"type": "string"
 								}
 							}
 						}
-					],
-					"responses": {
-						"200": {
-							"description": "Logged in successfully"
-						},
-						"201": {
-							"description": "User logged in successfully for the first time"
-						},
-						"401": {
-							"description": "Unauthorized request"
-						}
 					}
-				}
-			},
-			"users/signout": {
-				"delete": {
-					"tags": [
-						"user"
-					],
-					"summary": "sign the user out",
-					"description": "Authentication required",
-					"operationId": " ",
-					"consumes": [
-						"application/json",
-						"application/xml"
-					],
-					"produces": [
-						"application/xml",
-						"application/json"
-					],
-					"parameters": [
-						{
-							"in": "headers",
-							"name": "Authorization",
-							"required": true,
-							"schema": {
-								"type": "object",
-								"properties": {
-									"Authorization": {
-										"type": "string"
-									}
-								}
-							}
-						}
-					],
-					"responses": {
-						"200": {
-							"description": "Ok"
-						},
-						"401": {
-							"description": "Unauthorized"
-						}
-					}
-				}
-			},
-			"users": {
-				"get": {
-					"tags": [
-						"user"
-					],
-					"summary": "Gets the list of users",
-					"description": "Authentication required",
-					"operationId": " ",
-					"consumes": [
-						"application/json",
-						"application/xml"
-					],
-					"produces": [
-						"application/xml",
-						"application/json"
-					],
-					"parameters": [
-						{
-							"in": "headers",
-							"name": "Authorization",
-							"required": true,
-							"schema": {
-								"type": "object",
-								"properties": {
-									"Authorization": {
-										"type": "string"
-									}
-								}
-							}
-						}
-					],
-					"responses": {
-						"200": {
-							"description": "Ok"
-						},
-						"401": {
-							"description": "Unauthorized"
-						}
-					}
-				}
-			},
-			"/auth/google": {
-				"post": {
-					"tags": [
-						"Google login"
-					],
-					"summary": "Enable login with google",
-					"description": "",
-					"operationId": " ",
-					"consumes": [
-						"application/json"
-					],
-					"produces": [
-						"application/json"
-					],
-					"parameters": [
-						{
-							"in": "body",
-							"name": "body",
-							"required": true,
-							"schema": {
-								"type": "object",
-								"properties": {
-									"access_token": {
-										"type": "string"
-									}
-								}
-							}
-						}
-					],
-					"responses": {
-						"200": {
-							"description": "Logged in successfully"
-						},
-						"201": {
-							"description": "User logged in successfully for the first time"
-						},
-						"401": {
-							"description": "Unauthorized request"
-						}
-					}
-				}
-			},
-			"/users/reset_password": {
-				"post": {
-					"tags": [
-						"Forgot password"
-					],
-					"summary": "Enable sending reset password link to the user",
-					"description": "",
-					"operationId": " ",
-					"consumes": [
-						"application/json"
-					],
-					"produces": [
-						"application/json"
-					],
-					"parameters": [
-						{
-							"in": "body",
-							"name": "body",
-							"required": true,
-							"schema": {
-								"type": "object",
-								"$ref": "#/definitions/reset-email-info"
-							}
-						}
-					],
-					"responses": {
-						"200": {
-							"description": "Reset Password email successfully delivered"
-						},
-						"404": {
-							"description": "No user found with this email address"
-						},
-						"500": {
-							"description": "Fail to send the reset email"
-						}
-					}
-				}
-			},
-			"/users/password": {
-				"put": {
-					"tags": [
-						"Forgot password"
-					],
-					"summary": "Enable the user to update password",
-					"description": "",
-					"operationId": "",
-					"consumes": [
-						"application/json"
-					],
-					"produces": [
-						"application/json"
-					],
-					"security": [
-						{
-							"bearerToken": []
-						}
-					],
-					"parameters": [
-						{
-							"in": "body",
-							"name": "body",
-							"required": true,
-							"schema": {
-								"type": "object",
-								"$ref": "#/definitions/update-password-info"
-							}
-						}
-					],
-					"responses": {
-						"200": {
-							"description": "Password updated successfully"
-						},
-						"400": {
-							"description": "New password must be different from the current"
-						},
-						"404": {
-							"description": "No user found with this email address"
-						},
-						"401": {
-							"description": "Not authorized to update password"
-						},
-						"500": {
-							"description": "Failed to update the password"
-						},
-						"default": {
-							"description": "The link appears to be invalid or already expired"
-						}
-					}
-				}
-			},
-			"/articles/rate/{slug}": {
-				"post": {
-					"tags": [
-						"Rate articles"
-					],
-					"summary": "Create and post rate on articles",
-					"description": "",
-					"operationId": " ",
-					"consumes": [
-						"application/json"
-					],
-					"produces": [
-						"application/json"
-					],
-					"parameters": [
-						{
-							"in": "body",
-							"name": "body",
-							"required": true,
-							"schema": {
-								"type": "object",
-								"$ref": "#/definitions/post-rate-info"
-							}
-						},
-						{
-							"in": "path",
-							"name": "slug",
-							"required": true,
-							"schema": {
-								"type": "string"
-							},
-							"description": "Alphanumeric id that uniquely identify an article"
-						}
-					],
-					"responses": {
-						"201": {
-							"description": "The article was successfully rated"
-						},
-						"200": {
-							"description": "The article rating was successfully edited"
-						},
-						"404": {
-							"description": "Article was not found"
-						},
-						"500": {
-							"description": "Fail to rate the article"
-						}
+				],
+				"responses": {
+					"200": {
+						"description": "Ok"
+					},
+					"401": {
+						"description": "Unauthorized"
 					}
 				}
 			}
 		},
-		"securityDefinitions": {
-			"bearerToken": {
-				"type": "apiKey",
-				"name": "Authorization",
-				"description": "The authorization header must contain a Bearer token",
-				"in": "header"
+
+		"/users/reset_password": {
+			"post": {
+				"tags": [
+					"User"
+				],
+				"summary": "Enable sending reset password link to the user",
+				"description": "",
+				"operationId": " ",
+				"consumes": [
+					"application/json"
+				],
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "body",
+						"required": true,
+						"schema": {
+							"type": "object",
+							"$ref": "#/definitions/reset-email-info"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Reset Password email successfully delivered"
+					},
+					"404": {
+						"description": "No user found with this email address"
+					},
+					"500": {
+						"description": "Fail to send the reset email"
+					}
+				}
 			}
 		},
-		"definitions": {
-			"Users": {
-				"type": "array",
-				"items": {
-					"type": "string"
-				},
-				"properties": {
-					"username": {
+		"/users/password": {
+			"put": {
+				"tags": [
+					"User"
+				],
+				"summary": "Enable the user to update password",
+				"description": "",
+				"operationId": "",
+				"consumes": [
+					"application/json"
+				],
+				"produces": [
+					"application/json"
+				],
+				"security": [
+					{
+						"bearerToken": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "body",
+						"required": true,
+						"schema": {
+							"type": "object",
+							"$ref": "#/definitions/update-password-info"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Password updated successfully"
+					},
+					"400": {
+						"description": "New password must be different from the current"
+					},
+					"404": {
+						"description": "No user found with this email address"
+					},
+					"401": {
+						"description": "Not authorized to update password"
+					},
+					"500": {
+						"description": "Failed to update the password"
+					},
+					"default": {
+						"description": "The link appears to be invalid or already expired"
+					}
+				}
+			}
+		},
+		"/articles/rate/{slug}": {
+			"post": {
+				"tags": [
+					"Articles"
+				],
+				"summary": "Create and post rate on articles",
+				"description": "",
+				"operationId": " ",
+				"consumes": [
+					"application/json"
+				],
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "body",
+						"required": true,
+						"schema": {
+							"type": "object",
+							"$ref": "#/definitions/post-rate-info"
+						}
+					},
+					{
+						"in": "path",
+						"name": "slug",
+						"required": true,
+						"schema": {
+							"type": "string"
+						},
+						"description": "Alphanumeric id that uniquely identify an article"
+					}
+				],
+				"responses": {
+					"201": {
+						"description": "The article was successfully rated"
+					},
+					"200": {
+						"description": "The article rating was successfully edited"
+					},
+					"404": {
+						"description": "Article was not found"
+					},
+					"500": {
+						"description": "Fail to rate the article"
+					}
+				}
+			}
+		},
+		"/profiles/{username}/follow": {
+			"post": {
+				"tags": [
+					"Profiles"
+				],
+				"summary": "Follow user",
+				"description": "Authentication required, returns a Profile. No additional parameters required",
+				"operationId": null,
+				"produces": [
+					"application/xml",
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "username",
+						"in": "path",
+						"description": "The username of the user will be followed",
+						"required": true,
 						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation"
 					},
-					"email": {
-						"type": "email"
-					},
-					"bio": {
+					"404": {
+						"description": "User not found"
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"Profiles"
+				],
+				"summary": "Unfollow user",
+				"description": "Authentication required, returns a Profile. No additional parameters required",
+				"operationId": null,
+				"produces": [
+					"application/xml",
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "username",
+						"in": "path",
+						"description": "The username of the user will be unfollowed",
+						"required": true,
 						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
 					},
-					"password": {
-						"type": "string"
+					"404": {
+						"description": "User not found"
+					}
+				}
+			}
+		},
+		"/profiles/follow": {
+			"get": {
+				"tags": [
+					"Profiles"
+				],
+				"summary": "View followers and followees",
+				"description": "Authentication required, returns the followers and followees of the authenticated user. No additional parameters required",
+				"operationId": null,
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation"
 					},
-					"image": {
-						"type": "string"
+					"401": {
+						"description": "Unauthorized access"
+					}
+				}
+			}
+		},
+		"/auth/google": {
+			"post": {
+				"tags": [
+					"User"
+				],
+				"summary": "Enable login with google",
+				"description": "",
+				"operationId": " ",
+				"consumes": [
+					"application/json"
+				],
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "body",
+						"required": true,
+						"schema": {
+							"type": "object",
+							"properties": {
+								"access_token": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Logged in successfully"
 					},
-					"provider": {
-						"type": "string"
+					"201": {
+						"description": "User logged in successfully for the first time"
 					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
+					"401": {
+						"description": "Unauthorized request"
+					}
+				}
+			}
+		},
+		"/auth/facebook": {
+			"post": {
+				"tags": [
+					"User"
+				],
+				"summary": "Enable login with facebook",
+				"description": "",
+				"operationId": " ",
+				"consumes": [
+					"application/json"
+				],
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "body",
+						"required": true,
+						"schema": {
+							"type": "object",
+							"properties": {
+								"access_token": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Logged in successfully"
 					},
-					"updatedAt": {
-						"type": "string"
+					"201": {
+						"description": "User logged in successfully for the first time"
 					},
-					"following": {
-						"type": "boolean"
+					"401": {
+						"description": "Unauthorized request"
+					}
+				}
+			}
+		},
+		"users/signout": {
+			"delete": {
+				"tags": [
+					"User"
+				],
+				"summary": "sign the user out",
+				"description": "Authentication required",
+				"operationId": " ",
+				"consumes": [
+					"application/json",
+					"application/xml"
+				],
+				"produces": [
+					"application/xml",
+					"application/json"
+				],
+				"parameters": [
+					{
+						"in": "headers",
+						"name": "Authorization",
+						"required": true,
+						"schema": {
+							"type": "object",
+							"properties": {
+								"Authorization": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Ok"
+					},
+					"401": {
+						"description": "Unauthorized"
 					}
 				}
 			}
@@ -1028,7 +1009,7 @@
 		"/articles/{slug}/ratings?offset={value}&limit={value}": {
 			"get": {
 				"tags": [
-					"Rate articles"
+					"Articles"
 				],
 				"summary": "Fetch article's ratings with the User who rated",
 				"description": "Authentication not required, returns all the ratings and the users who rated. This enpoint needs the article slug to fetch it's ratings",
