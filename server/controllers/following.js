@@ -50,7 +50,6 @@ class Follows {
     try {
       if (await Follows.followingInfo(req, res)) {
         const response = await Follows.followingInfo(req, res);
-        
         const followedId = response.user.id;
         const followerId = response.follower.id;
         const followed = await Following.findOrCreate({
