@@ -147,6 +147,21 @@ describe('User ', () => {
 
   describe('User', () => {
     describe('Following', () => {
+      // Follow without token
+
+      it('should follow a user', (done) => {
+        chai.request(app)
+          .post('/api/profiles/mutombo/follow')
+          .set('Content-Type', 'application/json')
+          .end((err, res) => {
+            expect(res.status).to.equal(401);
+            expect(res.body.message).to.equal('Authorization is missing');
+            done();
+          });
+      });
+
+      // Following the right user
+
       it('should successfully allow to follow a user', (done) => {
         chai.request(app)
           .post('/api/profiles/mutombo/follow')
@@ -159,7 +174,37 @@ describe('User ', () => {
             done();
           });
       });
-      // Unfollow a user
+
+      // Should not follow the user for the second time
+
+      it('Should not follow the user', (done) => {
+        chai.request(app)
+          .post('/api/profiles/mutombo/follow')
+          .set('Content-Type', 'application/json')
+          .set('Authorization', userToken)
+          .end((err, res) => {
+            expect(res.status).to.equal(400);
+            expect(res.body.message).to.equal('You\'re alredy a follower of this user');
+            done();
+          });
+      });
+
+      // Test of unfound user
+
+      it('Should not find the user to follow', (done) => {
+        chai.request(app)
+          .post('/api/profiles/mutombo1/follow')
+          .set('Content-Type', 'application/json')
+          .set('Authorization', userToken)
+          .end((err, res) => {
+            expect(res.status).to.equal(404);
+            expect(res.body.message).to.equal('We don\'t find who you want to follow');
+            done();
+          });
+      });
+
+      // Unfollow a followed user
+
       it('should successfully allow to unfollow a user', (done) => {
         chai.request(app)
           .delete('/api/profiles/mutombo/follow')
@@ -172,7 +217,23 @@ describe('User ', () => {
             done();
           });
       });
+
+      // Unfollow an unexisting following
+
+      it('Should not unfollow the user', (done) => {
+        chai.request(app)
+          .delete('/api/profiles/mutombo/follow')
+          .set('Content-Type', 'application/json')
+          .set('Authorization', userToken)
+          .end((err, res) => {
+            expect(res.status).to.equal(404);
+            expect(res.body.message).to.equal('You\'re not a follower of this user');
+            done();
+          });
+      });
+
       // User view of follows
+
       it('Should allow the user to view followers and followees', (done) => {
         chai.request(app)
           .get('/api/profiles/follow')

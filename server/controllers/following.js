@@ -20,6 +20,7 @@ class Follows {
     try {
       const follower = req.user;
       const user = await User.findOne({
+        attributes: ['id', 'username', 'email', 'bio', 'image'],
         where: { username: req.params.username }
       });
       if (!user) {
@@ -49,6 +50,7 @@ class Follows {
     try {
       if (await Follows.followingInfo(req, res)) {
         const response = await Follows.followingInfo(req, res);
+        
         const followedId = response.user.id;
         const followerId = response.follower.id;
         const followed = await Following.findOrCreate({
@@ -99,10 +101,6 @@ class Follows {
           },
         });
         if (followed) {
-          const followedInfo = await User.findOne({
-            attributes: ['username', 'email', 'bio', 'image'],
-            where: { username: req.params.username },
-          });
           await Following.destroy({
             where: {
               followedId: response.user.id,
@@ -113,11 +111,15 @@ class Follows {
           return res.status(200).json({
             status: 200,
             message: `Successfully unfollowed user ${req.params.username}`,
-            profile: followedInfo,
+            profile: {
+              username: response.user.username,
+              email: response.user.email,
+              bio: response.user.bio
+            }
           });
         }
-        return res.status(200).json({
-          status: 200,
+        return res.status(404).json({
+          status: 404,
           message: 'You\'re not a follower of this user',
         });
       }
