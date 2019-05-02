@@ -23,6 +23,11 @@ const users = {
     email: 'hadad_test@andela.com',
     password: 'Hadad12@'
   },
+  correctUserForComment: {
+    username: 'karl',
+    email: 'karl_test_comment@andela.com',
+    password: 'Hadad12@'
+  },
   correctLogout: {
     username: 'dusmel12',
     email: 'hadad_test_11@andela.com',
