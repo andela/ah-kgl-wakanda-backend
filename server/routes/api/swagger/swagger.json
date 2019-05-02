@@ -222,6 +222,86 @@
 				}
 			}
 		},
+		"/articles/{slug}/favorite": {
+			"post": {
+				"tags": [
+					"Articles"
+				],
+				"summary": "User will be able to like articles",
+				"description": "",
+				"operationId": " ",
+				"consumes": [
+					"application/json"
+				],
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "slug",
+						"required": true,
+						"schema": {
+							"type": "string"
+						},
+						"description": "Alphanumeric id that uniquely identify an article"
+					}
+				],
+				"responses": {
+					"401": {
+						"description": "Authorization is missing"
+					},
+					"200": {
+						"description": "User successfully liked the article"
+					},
+					"404": {
+						"description": "Article was not found"
+					},
+					"500": {
+						"description": "Fail to like the article"
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"Articles"
+				],
+				"summary": "User will be able to unlike articles",
+				"description": "",
+				"operationId": " ",
+				"consumes": [
+					"application/json"
+				],
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "slug",
+						"required": true,
+						"schema": {
+							"type": "string"
+						},
+						"description": "Alphanumeric id that uniquely identify an article"
+					}
+				],
+				"responses": {
+					"401": {
+						"description": "Authorization is missing"
+					},
+					"200": {
+						"description": "User successfully unliked the article"
+					},
+					"404": {
+						"description": "Article was not found"
+					},
+					"500": {
+						"description": "Fail to like the article"
+					}
+				}
+			}
+		},
 		"/api/auth/signup": {
 			"post": {
 				"tags": [
@@ -270,6 +350,37 @@
 					}
 				}
 			},
+			"delete": {
+				"tags": [
+					"profile"
+				],
+				"summary": "Unfollow user",
+				"description": "Authentication required, returns a Profile. No additional parameters required",
+				"operationId": null,
+				"produces": [
+					"application/xml",
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "username",
+						"in": "path",
+						"description": "The username of the user to unfollow",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"400": {
+						"description": "Invalid username"
+					}
+				}
+			}
+		},
+		"/api/auth/login":{
 			"post": {
 				"tags": [
 					"login"
@@ -307,35 +418,6 @@
 					},
 					"401": {
 						"description": "The credentials you provided is incorrect"
-					}
-				}
-			},
-			"delete": {
-				"tags": [
-					"profile"
-				],
-				"summary": "Unfollow user",
-				"description": "Authentication required, returns a Profile. No additional parameters required",
-				"operationId": null,
-				"produces": [
-					"application/xml",
-					"application/json"
-				],
-				"parameters": [
-					{
-						"name": "username",
-						"in": "path",
-						"description": "The username of the user to unfollow",
-						"required": true,
-						"type": "string"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "successful operation"
-					},
-					"400": {
-						"description": "Invalid username"
 					}
 				}
 			}

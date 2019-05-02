@@ -36,6 +36,11 @@ const users = {
     email: 'hadad_test@andela.com',
     password: 'Hadad12@'
   },
+  correctLikeArticle: {
+    username: 'dusmel01',
+    email: 'hadad_test01@andela.com',
+    password: 'Hadad12@'
+  },
 
 };
 
