@@ -1,6 +1,7 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { Article } from '../models';
+import readTime from '../helpers/readTime';
 
 import app from '../../app';
 
@@ -24,6 +25,8 @@ const badArticle = {
 };
 
 const slug = ['how-to-train-your-dragon', 'how-to-train-your-cat'];
+
+const lorem = 'Lorem ipsum dolor sit amet'.repeat(100);
 
 after(() => {
   Article.destroy({ truncate: true });
@@ -307,6 +310,15 @@ describe('Article endpoints', () => {
           expect(res.body.message).to.equals('Article not found');
           done();
         });
+    });
+  });
+
+  describe('Function to get the read time of an article', () => {
+    it('Should return the read time', () => {
+      expect(readTime).to.be.a('function');
+      expect(readTime('', '', '')).to.be.equals('0 s');
+      expect(readTime(article.title, article.description, article.body)).to.be.equals('3 s');
+      expect(readTime(article.title, article.description, lorem)).to.be.equals('1 min 42 s');
     });
   });
 });
