@@ -309,4 +309,52 @@ describe('Article endpoints', () => {
         });
     });
   });
+
+  describe('to share an article', () => {
+    it('should not share if the the channel is not the ones predefined', (done) => {
+      chai.request(app)
+        .post(`/api/articles/${slug[2]}/share/maily`)
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(400);
+          expect(res.body.message).to.equals('channel must be one of facebook twitter mail');
+          done();
+        });
+    });
+    it('should not share if the article is not found', (done) => {
+      chai.request(app)
+        .post(`/api/articles/${slug[2]}/share/facebook`)
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(404);
+          expect(res.body.message).to.equals('We didn\'t find that article would you like to write one?');
+          done();
+        });
+    });
+    it('should  share to facebook', (done) => {
+      chai.request(app)
+        .post(`/api/articles/${slug[0]}-177804958/share/facebook`)
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body.message).to.equals('Article shared to facebook');
+          done();
+        });
+    });
+    it('should  share to twitter', (done) => {
+      chai.request(app)
+        .post(`/api/articles/${slug[0]}-177804958/share/twitter`)
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body.message).to.equals('Article shared to twitter');
+          done();
+        });
+    });
+    it('should  share to mail', (done) => {
+      chai.request(app)
+        .post(`/api/articles/${slug[0]}-177804958/share/mail`)
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body.message).to.equals('Article shared to mail');
+          done();
+        });
+    });
+  });
 });

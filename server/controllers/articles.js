@@ -331,10 +331,19 @@ class Articles {
  */
   static async share(req, res) {
     const { slug, channel } = req.params;
+    const article = await Articles.checkArticle(slug);
+    if (!article) {
+      return res.status(404).json({
+        status: 404,
+        message: 'We didn\'t find that article would you like to write one?'
+      });
+    }
     const url = `https://ah-kgl-wakanda-staging.herokuapp.com/api/articles/${slug}/share/${channel}`;
     switch (channel) {
       case 'facebook':
-        open(`https:www.facebook.com/sharer/sharer.php?u=${url}`);
+        if (process.env.NODE_ENV !== 'test') {
+          open(`https:www.facebook.com/sharer/sharer.php?u=${url}`);
+        }
         res.status(200).json({
           status: 200,
           message: `Article shared to ${channel}`,
@@ -342,7 +351,9 @@ class Articles {
         });
         break;
       case 'twitter':
-        open(`https://twitter.com/intent/tweet?url=${url}`);
+        if (process.env.NODE_ENV !== 'test') {
+          open(`https://twitter.com/intent/tweet?url=${url}`);
+        }
         res.status(200).json({
           status: 200,
           message: `Article shared to ${channel}`,
@@ -350,7 +361,9 @@ class Articles {
         });
         break;
       case 'mail':
-        open(`mailto:?subject=${slug}&body=${url}`);
+        if (process.env.NODE_ENV !== 'test') {
+          open(`mailto:?subject=${slug}&body=${url}`);
+        }
         res.status(200).json({
           status: 200,
           message: `Article shared to ${channel}`,
@@ -359,6 +372,28 @@ class Articles {
         break;
       default:
         break;
+    }
+  }
+
+  /**
+ *
+ *
+ * @static
+ * @param {string} slug
+ * @returns {object} response
+ * @memberof Articles
+ */
+  static async checkArticle(slug) {
+    try {
+      const article = await Article.findOne({
+        include: [{
+          model: Tags
+        }],
+        where: { slug }
+      });
+      return article;
+    } catch (error) {
+      return null;
     }
   }
 }
