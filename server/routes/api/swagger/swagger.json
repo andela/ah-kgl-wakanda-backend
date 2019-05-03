@@ -129,7 +129,7 @@
 				}
 			}
 		},
-		"articles/{slug}": {
+		"/articles/{slug}": {
 			"get": {
 				"tags": [
 					"Articles"
@@ -232,6 +232,40 @@
 					},
 					"404": {
 						"description": "The article was not found"
+					}
+				}
+			}
+		},
+		"/articles/{slug}/share/{channel}": {
+			"post": {
+				"tags": [
+					"Articles"
+				],
+				"summary": "Share an article",
+				"description": "returns the status and message.",
+				"operationId": null,
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "slug",
+						"description": "The slug of the article"
+					},
+					{
+						"name": "channel",
+						"description": "Channel have to be either facebook, twitter  or mail"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "The success message"
+					},
+					"404": {
+						"description": "We didn't find that article would you like to write one?"
+					},
+					"400": {
+						"description": "channel must be one of facebook, twitter, mail"
 					}
 				}
 			}
