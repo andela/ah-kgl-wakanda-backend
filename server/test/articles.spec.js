@@ -319,6 +319,7 @@ describe('Article endpoints', () => {
       expect(readTime('', '', '')).to.be.equals('0 s');
       expect(readTime(article.title, article.description, article.body)).to.be.equals('3 s');
       expect(readTime(article.title, article.description, lorem)).to.be.equals('1 min 42 s');
+      expect(readTime(article.title, article.description, `${lorem} word word word`)).to.be.equals('1 min 43 s');
     });
   });
 });

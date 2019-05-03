@@ -2,6 +2,7 @@ import slugify from '@sindresorhus/slugify';
 import { Article, Tags, ArticleLikes } from '../models';
 import errorHandler from '../helpers/errorHandler';
 import includeQuery from '../helpers/includeQuery';
+import readTime from '../helpers/readTime';
 /**
  *
  *
@@ -63,11 +64,18 @@ class Articles {
     // get query string
     const { limit = 20, offset = 0 } = req.query;
     try {
-      const result = await Article.findAll({
+      let result = await Article.findAll({
         order: [['createdAt', 'DESC']],
         limit,
         offset,
         include: includeQuery
+      });
+
+      result = result.map((item) => {
+        const article = Object.assign(item.dataValues, {
+          readTime: readTime(item.title, item.description, item.body)
+        });
+        return article;
       });
 
       return res.status(200).json({
@@ -90,7 +98,7 @@ class Articles {
    */
   static async get(req, res) {
     try {
-      const result = await Article.findOne({
+      let result = await Article.findOne({
         include: [{
           model: Tags
         }],
@@ -98,6 +106,10 @@ class Articles {
       });
 
       if (result) {
+        result = Object.assign(result.dataValues, {
+          readTime: readTime(result.title, result.description, result.body)
+        });
+
         return res.status(200).json({
           status: 200,
           data: { article: result }
