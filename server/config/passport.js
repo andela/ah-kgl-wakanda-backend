@@ -39,7 +39,7 @@ passport.use(
     {
       consumerKey: process.env.TWITTER_APP_ID,
       consumerSecret: process.env.TWITTER_APP_SECRET,
-      callbackURL: 'http://localhost:3000/api/auth/twitter/callback'
+      callbackURL: 'https://ah-kgl-wakanda-staging.herokuapp.com/api/auth/twitter/callback'
     },
     async (token, tokenSecret, profile, done) => {
       done(null, profile);
