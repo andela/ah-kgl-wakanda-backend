@@ -654,7 +654,6 @@
 				}
 			}
 		},
-
 		"/users/reset_password": {
 			"post": {
 				"tags": [
@@ -867,9 +866,7 @@
 					"application/json"
 				],
 				"parameters": [
-					{
-						
-					}
+					{}
 				],
 				"responses": {
 					"200": {
@@ -951,6 +948,36 @@
 							}
 						}
 					}
+				],
+				"responses": {
+					"200": {
+						"description": "Logged in successfully"
+					},
+					"201": {
+						"description": "User logged in successfully for the first time"
+					},
+					"401": {
+						"description": "Unauthorized request"
+					}
+				}
+			}
+		},
+		"/auth/twitter": {
+			"get": {
+				"tags": [
+					"User"
+				],
+				"summary": "Enable login with twitter",
+				"description": "",
+				"operationId": " ",
+				"consumes": [
+					"application/json"
+				],
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{}
 				],
 				"responses": {
 					"200": {
