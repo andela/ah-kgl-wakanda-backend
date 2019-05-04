@@ -1,5 +1,5 @@
 paths:
-  /api/auth/login:
+  /auth/login:
     post:
       tags:
         - User
@@ -28,5 +28,6 @@ definitions:
     properties:
       email:
         type: string
+        format: email
       password:
         type: string

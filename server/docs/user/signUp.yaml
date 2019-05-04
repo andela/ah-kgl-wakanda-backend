@@ -1,5 +1,5 @@
 paths:
-  /api/auth/signup:
+  /auth/signup:
     post:
       tags:
         - User
@@ -29,7 +29,8 @@ definitions:
       username:
         type: string
       email:
-        type: email
+        type: string
+        format: email
       password:
         type: string
         description: Password should contain at least 1 Uppercase, 1 lowercase and a number

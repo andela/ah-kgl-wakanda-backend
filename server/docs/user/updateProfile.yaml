@@ -35,6 +35,7 @@ definitions:
         properties:
           email:
             type: string
+            format: email
           bio:
             type: string
           image:

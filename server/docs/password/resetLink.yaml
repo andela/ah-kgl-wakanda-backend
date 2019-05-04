@@ -26,4 +26,5 @@ definitions:
     type: object
     properties:
       email:
-        type: email
+        type: string
+        format: email
