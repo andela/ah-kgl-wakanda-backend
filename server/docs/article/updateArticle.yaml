@@ -1,0 +1,34 @@
+paths:
+  /article/{slug}:
+    put:
+      tags:
+        - Articles
+      summary: Update the article
+      description:
+        Authentication required, returns the updated article. No additional
+        parameters required
+      produces:
+        - application/json
+      parameters:
+        - name: slug
+          description: The slug of the article
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/updateArticle"
+      responses:
+        200:
+          description: The updated article
+        404:
+          description: The article was not found
+definitions:
+  updateArticle:
+    type: object
+    properties:
+      title:
+        type: string
+      description:
+        type: string
+      body:
+        type: string

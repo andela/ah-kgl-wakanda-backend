@@ -1,0 +1,23 @@
+paths:
+  /profiles/{username}/follow:
+    delete:
+      tags:
+        - Profiles
+      summary: Unfollow user
+      description:
+        Authentication required, returns a Profile. No additional parameters
+        required
+      operationId:
+      produces:
+        - application/json
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+          description: The username of the user will be unfollowed
+      responses:
+        200:
+          description: successful operation
+        404:
+          description: User not found

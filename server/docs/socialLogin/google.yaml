@@ -1,0 +1,29 @@
+paths:
+  /auth/google:
+    post:
+      tags:
+        - User
+      summary: Enable login with google
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#definitions/googleLogin"
+      responses:
+        200:
+          description: Logged in successfully
+        201:
+          description: User logged in successfully for the first time
+        401:
+          description: Unauthorized request
+definitions:
+  googleLogin:
+    type: object
+    properties:
+      access_token:
+        type: string

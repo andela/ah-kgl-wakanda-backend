@@ -1,0 +1,35 @@
+paths:
+  /api/auth/signup:
+    post:
+      tags:
+        - User
+      summary: User Registration
+      description:
+        Username, Email, password required, returns a Profile. No additional
+        parameters required
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/signUp"
+      responses:
+        400:
+          description: Invalid Email supplied
+        409:
+          description: Email already exists
+definitions:
+  signUp:
+    type: object
+    properties:
+      username:
+        type: string
+      email:
+        type: email
+      password:
+        type: string
+        description: Password should contain at least 1 Uppercase, 1 lowercase and a number

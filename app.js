@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import passport from 'passport';
 import session from 'express-session';
 import routes from './server/routes';
+import { LOCAL_PORT } from './server/config/constant';
 
 import './server/config/passport';
 
@@ -26,6 +27,6 @@ app.use(session({
 app.use(routes);
 
 // finally, let's start our server...
-const server = app.listen(process.env.PORT || 3000, () => { });
+const server = app.listen(process.env.PORT || LOCAL_PORT, () => { });
 
 export default server;

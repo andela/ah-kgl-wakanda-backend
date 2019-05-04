@@ -1,0 +1,30 @@
+paths:
+  /articles/{slug}/comments:
+    post:
+      tags:
+        - Comment
+      summary: Post a comment on an article
+      description: Authentication required, returns the comment
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/commentArticle"
+      responses:
+        201:
+          description: Ok
+        400:
+          description: Invalid parameter
+        401:
+          description: Unauthorized request
+definitions:
+  commentArticle:
+    type: object
+    properties:
+      body:
+        type: string

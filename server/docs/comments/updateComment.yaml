@@ -1,0 +1,33 @@
+paths:
+  /articles/{slug}/comments/{id}:
+    put:
+      tags:
+        - Comment
+      summary: Update a comment
+      description:
+        Authentication required, returns the updated comment. No additional
+        parameters required
+      produces:
+        - application/json
+      parameters:
+        - name: slug
+          description: The slug of the article
+        - name: id
+          description: The comment id
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/updateArticle"
+      responses:
+        200:
+          description: The updated article
+        404:
+          description: The article was not found or The comment was not found
+
+definitions:
+  updateArticle:
+    type: object
+    properties:
+      body:
+        type: string

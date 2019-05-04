@@ -1,0 +1,32 @@
+paths:
+  /api/auth/login:
+    post:
+      tags:
+        - User
+      summary: User login
+      description:
+        Email, password required, returns a Profile. No additional parameters
+        required
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/login"
+      responses:
+        400:
+          description: Email and Password required
+        401:
+          description: The credentials you provided is incorrect
+definitions:
+  login:
+    type: object
+    properties:
+      email:
+        type: string
+      password:
+        type: string

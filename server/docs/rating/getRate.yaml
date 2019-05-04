@@ -1,0 +1,36 @@
+paths:
+  /articles/{slug}/ratings?offset={value}&limit={value}:
+    get:
+      tags:
+        - Articles
+      summary: Fetch article's ratings with the User who rated
+      description:
+        Authentication not required, returns all the ratings and the users
+        who rated. This enpoint needs the article slug to fetch it's ratings
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: slug
+          type: string
+          required: true
+          description: The slug of the article to fetch rates for
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: The number of items to skip before starting to collect the result set
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return
+
+      responses:
+        200:
+          description: The ratings and the users who rated are displayed
+        400:
+          description: Invalid slug supplied
+        404:
+          description: The article not found

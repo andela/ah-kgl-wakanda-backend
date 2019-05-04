@@ -1,0 +1,19 @@
+paths:
+  /articles/{slug}/comments:
+    get:
+      tags:
+        - Comment
+      summary: Get all comments for an article
+      description: Returns comments for an article. No additional parameters required
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: slug
+          description: The slug of the article
+      responses:
+        200:
+          description: Ok
+        404:
+          description: Article not found
