@@ -23,14 +23,10 @@ class SearchFilter {
       offset: Joi.number()
         .integer()
         .min(0),
-      author: Joi.number()
-        .string(),
-      title: Joi.number()
-        .string(),
-      keyword: Joi.number()
-        .string(),
-      tags: Joi.number()
-        .string(),
+      author: Joi.string(),
+      title: Joi.string(),
+      keyword: Joi.string(),
+      tag: Joi.string(),
     };
 
     const filter = Joi.validate(req.query, schema);
