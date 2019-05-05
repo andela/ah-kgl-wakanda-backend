@@ -7,7 +7,7 @@ import Joi from 'joi';
 */
 class Pagination {
   /**
-   * @description Validate rating credentials in the request body
+   * @description Validate pagination in the request query
    * @static
    * @param {object} req
    * @param {object} res
@@ -27,7 +27,6 @@ class Pagination {
 
     const pagination = Joi.validate(req.query, schema);
 
-    // validate rate in body
     if (pagination.error) {
       return res.status(400).json({
         message: pagination.error.details[0].message.replace(/[^a-zA-Z0-9 ]/g, ''),
