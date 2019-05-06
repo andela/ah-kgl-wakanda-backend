@@ -46,6 +46,11 @@ const users = {
     email: 'hadad_test01@andela.com',
     password: 'Hadad12@'
   },
+  correctNotificationArticle: {
+    username: 'dusmel010',
+    email: 'hadad_test010@andela.com',
+    password: 'Hadad12@'
+  },
 
 };
 
