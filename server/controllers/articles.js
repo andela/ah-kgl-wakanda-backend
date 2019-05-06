@@ -419,5 +419,155 @@ class Articles {
       return null;
     }
   }
+
+  /**
+   * helps filter by author
+   *
+   * @description Check whether title matches or
+   * if title contains the value passed as params
+   * @static
+   * @param {object} res
+   * @param {string} author
+   * @param {object} pagination
+   * @returns {object} response
+   * @memberof Articles
+  */
+  static async filterByAuthor(res, author, pagination) {
+    const where = {
+      username: { [Op.iLike]: `%${author}%` }
+    };
+
+    const result = await Article.findAll({
+      order: [['createdAt', 'DESC']],
+      limit: pagination.limit,
+      offset: pagination.offset,
+      include: [
+        {
+          model: User,
+          attributes: ['username', 'email', 'image'],
+          where,
+        },
+        {
+          model: Tags,
+        },
+        {
+          model: Rating,
+          attributes: ['rate']
+        }
+      ]
+    });
+
+    return res.status(200).json({
+      status: 200,
+      data: { articles: result }
+    });
+  }
+
+  /**
+   * helps filter by title
+   *
+   * @description Check whether title matches or
+   * if title contains the value passed as params
+   * @static
+   * @param {object} res
+   * @param {string} title
+   * @param {object} pagination
+   * @returns {object} response
+   * @memberof Articles
+  */
+  static async filterByTitle(res, title, pagination) {
+    const where = {
+      title: { [Op.iLike]: `%${title}%` }
+    };
+
+    const result = await Article.findAll({
+      order: [['createdAt', 'DESC']],
+      limit: pagination.limit,
+      offset: pagination.offset,
+      where,
+      include: includeQuery
+    });
+
+    return res.status(200).json({
+      status: 200,
+      data: { articles: result }
+    });
+  }
+
+  /**
+   * helps filter by keyword
+   *
+   * @description search the keyword inside the article title, body or description
+   * @static
+   * @param {object} res
+   * @param {string} keywords
+   * @param {object} pagination
+   * @returns {object} response
+   * @memberof Articles
+  */
+  static async filterByKeywords(res, keywords, pagination) {
+    const where = {
+      [Op.or]: [
+        { title: { [Op.iLike]: `%${keywords}%` } },
+        { body: { [Op.iLike]: `%${keywords}%` } },
+        { description: { [Op.iLike]: `%${keywords}%` } }
+      ]
+    };
+
+    const result = await Article.findAll({
+      order: [['createdAt', 'DESC']],
+      limit: pagination.limit,
+      offset: pagination.offset,
+      where,
+      include: includeQuery
+    });
+
+    return res.status(200).json({
+      status: 200,
+      data: { articles: result }
+    });
+  }
+
+  /**
+   * helps filter by tag
+   *
+   * @description search if tagName contains tags pass in params
+   * @static
+   * @param {object} res
+   * @param {string[]} tags
+   * @returns {object} response
+   * @memberof Articles
+  */
+  static async filterByTags(res, tags) {
+    const tagsList = Articles.tagsToArray(tags);
+    const where = {
+      [Op.or]: [
+        { tagName: tagsList }
+      ]
+    };
+
+    const result = await Tags.findAll({
+      where,
+      include: [{
+        model: Article,
+        include: [
+          {
+            model: User,
+            attributes: ['username', 'email', 'image'],
+          },
+          {
+            model: Rating,
+            attributes: ['rate']
+          }
+        ],
+        order: [['createdAt', 'DESC']],
+      }]
+    });
+
+    return res.status(200).json({
+      status: 200,
+      data: { articles: result }
+    });
+  }
 }
 export default Articles;
