@@ -41,10 +41,16 @@ const slug = ['how-to-train-your-dragon', 'how-to-train-your-cat'];
 let loginToken;
 
 const lorem = 'Lorem ipsum dolor sit amet'.repeat(100);
+const title = 'How to train your dog';
+const author = 'mutombo';
+const keyword = 'Ever wonder how';
+const tags = {
+  cat: 'cat',
+  dog: 'dog'
+};
 
 after(() => {
   Article.destroy({ truncate: true });
-  // Users.destroy({ truncate: true });
 });
 
 describe('Signing up a new user', () => {
