@@ -3,11 +3,7 @@ import open from 'open';
 import { Article, Tags, ArticleLikes } from '../models';
 import errorHandler from '../helpers/errorHandler';
 import includeQuery from '../helpers/includeQuery';
-<<<<<<< HEAD
-
-=======
 import Notifications from './notifications';
->>>>>>> [Feature 165020131] enable users to receive notifications
 /**
  *
  *

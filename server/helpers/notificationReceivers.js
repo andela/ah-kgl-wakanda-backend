@@ -26,7 +26,7 @@ class NotificationReceivers {
       *
       *
       * @static
-      * @param {integer} articleId
+      * @param {integer} id
       * @returns {integer} Ids of the article
       * @memberof NotificationReceivers
       */

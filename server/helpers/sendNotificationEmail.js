@@ -3,9 +3,7 @@ import mailer from './mailer';
 import { Article, User } from '../models';
 
 /**
- * Send a link containing a token,
- * returns an object with a sent
- * property
+ * Send an email notification ,
  *
  * @param {string} receiverIds
  * @param {string} body
@@ -38,6 +36,7 @@ const sendNotifications = async (receiverIds, body, subject, articleId = null) =
       attributes: ['username', 'email'],
       where: {
         [Sequelize.Op.or]: objIds,
+        allowEmailNotification: true,
       }
     });
 
@@ -57,7 +56,7 @@ const sendNotifications = async (receiverIds, body, subject, articleId = null) =
       subject,
       link,
       linkText: 'Go to Authors Haven',
-      name: 'Authors Haven',
+      name: ' Sir/Mrs ',
       title: 'Notification from Authors Haven',
       body,
       usersInfo,
