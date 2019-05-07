@@ -316,10 +316,9 @@ describe('Article endpoints', () => {
   describe('Function to get the read time of an article', () => {
     it('Should return the read time', () => {
       expect(readTime).to.be.a('function');
-      expect(readTime('', '', '')).to.be.equals('0 s');
-      expect(readTime(article.title, article.description, article.body)).to.be.equals('3 s');
-      expect(readTime(article.title, article.description, lorem)).to.be.equals('1 min 42 s');
-      expect(readTime(article.title, article.description, `${lorem} word word word`)).to.be.equals('1 min 43 s');
+      expect(readTime('', '', '')).to.be.equals('Less than a minute');
+      expect(readTime(article.title, article.description, article.body)).to.be.equals('Less than a minute');
+      expect(readTime(article.title, article.description, lorem)).to.be.equals('2 min');
     });
   });
 });

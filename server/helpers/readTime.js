@@ -8,10 +8,10 @@
  */
 const converter = (seconds) => {
   if (seconds > 60) {
-    return `${Math.floor(seconds / 60)} min ${seconds % 60 !== 0 ? `${Math.floor(seconds % 60)} s` : ''}`;
+    return `${Math.ceil(seconds / 60)} min`;
   }
 
-  return `${Math.floor(seconds)} s`;
+  return 'Less than a minute';
 };
 
 /**
