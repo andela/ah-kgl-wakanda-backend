@@ -3,7 +3,11 @@ import open from 'open';
 import { Article, Tags, ArticleLikes } from '../models';
 import errorHandler from '../helpers/errorHandler';
 import includeQuery from '../helpers/includeQuery';
+<<<<<<< HEAD
 
+=======
+import Notifications from './notifications';
+>>>>>>> [Feature 165020131] enable users to receive notifications
 /**
  *
  *
@@ -40,8 +44,12 @@ class Articles {
   static async create(req, res) {
     try {
       const { article } = req.body;
+      const { id } = req.user;
+      article.userId = id;
       article.slug = await Articles.createSlug(res, article.title);
       const result = await Article.create(article, { include: [{ model: Tags }] });
+
+      Notifications.create({ userId: id, title: 'NEW Article', articleId: result.id, });
 
       return res.status(201).json({
         status: 201,
@@ -203,7 +211,7 @@ class Articles {
       }
 
       const { user } = req;
-      await ArticleLikes.findOrCreate({
+      const newLike = await ArticleLikes.findOrCreate({
         where: {
           articleId: result.id,
           userId: user.id,
@@ -213,6 +221,13 @@ class Articles {
           userId: user.id,
         },
       });
+      if (!newLike[1]) {
+        return res.status(409).json({
+          status: 409,
+          message: 'You already liked this article'
+        });
+      }
+
       const totOfLikes = await ArticleLikes.findAndCountAll({
         where: { articleId: result.id }
       });
@@ -228,6 +243,9 @@ class Articles {
           plain: true
         }
       );
+
+      Notifications.create({ userId: user.id, title: 'NEW Like', articleId: result.id });
+
       return res.status(200).json({
         status: 200,
         data: { article: updateArticle[1].get() }

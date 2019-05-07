@@ -1,5 +1,6 @@
 import { User, Following } from '../models';
 import errorHandler from '../helpers/errorHandler';
+import Notifications from './notifications';
 /**
  *
  *
@@ -66,6 +67,7 @@ class Follows {
           message: 'You\'re alredy a follower of this user',
         });
       }
+      Notifications.create({ userId: followerId, title: 'NEW Follower', followedId });
       return res.status(200).json({
         status: 200,
         message: `Successfully followed user ${req.params.username}`,
