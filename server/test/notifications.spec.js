@@ -56,8 +56,6 @@ describe('Notifications', () => {
           if (error) {
             done(error);
           }
-          console.log(res.body);
-
           expect(res.body.status).to.be.equal(200);
           expect(res.body).to.have.property('notifications');
           expect(res.body).to.have.property('notificationsCount');

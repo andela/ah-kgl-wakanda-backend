@@ -1,6 +1,5 @@
-import {
-  Following, Comment, ArticleLikes, Article
-} from '../models';
+// eslint-disable-next-line object-curly-newline
+import { Following, Comment, ArticleLikes, Article } from '../models';
 
 /**
  * Get notification receivers
