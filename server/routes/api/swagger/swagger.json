@@ -880,6 +880,91 @@
 					}
 				}
 			}
+		}
+		,
+		"/articles/{slug}/bookmark": {
+			"post": {
+				"tags": [
+					"Articles"
+				],
+				"summary": "Bookmark an article",
+				"description": "Authentication required, returns a bookmarked article. No additional parameters required",
+				"operationId": null,
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "slug",
+						"in": "path",
+						"description": "The artice will be bookmarked",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation"
+					},
+					"404": {
+						"description": "Article not found"
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"Articles"
+				],
+				"summary": "Unbookmark an article",
+				"description": "Authentication required, returns an unbookmarked article. No additional parameters required",
+				"operationId": null,
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "slug",
+						"in": "path",
+						"description": "The article will be unbookmarked",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"404": {
+						"description": "Article not found"
+					}
+				}
+			}
+		},
+		"/articles/bookmark": {
+			"get": {
+				"tags": [
+					"Articles"
+				],
+				"summary": "View all the bookmarked articles",
+				"description": "Authentication required, returns the bookmarked articles of the authenticated user. No additional parameters required",
+				"operationId": null,
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation"
+					},
+					"401": {
+						"description": "Unauthorized access"
+					}
+				}
+			}
 		},
 		"/auth/google": {
 			"post": {
