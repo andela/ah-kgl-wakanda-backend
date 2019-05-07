@@ -421,18 +421,67 @@ class Articles {
   }
 
   /**
+   * search filter for articles
+   * @author Mutombo jean-vincent
+   * @static
+   * @param {*} req
+   * @param {*} res
+   * @returns {object} response
+   * @memberof Articles
+  */
+  static async search(req, res) {
+    // get query string
+    const {
+      author, title, tag, keyword, offset = 0, limit = 20
+    } = req.query;
+
+    const pagination = { offset, limit };
+    let result;
+
+    try {
+      if (author) {
+        result = await Articles.filterByAuthor(author, pagination);
+      } else if (title) {
+        result = await Articles.filterByTitle(title, pagination);
+      } else if (keyword) {
+        result = await Articles.filterByKeywords(keyword, pagination);
+
+        // If we don't find article inside title, body or description
+        // we search it inside tag
+        if (result.length === 0) {
+          result = await Articles.filterByTags(keyword);
+        }
+      } else if (tag) {
+        result = await Articles.filterByTags(tag);
+      } else {
+        return res.status(400).json({
+          message: 'search paramater are required'
+        });
+      }
+
+      return res.status(200).json({
+        status: 200,
+        data: { articles: result }
+      });
+    } catch (e) {
+      return res.status(500).json({
+        message: 'Failed to search article'
+      });
+    }
+  }
+
+  /**
    * helps filter by author
    *
    * @description Check whether title matches or
    * if title contains the value passed as params
    * @static
-   * @param {object} res
    * @param {string} author
    * @param {object} pagination
    * @returns {object} response
    * @memberof Articles
   */
-  static async filterByAuthor(res, author, pagination) {
+  static async filterByAuthor(author, pagination) {
     const where = {
       username: { [Op.iLike]: `%${author}%` }
     };
@@ -457,10 +506,7 @@ class Articles {
       ]
     });
 
-    return res.status(200).json({
-      status: 200,
-      data: { articles: result }
-    });
+    return result;
   }
 
   /**
@@ -469,13 +515,12 @@ class Articles {
    * @description Check whether title matches or
    * if title contains the value passed as params
    * @static
-   * @param {object} res
    * @param {string} title
    * @param {object} pagination
    * @returns {object} response
    * @memberof Articles
   */
-  static async filterByTitle(res, title, pagination) {
+  static async filterByTitle(title, pagination) {
     const where = {
       title: { [Op.iLike]: `%${title}%` }
     };
@@ -488,10 +533,7 @@ class Articles {
       include: includeQuery
     });
 
-    return res.status(200).json({
-      status: 200,
-      data: { articles: result }
-    });
+    return result;
   }
 
   /**
@@ -499,13 +541,12 @@ class Articles {
    *
    * @description search the keyword inside the article title, body or description
    * @static
-   * @param {object} res
    * @param {string} keywords
    * @param {object} pagination
    * @returns {object} response
    * @memberof Articles
   */
-  static async filterByKeywords(res, keywords, pagination) {
+  static async filterByKeywords(keywords, pagination) {
     const where = {
       [Op.or]: [
         { title: { [Op.iLike]: `%${keywords}%` } },
@@ -522,10 +563,7 @@ class Articles {
       include: includeQuery
     });
 
-    return res.status(200).json({
-      status: 200,
-      data: { articles: result }
-    });
+    return result;
   }
 
   /**
@@ -533,12 +571,11 @@ class Articles {
    *
    * @description search if tagName contains tags pass in params
    * @static
-   * @param {object} res
    * @param {string[]} tags
    * @returns {object} response
    * @memberof Articles
   */
-  static async filterByTags(res, tags) {
+  static async filterByTags(tags) {
     const tagsList = Articles.tagsToArray(tags);
     const where = {
       [Op.or]: [
@@ -564,10 +601,7 @@ class Articles {
       }]
     });
 
-    return res.status(200).json({
-      status: 200,
-      data: { articles: result }
-    });
+    return result;
   }
 }
 export default Articles;
