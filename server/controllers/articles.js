@@ -421,6 +421,19 @@ class Articles {
   }
 
   /**
+   * @static
+   * @description convert mutliple tags separeted by space or commas into an array of tags
+   * @param {string} tag
+   * @returns {string[]} tagList
+  */
+  static tagsToArray(tag) {
+    const tagList = tag.split(/[ ,]+/)
+      .filter(Boolean)
+      .map(item => item.replace(/,+/g, ''));
+    return tagList;
+  }
+
+  /**
    * search filter for articles
    * @author Mutombo jean-vincent
    * @static
