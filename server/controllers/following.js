@@ -24,15 +24,12 @@ class Follows {
         where: { username: req.params.username }
       });
       if (!user) {
-        return res.status(404).json({
-          status: 404,
-          message: 'We don\'t find who you want to follow'
-        });
+        return false;
       }
 
       return { follower, user };
     } catch (e) {
-      errorHandler.errorResponse(res, e);
+      return errorHandler.errorResponse(res, e);
     }
   }
 
@@ -48,35 +45,39 @@ class Follows {
        */
   static async follow(req, res) {
     try {
-      if (await Follows.followingInfo(req, res)) {
-        const response = await Follows.followingInfo(req, res);
-        const followedId = response.user.id;
-        const followerId = response.follower.id;
-        const followed = await Following.findOrCreate({
-          where: {
-            followedId,
-            followerId
-          },
-        });
-        if (!followed[1]) {
-          return res.status(400).json({
-            status: 400,
-            message: 'You\'re alredy a follower of this user',
-          });
-        }
-        return res.status(200).json({
-          status: 200,
-          message: `Successfully followed user ${req.params.username}`,
-          profile: {
-            username: response.user.username,
-            email: response.user.email,
-            bio: response.user.bio,
-            image: response.user.image
-          }
+      const response = await Follows.followingInfo(req, res);
+      if (!response) {
+        return res.status(404).json({
+          status: 404,
+          message: 'We don\'t find who you want to follow'
         });
       }
+      const followedId = response.user.id;
+      const followerId = response.follower.id;
+      const followed = await Following.findOrCreate({
+        where: {
+          followedId,
+          followerId
+        },
+      });
+      if (!followed[1]) {
+        return res.status(400).json({
+          status: 400,
+          message: 'You\'re alredy a follower of this user',
+        });
+      }
+      return res.status(200).json({
+        status: 200,
+        message: `Successfully followed user ${req.params.username}`,
+        profile: {
+          username: response.user.username,
+          email: response.user.email,
+          bio: response.user.bio,
+          image: response.user.image
+        }
+      });
     } catch (e) {
-      errorHandler.errorResponse(res, e);
+      return errorHandler.errorResponse(res, e);
     }
   }
 
@@ -91,8 +92,8 @@ class Follows {
        */
   static async unfollow(req, res) {
     try {
-      if (await Follows.followingInfo(req, res)) {
-        const response = await Follows.followingInfo(req, res);
+      const response = await Follows.followingInfo(req, res);
+      if (response) {
         const followed = await Following.findOne({
           where: {
             followedId: response.user.id,
@@ -123,7 +124,7 @@ class Follows {
         });
       }
     } catch (e) {
-      errorHandler.errorResponse(res, e);
+      return errorHandler.errorResponse(res, e);
     }
   }
 
@@ -161,7 +162,7 @@ class Follows {
       });
       return res.json({ followees, followers });
     } catch (e) {
-      errorHandler.errorResponse(res, e);
+      return errorHandler.errorResponse(res, e);
     }
   }
 }

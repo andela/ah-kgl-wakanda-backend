@@ -129,7 +129,7 @@
 				}
 			}
 		},
-		"articles/{slug}": {
+		"/articles/{slug}": {
 			"get": {
 				"tags": [
 					"Articles"
@@ -232,6 +232,40 @@
 					},
 					"404": {
 						"description": "The article was not found"
+					}
+				}
+			}
+		},
+		"/articles/{slug}/share/{channel}": {
+			"post": {
+				"tags": [
+					"Articles"
+				],
+				"summary": "Share an article",
+				"description": "returns the status and message.",
+				"operationId": null,
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "slug",
+						"description": "The slug of the article"
+					},
+					{
+						"name": "channel",
+						"description": "Channel have to be either facebook, twitter  or mail"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "The success message"
+					},
+					"404": {
+						"description": "We didn't find that article would you like to write one?"
+					},
+					"400": {
+						"description": "channel must be one of facebook, twitter, mail"
 					}
 				}
 			}
@@ -862,6 +896,91 @@
 				],
 				"summary": "View followers and followees",
 				"description": "Authentication required, returns the followers and followees of the authenticated user. No additional parameters required",
+				"operationId": null,
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation"
+					},
+					"401": {
+						"description": "Unauthorized access"
+					}
+				}
+			}
+		}
+		,
+		"/articles/{slug}/bookmark": {
+			"post": {
+				"tags": [
+					"Articles"
+				],
+				"summary": "Bookmark an article",
+				"description": "Authentication required, returns a bookmarked article. No additional parameters required",
+				"operationId": null,
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "slug",
+						"in": "path",
+						"description": "The artice will be bookmarked",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful operation"
+					},
+					"404": {
+						"description": "Article not found"
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"Articles"
+				],
+				"summary": "Unbookmark an article",
+				"description": "Authentication required, returns an unbookmarked article. No additional parameters required",
+				"operationId": null,
+				"produces": [
+					"application/json"
+				],
+				"parameters": [
+					{
+						"name": "slug",
+						"in": "path",
+						"description": "The article will be unbookmarked",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "successful operation"
+					},
+					"404": {
+						"description": "Article not found"
+					}
+				}
+			}
+		},
+		"/articles/bookmark": {
+			"get": {
+				"tags": [
+					"Articles"
+				],
+				"summary": "View all the bookmarked articles",
+				"description": "Authentication required, returns the bookmarked articles of the authenticated user. No additional parameters required",
 				"operationId": null,
 				"produces": [
 					"application/json"

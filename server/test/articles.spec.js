@@ -24,12 +24,53 @@ const badArticle = {
   Tags: ['dragons', 'training']
 };
 
+const user = [{
+  username: 'vera',
+  email: 'vera.iradu@andela.com',
+  password: 'Hadad12@'
+},
+{
+  email: 'vera.iradu@andela.com',
+  password: 'Hadad12@'
+}];
+
+let userToken;
 const slug = ['how-to-train-your-dragon', 'how-to-train-your-cat'];
 
 const lorem = 'Lorem ipsum dolor sit amet'.repeat(100);
 
 after(() => {
   Article.destroy({ truncate: true });
+  // Users.destroy({ truncate: true });
+});
+
+describe('Signing up a new user', () => {
+  it('should be able to signup', (done) => {
+    chai.request(app)
+      .post('/api/auth/signup')
+      .send(user[0])
+      .end((err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res).to.be.an('object');
+        expect(res.body).to.have.property('user');
+        done();
+      });
+  });
+});
+
+describe('logging a new user', () => {
+  it('should be able to login', (done) => {
+    chai.request(app)
+      .post('/api/auth/login')
+      .send(user[1])
+      .end((err, res) => {
+        userToken = `Bearer ${res.body.user.token}`;
+        expect(res.status).to.equal(200);
+        expect(res).to.be.an('object');
+        expect(res.body).to.have.property('user');
+        done();
+      });
+  });
 });
 
 describe('Article endpoints', () => {
@@ -289,25 +330,174 @@ describe('Article endpoints', () => {
     });
   });
 
-  describe('The endpoint to delete an article', () => {
-    it('Should delete an article ', (done) => {
+  // Bookmarking an article
+  describe('Bookmarking', () => {
+    // Bookmarking without token
+
+    it('Should not bookmark the article', (done) => {
       chai.request(app)
-        .delete(`/api/articles/${slug[1]}`)
-        .set('Authorization', 'Bearer <token>')
-        .end((error, res) => {
-          expect(res.body.status).to.be.equal(200);
-          expect(res.body.message).to.equals('Article successfully deleted');
+        .post(`/api/articles/${slug[0]}/bookmark`)
+        .send({})
+        .end((err, res) => {
+          expect(res.status).to.equal(401);
+          expect(res.body.message).to.equal('Authorization is missing');
           done();
         });
     });
 
-    it('Should fail to delete an article ', (done) => {
+    // Bookmarking the right article
+
+    it('Should successfully bookmark an article', (done) => {
       chai.request(app)
-        .delete('/api/articles/wrong-slug')
-        .set('Authorization', 'Bearer <token>')
+        .post(`/api/articles/${slug[1]}/bookmark`)
+        .set('Content-Type', 'application/json')
+        .set('Authorization', userToken)
+        .end((err, res) => {
+          expect(res.status).to.equal(200);
+          expect(res.body.message).to.equal('Successfully bookmarked the article');
+          expect(res.body).to.have.property('article');
+          expect(res.body.article).to.have.property('slug');
+          done();
+        });
+    });
+    // User view of bookmarks
+
+    it('Should allow the user to view all the article bookmarked', (done) => {
+      chai.request(app)
+        .get('/api/articles/bookmark')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', userToken)
+        .end((err, res) => {
+          expect(res.status).to.equal(200);
+          expect(res.body).to.have.property('articles').be.an('array');
+          done();
+        });
+    });
+
+    // Should not bookmark the article for the second time
+
+    it('Should not bookmark the article for the second time', (done) => {
+      chai.request(app)
+        .post(`/api/articles/${slug[1]}/bookmark`)
+        .set('Content-Type', 'application/json')
+        .set('Authorization', userToken)
+        .end((err, res) => {
+          expect(res.status).to.equal(400);
+          expect(res.body.message).to.equal('The article is already bookmarked');
+          done();
+        });
+    });
+
+    // Test of unfound bookmark
+
+    it('Should not find the article to bookmark', (done) => {
+      chai.request(app)
+        .post('/api/articles/non-existing-article/bookmark')
+        .set('Content-Type', 'application/json')
+        .set('Authorization', userToken)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          expect(res.body.message).to.equal('Article is not found.');
+          done();
+        });
+    });
+
+    // Unbookmark the bookmarked article
+
+    it('Should successfully unbookmark the article', (done) => {
+      chai.request(app)
+        .delete(`/api/articles/${slug[1]}/bookmark`)
+        .set('Content-Type', 'application/json')
+        .set('Authorization', userToken)
+        .end((err, res) => {
+          expect(res.status).to.equal(200);
+          expect(res.body.message).to.equal('Successfully unbookmarked the article');
+          expect(res.body).to.have.property('article');
+          done();
+        });
+    });
+
+    // Unbookmark the unbookmarked article
+
+    it('Should not unbookmark the unbookmarked article', (done) => {
+      chai.request(app)
+        .delete(`/api/articles/${slug[1]}/bookmark`)
+        .set('Content-Type', 'application/json')
+        .set('Authorization', userToken)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          expect(res.body.message).to.equal('This article is not bookmarked');
+          done();
+        });
+    });
+    describe('The endpoint to delete an article', () => {
+      it('Should delete an article ', (done) => {
+        chai.request(app)
+          .delete(`/api/articles/${slug[1]}`)
+          .set('Authorization', 'Bearer <token>')
+          .end((error, res) => {
+            expect(res.body.status).to.be.equal(200);
+            expect(res.body.message).to.equals('Article successfully deleted');
+            done();
+          });
+      });
+
+      it('Should fail to delete an article ', (done) => {
+        chai.request(app)
+          .delete('/api/articles/wrong-slug')
+          .set('Authorization', 'Bearer <token>')
+          .end((error, res) => {
+            expect(res.body.status).to.be.equal(404);
+            expect(res.body.message).to.equals('Article not found');
+            done();
+          });
+      });
+    });
+  });
+
+  describe('to share an article', () => {
+    it('should not share if the the channel is not the ones predefined', (done) => {
+      chai.request(app)
+        .post(`/api/articles/${slug[2]}/share/maily`)
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(400);
+          expect(res.body.message).to.equals('channel must be one of facebook twitter mail');
+          done();
+        });
+    });
+    it('should not share if the article is not found', (done) => {
+      chai.request(app)
+        .post(`/api/articles/${slug[2]}/share/facebook`)
         .end((error, res) => {
           expect(res.body.status).to.be.equal(404);
-          expect(res.body.message).to.equals('Article not found');
+          expect(res.body.message).to.equals('We didn\'t find that article would you like to write one?');
+          done();
+        });
+    });
+    it('should  share to facebook', (done) => {
+      chai.request(app)
+        .post(`/api/articles/${slug[0]}-177804958/share/facebook`)
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body.message).to.equals('Article shared to facebook');
+          done();
+        });
+    });
+    it('should  share to twitter', (done) => {
+      chai.request(app)
+        .post(`/api/articles/${slug[0]}-177804958/share/twitter`)
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body.message).to.equals('Article shared to twitter');
+          done();
+        });
+    });
+    it('should  share to mail', (done) => {
+      chai.request(app)
+        .post(`/api/articles/${slug[0]}-177804958/share/mail`)
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body.message).to.equals('Article shared to mail');
           done();
         });
     });

@@ -7,10 +7,12 @@ import ratings from './ratings';
 import articleLikes from './likeArticles';
 import comments from './comments';
 import following from './following';
+import bookmarking from './bookmarking';
 
 const router = express.Router();
 
 router.use(users);
+router.use(bookmarking);
 router.use(articles);
 router.use(socialLogin);
 router.use(password);
