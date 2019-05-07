@@ -1,7 +1,9 @@
 import slugify from '@sindresorhus/slugify';
+import open from 'open';
 import { Article, Tags, ArticleLikes } from '../models';
 import errorHandler from '../helpers/errorHandler';
 import includeQuery from '../helpers/includeQuery';
+
 /**
  *
  *
@@ -315,6 +317,77 @@ class Articles {
       });
     } catch (error) {
       errorHandler.errorResponse(res, error);
+    }
+  }
+
+  /**
+ *
+ *
+ * @static
+ * @param {*} req
+ * @param {*} res
+ * @returns {object} response
+ * @memberof Articles
+ */
+  static async share(req, res) {
+    const { slug, channel } = req.params;
+    const article = await Articles.checkArticle(slug);
+    if (!article) {
+      return res.status(404).json({
+        status: 404,
+        message: 'We didn\'t find that article would you like to write one?'
+      });
+    }
+    const url = `https://ah-kgl-wakanda-staging.herokuapp.com/api/articles/${slug}/share/${channel}`;
+    switch (channel) {
+      case 'facebook':
+        open(`https:www.facebook.com/sharer/sharer.php?u=${url}`);
+        res.status(200).json({
+          status: 200,
+          message: `Article shared to ${channel}`,
+          url,
+        });
+        break;
+      case 'twitter':
+        open(`https://twitter.com/intent/tweet?url=${url}`);
+        res.status(200).json({
+          status: 200,
+          message: `Article shared to ${channel}`,
+          url,
+        });
+        break;
+      case 'mail':
+        open(`mailto:?subject=${slug}&body=${url}`);
+        res.status(200).json({
+          status: 200,
+          message: `Article shared to ${channel}`,
+          url,
+        });
+        break;
+      default:
+        break;
+    }
+  }
+
+  /**
+ *
+ *
+ * @static
+ * @param {string} slug
+ * @returns {object} response
+ * @memberof Articles
+ */
+  static async checkArticle(slug) {
+    try {
+      const article = await Article.findOne({
+        include: [{
+          model: Tags
+        }],
+        where: { slug }
+      });
+      return article;
+    } catch (error) {
+      return null;
     }
   }
 }
