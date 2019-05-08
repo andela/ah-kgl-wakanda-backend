@@ -2,6 +2,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { Article } from '../models';
 import readTime from '../helpers/readTime';
+import dummyUsers from './config/users';
 
 import app from '../../app';
 

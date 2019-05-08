@@ -4,6 +4,7 @@ import { Article, Tags, ArticleLikes } from '../models';
 import errorHandler from '../helpers/errorHandler';
 import includeQuery from '../helpers/includeQuery';
 import readTime from '../helpers/readTime';
+import Notifications from './notifications';
 /**
  *
  *
