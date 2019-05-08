@@ -1,0 +1,16 @@
+paths:
+  /articles/bookmark:
+    get:
+      tags:
+        - Articles
+      summary: View all the bookmarked articles
+      description:
+        Authentication required, returns the bookmarked articles of the authenticated
+        user. No additional parameters required
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Successful operation
+        401:
+          description: Unauthorized access
