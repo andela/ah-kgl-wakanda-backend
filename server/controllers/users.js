@@ -108,7 +108,7 @@ class Users {
       const user = {
         provider,
         username: displayName.replace(' ', '_').toLowerCase(),
-        email: req.user.emails[0].value,
+        email: req.user.emails ? req.user.emails[0].value : null,
         image: req.user.photos[0].value,
       };
       const newUser = await User.findOrCreate({
@@ -140,11 +140,8 @@ class Users {
           bio,
         },
       });
-    } catch (error) {
-      return res.status(400).json({
-        status: 400,
-        message: error,
-      });
+    } catch (e) {
+      errorHandler.errorResponse(res, e);
     }
   }
 

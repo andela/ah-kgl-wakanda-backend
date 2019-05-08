@@ -43,6 +43,6 @@ describe('Social login', () => {
     };
     sinon.stub(res, 'status').returnsThis();
     await User.socialLogin(req, res);
-    expect(res.status).to.have.been.calledWith(400);
+    expect(res.status).to.have.been.calledWith(500);
   });
 });
