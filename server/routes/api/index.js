@@ -8,6 +8,7 @@ import articleLikes from './likeArticles';
 import comments from './comments';
 import following from './following';
 import bookmarking from './bookmarking';
+import notifications from './notifications';
 
 const router = express.Router();
 
@@ -20,5 +21,6 @@ router.use(ratings);
 router.use(articleLikes);
 router.use(comments);
 router.use(following);
+router.use(notifications);
 
 export default router;

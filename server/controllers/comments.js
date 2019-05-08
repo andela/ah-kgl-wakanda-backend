@@ -1,6 +1,7 @@
 import { Comment, User } from '../models';
 import errorHandler from '../helpers/errorHandler';
 import checkSlug from '../helpers/checkSlug';
+import Notifications from './notifications';
 /**
  *
  *
@@ -30,7 +31,7 @@ class Comments {
       };
 
       const result = await Comment.create(comment);
-
+      Notifications.create({ userId, title: 'NEW Comment', articleId });
       return res.status(201).json({
         status: 201,
         data: { comment: result }
