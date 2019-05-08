@@ -1,6 +1,7 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { Article } from '../models';
+import readTime from '../helpers/readTime';
 import dummyUsers from './config/users';
 
 import app from '../../app';
@@ -37,6 +38,8 @@ const user = [{
 let userToken;
 const slug = ['how-to-train-your-dragon', 'how-to-train-your-cat'];
 let loginToken;
+
+const lorem = 'Lorem ipsum dolor sit amet'.repeat(100);
 
 after(() => {
   Article.destroy({ truncate: true });
@@ -505,6 +508,15 @@ describe('Article endpoints', () => {
           expect(res.body.message).to.equals('Article shared to mail');
           done();
         });
+    });
+  });
+
+  describe('Function to get the read time of an article', () => {
+    it('Should return the read time', () => {
+      expect(readTime).to.be.a('function');
+      expect(readTime('', '', '')).to.be.equals('Less than a minute');
+      expect(readTime(article.title, article.description, article.body)).to.be.equals('Less than a minute');
+      expect(readTime(article.title, article.description, lorem)).to.be.equals('2 min');
     });
   });
 });
