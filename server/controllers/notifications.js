@@ -118,7 +118,7 @@ class Notifications {
         { returning: true }
       );
 
-      if (process.env.NODE_ENV !== 'test') sendNotificationEmail(receiverIds, content, title, articleId);
+      sendNotificationEmail(receiverIds, content, title, articleId);
 
       return createdNotifications;
     } catch (e) {

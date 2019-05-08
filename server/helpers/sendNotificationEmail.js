@@ -52,17 +52,18 @@ const sendNotifications = async (receiverIds, body, subject, articleId = null) =
   }
 
   try {
-    const response = await mailer({
-      subject,
-      link,
-      linkText: 'Go to Authors Haven',
-      name: ' Sir/Mrs ',
-      title: 'Notification from Authors Haven',
-      body,
-      usersInfo,
-    });
-
-    return response;
+    if (process.env.NODE_ENV !== 'test') {
+      const response = await mailer({
+        subject,
+        link,
+        linkText: 'Go to Authors Haven',
+        name: ' Sir/Mrs ',
+        title: 'Notification from Authors Haven',
+        body,
+        usersInfo,
+      });
+      return response;
+    }
   } catch (error) {
     return {
       sent: false,

@@ -36,9 +36,6 @@ describe('Notifications', () => {
         .set('Content-Type', 'application/json')
         .set('Authorization', loginToken)
         .end((error, res) => {
-          if (error) {
-            done(error);
-          }
           expect(res.body.status).to.be.equal(200);
           expect(res.body).to.have.property('user');
           expect(res.body.user.allowEmailNotification).equals(true);
@@ -53,9 +50,6 @@ describe('Notifications', () => {
         .set('Content-Type', 'application/json')
         .set('Authorization', loginToken)
         .end((error, res) => {
-          if (error) {
-            done(error);
-          }
           expect(res.body.status).to.be.equal(200);
           expect(res.body).to.have.property('notifications');
           expect(res.body).to.have.property('notificationsCount');
@@ -71,9 +65,6 @@ describe('Notifications', () => {
         .set('Content-Type', 'application/json')
         .set('Authorization', loginToken)
         .end((error, res) => {
-          if (error) {
-            done(error);
-          }
           expect(res.body.status).to.be.equal(200);
           expect(res.body).to.have.property('notifications');
           expect(res.body).to.have.property('notificationsCount');
@@ -87,11 +78,6 @@ describe('Notifications', () => {
         .set('Content-Type', 'application/json')
         .set('Authorization', loginToken)
         .end((error, res) => {
-          if (error) {
-            done(error);
-          }
-          // console.log(res.body);
-
           expect(res.body.status).to.be.equal(404);
           expect(res.body).to.have.property('message');
           expect(res.body.message).to.be.eql('This notification is either read or does not exist');
