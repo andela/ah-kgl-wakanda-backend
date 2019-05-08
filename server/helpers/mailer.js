@@ -26,7 +26,8 @@ const mailer = async ({
   linkText,
   name,
   title,
-  body
+  body,
+  usersInfo,
 }) => {
   const req = unirest('POST', 'https://api.sendgrid.com/v3/mail/send');
 
@@ -38,7 +39,7 @@ const mailer = async ({
   const message = {
     personalizations: [
       {
-        to: [{ email, name }],
+        to: usersInfo || [{ email, name }],
         dynamic_template_data: {
           name,
           link,
@@ -51,7 +52,7 @@ const mailer = async ({
       }
     ],
     from: { email: 'noreply@authorshaven.com' },
-    template_id: 'd-aea0cb09b07540dab8b103e17a6d8e0a'
+    template_id: 'd-29060466d3544ef7845065aad76956f3'
   };
 
   req.type('json');

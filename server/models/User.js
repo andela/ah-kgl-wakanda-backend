@@ -13,6 +13,9 @@ export default (sequelize, DataTypes) => {
     isLoggedIn: {
       type: DataTypes.BOOLEAN,
     },
+    allowEmailNotification: {
+      type: DataTypes.BOOLEAN,
+    },
     bio: DataTypes.TEXT,
     image: {
       type: DataTypes.STRING,

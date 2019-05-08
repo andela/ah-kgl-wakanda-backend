@@ -1,6 +1,8 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { Article } from '../models';
+import dummyUsers from './config/users';
+
 import app from '../../app';
 
 // Chai configuration
@@ -34,6 +36,7 @@ const user = [{
 
 let userToken;
 const slug = ['how-to-train-your-dragon', 'how-to-train-your-cat'];
+let loginToken;
 
 after(() => {
   Article.destroy({ truncate: true });
@@ -73,23 +76,29 @@ describe('Article endpoints', () => {
   describe('The endpoint to create an article', () => {
     it('Should create an article', (done) => {
       chai.request(app)
-        .post('/api/articles')
-        .set('Authorization', 'Bearer <token>')
-        .send({ article })
-        .end((error, res) => {
-          expect(res.body.status).to.be.equal(201);
-          expect(res.body).to.have.property('data');
-          expect(res.body.data).to.have.property('article');
-          expect(res.body.data.article).to.have.property('title');
-          expect(res.body.data.article.title).equals('How to train your dragon');
-          done();
+        .post('/api/auth/signup')
+        .send(dummyUsers.correctCreateArticle)
+        .end((err, resp) => {
+          loginToken = `Bearer ${resp.body.user.token}`;
+          chai.request(app)
+            .post('/api/articles')
+            .set('Authorization', `Bearer ${resp.body.user.token}`)
+            .send({ article })
+            .end((error, res) => {
+              expect(res.body.status).to.be.equal(201);
+              expect(res.body).to.have.property('data');
+              expect(res.body.data).to.have.property('article');
+              expect(res.body.data.article).to.have.property('title');
+              expect(res.body.data.article.title).equals('How to train your dragon');
+              done();
+            });
         });
     });
 
     it('Should return a sequelize validation error', (done) => {
       chai.request(app)
         .post('/api/articles')
-        .set('Authorization', 'Bearer <token>')
+        .set('Authorization', loginToken)
         .send({ article: badArticle })
         .end((error, res) => {
           expect(res.body.status).to.be.equal(400);
@@ -101,7 +110,7 @@ describe('Article endpoints', () => {
     it('Should return a validation error', (done) => {
       chai.request(app)
         .post('/api/articles')
-        .set('Authorization', 'Bearer <token>')
+        .set('Authorization', loginToken)
         .send({ bad: 'request' })
         .end((error, res) => {
           expect(res.body.status).to.be.equal(400);
