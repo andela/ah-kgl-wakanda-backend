@@ -1,53 +1,53 @@
 paths:
-  /search?author={value}&title={value}&tag={value}&keyword={value}&offset={value}&limit={value}:
-  get:
-    tags:
-      - Articles
-    summary: Search article filtering by title, author, tag or keyword
-    description:
-      Authentication not required, return all articles satisfying the filter
-      criteria
-    consumes:
-      - application/json
-    produces:
-      - application/json
-    parameters:
-      - in: query
-        name: author
-        schema:
-          type: string
-        description: The author username
-      - in: query
-        name: title
-        schema:
-          type: string
-        description: The article title
-      - in: query
-        name: tag
-        schema:
-          type: string
-        description: The article tag, can accept many tags separated by commas or space
-      - in: query
-        name: keyword
-        schema:
-          type: string
-        description: Any keyword to be found in the article title, body or description
-      - in: query
-        name: offset
-        schema:
-          type: integer
-        description:
-          The number of items to skip before starting to collect the result
-          set
-      - in: query
-        name: limit
-        schema:
-          type: integer
-        description: The numbers of items to return
-    responses:
-      200:
-        description: Ok
-      400:
-        description: search paramater are required
-      500:
-        description: Failed to search article
+  ? /search?author={value}&title={value}&tag={value}&keyword={value}&offset={value}&limit={value}
+  : get:
+      tags:
+        - Articles
+      summary: Search article filtering by title, author, tag or keyword
+      description:
+        Authentication not required, return all articles satisfying the filter
+        criteria
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: author
+          schema:
+            type: string
+          description: The author username
+        - in: query
+          name: title
+          schema:
+            type: string
+          description: The article title
+        - in: query
+          name: tag
+          schema:
+            type: string
+          description: The article tag, can accept many tags separated by commas or space
+        - in: query
+          name: keyword
+          schema:
+            type: string
+          description: Any keyword to be found in the article title, body or description
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description:
+            The number of items to skip before starting to collect the result
+            set
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return
+      responses:
+        200:
+          description: Ok
+        400:
+          description: search paramater are required
+        500:
+          description: Failed to search article
