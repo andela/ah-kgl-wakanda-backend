@@ -588,6 +588,17 @@ describe('Article endpoints', () => {
           });
       });
 
+      it('should search keyword inside the tagList', (done) => {
+        chai.request(app)
+          .get('/api/search?keyword=keyword_not_exist')
+          .end((error, res) => {
+            expect(res.status).to.be.equal(200);
+            expect(res.body).to.have.property('data');
+            expect(res.body.data).to.have.property('articles');
+            done();
+          });
+      });
+
       it('should fail if keyword not provided', (done) => {
         chai.request(app)
           .get('/api/search?keyword=')
