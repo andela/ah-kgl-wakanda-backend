@@ -1,9 +1,7 @@
 import slugify from '@sindresorhus/slugify';
 import open from 'open';
 import { Op } from 'sequelize';
-import {
-  Article, User, Tags, ArticleLikes, Rating
-} from '../models';
+import { Article, User, Tags, ArticleLikes, Rating } from '../models';
 import errorHandler from '../helpers/errorHandler';
 import includeQuery from '../helpers/includeQuery';
 import readTime from '../helpers/readTime';
@@ -23,14 +21,14 @@ class Articles {
    * @returns {string} slug
    * @memberof Articles
    */
-  static async createSlug(res, string) {
-    try {
-      const slug = `${await slugify(string)}-${Math.floor(Math.random() * 999999999) + 100000000}`;
-      return slug;
-    } catch (e) {
-      errorHandler.errorResponse(res, e);
-    }
-  }
+	static async createSlug(res, string) {
+		try {
+			const slug = `${await slugify(string)}-${Math.floor(Math.random() * 999999999) + 100000000}`;
+			return slug;
+		} catch (e) {
+			errorHandler.errorResponse(res, e);
+		}
+	}
 
   /**
    *
@@ -41,60 +39,24 @@ class Articles {
    * @returns {object} response
    * @memberof Articles
    */
-  static async create(req, res) {
-    try {
-      const { article } = req.body;
-      const { id } = req.user;
-      article.userId = id;
-      article.slug = await Articles.createSlug(res, article.title);
-      const result = await Article.create(article, { include: [{ model: Tags }] });
+	static async create(req, res) {
+		try {
+			const { article } = req.body;
+			const { id } = req.user;
+			article.userId = id;
+			article.slug = await Articles.createSlug(res, article.title);
+			const result = await Article.create(article, { include: [{ model: Tags }] });
 
-      Notifications.create({ userId: id, title: 'NEW Article', articleId: result.id, });
+			Notifications.create({ userId: id, title: 'NEW Article', articleId: result.id, });
 
-      return res.status(201).json({
-        status: 201,
-        data: { article: result }
-      });
-    } catch (e) {
-      errorHandler.errorResponse(res, e);
-    }
-  }
-
-  /**
-   *
-   *
-   * @static
-   * @param {*} req
-   * @param {*} res
-   * @returns {object} response
-   * @memberof Articles
-   */
-  static async getAll(req, res) {
-    // get query string
-    const { limit = 20, offset = 0 } = req.query;
-    try {
-      let result = await Article.findAll({
-        order: [['createdAt', 'DESC']],
-        limit,
-        offset,
-        include: includeQuery
-      });
-
-      result = result.map((item) => {
-        const article = Object.assign(item.dataValues, {
-          readTime: readTime(item.title, item.description, item.body)
-        });
-        return article;
-      });
-
-      return res.status(200).json({
-        status: 200,
-        data: { articles: result }
-      });
-    } catch (e) {
-      errorHandler.errorResponse(res, e);
-    }
-  }
+			return res.status(201).json({
+				status: 201,
+				data: { article: result }
+			});
+		} catch (e) {
+			errorHandler.errorResponse(res, e);
+		}
+	}
 
   /**
    *
@@ -105,34 +67,32 @@ class Articles {
    * @returns {object} response
    * @memberof Articles
    */
-  static async get(req, res) {
-    try {
-      let result = await Article.findOne({
-        include: [{
-          model: Tags
-        }],
-        where: { slug: req.params.slug }
-      });
+	static async getAll(req, res) {
+		// get query string
+		const { limit = 20, offset = 0 } = req.query;
+		try {
+			let result = await Article.findAll({
+				order: [['createdAt', 'DESC']],
+				limit,
+				offset,
+				include: includeQuery
+			});
 
-      if (result) {
-        result = Object.assign(result.dataValues, {
-          readTime: readTime(result.title, result.description, result.body)
-        });
+			result = result.map((item) => {
+				const article = Object.assign(item.dataValues, {
+					readTime: readTime(item.title, item.description, item.body)
+				});
+				return article;
+			});
 
-        return res.status(200).json({
-          status: 200,
-          data: { article: result }
-        });
-      }
-
-      return res.status(404).json({
-        status: 404,
-        message: 'Article not found'
-      });
-    } catch (e) {
-      errorHandler.errorResponse(res, e);
-    }
-  }
+			return res.status(200).json({
+				status: 200,
+				data: { articles: result }
+			});
+		} catch (e) {
+			errorHandler.errorResponse(res, e);
+		}
+	}
 
   /**
    *
@@ -143,28 +103,66 @@ class Articles {
    * @returns {object} response
    * @memberof Articles
    */
-  static async update(req, res) {
-    try {
-      const { article } = req.body;
+	static async get(req, res) {
+		try {
+			let result = await Article.findOne({
+				include: [{
+					model: Tags
+				}],
+				where: { slug: req.params.slug }
+			});
 
-      if (article.title) {
-        article.slug = await Articles.createSlug(res, article.title);
-      }
+			if (result) {
+				result = Object.assign(result.dataValues, {
+					readTime: readTime(result.title, result.description, result.body)
+				});
 
-      const { slug } = req.params;
-      const result = await Article.update(article, {
-        where: { slug, },
-        returning: true,
-        plain: true
-      });
-      return res.status(200).json({
-        status: 200,
-        data: { article: result[1].get() }
-      });
-    } catch (e) {
-      errorHandler.errorResponse(res, e);
-    }
-  }
+				return res.status(200).json({
+					status: 200,
+					data: { article: result }
+				});
+			}
+
+			return res.status(404).json({
+				status: 404,
+				message: 'Article not found'
+			});
+		} catch (e) {
+			errorHandler.errorResponse(res, e);
+		}
+	}
+
+  /**
+   *
+   *
+   * @static
+   * @param {*} req
+   * @param {*} res
+   * @returns {object} response
+   * @memberof Articles
+   */
+	static async update(req, res) {
+		try {
+			const { article } = req.body;
+
+			if (article.title) {
+				article.slug = await Articles.createSlug(res, article.title);
+			}
+
+			const { slug } = req.params;
+			const result = await Article.update(article, {
+				where: { slug, },
+				returning: true,
+				plain: true
+			});
+			return res.status(200).json({
+				status: 200,
+				data: { article: result[1].get() }
+			});
+		} catch (e) {
+			errorHandler.errorResponse(res, e);
+		}
+	}
 
   /**
  *
@@ -175,96 +173,26 @@ class Articles {
  * @returns {object} response
  * @memberof Articles
  */
-  static async delete(req, res) {
-    try {
-      const { slug } = req.params;
-      const result = await Article.destroy({ where: { slug, }, returning: true });
+	static async delete(req, res) {
+		try {
+			const { slug } = req.params;
+			const result = await Article.destroy({ where: { slug, }, returning: true });
 
-      if (result > 0) {
-        return res.status(200).json({
-          status: 200,
-          message: 'Article successfully deleted'
-        });
-      }
+			if (result > 0) {
+				return res.status(200).json({
+					status: 200,
+					message: 'Article successfully deleted'
+				});
+			}
 
-      return res.status(404).json({
-        status: 404,
-        message: 'Article not found'
-      });
-    } catch (e) {
-      errorHandler.errorResponse(res, e);
-    }
-  }
-
-  /**
- *
- *
- * @static
- * @param {*} req
- * @param {*} res
- * @returns {object} response
- * @memberof Articles
- */
-  static async like(req, res) {
-    try {
-      const result = await Article.findOne({
-        include: [{
-          model: Tags
-        }],
-        where: { slug: req.params.slug }
-      });
-
-      if (!result) {
-        return res.status(404).json({
-          status: 404,
-          message: 'Article not found'
-        });
-      }
-
-      const { user } = req;
-      const newLike = await ArticleLikes.findOrCreate({
-        where: {
-          articleId: result.id,
-          userId: user.id,
-        },
-        defaults: {
-          articleId: result.id,
-          userId: user.id,
-        },
-      });
-      if (!newLike[1]) {
-        return res.status(409).json({
-          status: 409,
-          message: 'You already liked this article'
-        });
-      }
-
-      const totOfLikes = await ArticleLikes.findAndCountAll({
-        where: { articleId: result.id }
-      });
-      const { slug } = req.params;
-      const updateArticle = await Article.update(
-        {
-          favorited: true,
-          favoritesCount: totOfLikes.count,
-        },
-        {
-          where: { slug, },
-          returning: true,
-          plain: true
-        }
-      );
-
-      Notifications.create({ userId: user.id, title: 'NEW Like', articleId: result.id });
-
-      return res.status(200).json({
-        status: 200,
-        data: { article: updateArticle[1].get() }
-      });
-    } catch (e) {
-      errorHandler.errorResponse(res, e);
-    }
-  }
+			return res.status(404).json({
+				status: 404,
+				message: 'Article not found'
+			});
+		} catch (e) {
+			errorHandler.errorResponse(res, e);
+		}
+	}
 
   /**
  *
@@ -275,79 +203,66 @@ class Articles {
  * @returns {object} response
  * @memberof Articles
  */
-  static async unlike(req, res) {
-    try {
-      const { user } = req;
-      const { slug } = req.params;
-      const article = await Article.findOne({
-        include: [{
-          model: Tags
-        }],
-        where: { slug }
-      });
+	static async like(req, res) {
+		try {
+			const result = await Article.findOne({
+				include: [{
+					model: Tags
+				}],
+				where: { slug: req.params.slug }
+			});
 
-      if (!article) {
-        return res.status(404).json({
-          status: 404,
-          message: 'Article not found'
-        });
-      }
-      const isLiked = await ArticleLikes.findOne({
-        where: {
-          articleId: article.id,
-          userId: user.id,
-        }
-      });
-      if (isLiked) {
-        await ArticleLikes.destroy({
-          where: {
-            articleId: article.id,
-            userId: user.id,
-          },
-          returning: true,
-        });
+			if (!result) {
+				return res.status(404).json({
+					status: 404,
+					message: 'Article not found'
+				});
+			}
 
-        const totOfLikes = await ArticleLikes.findAndCountAll({
-          where: { articleId: article.id }
-        });
-        let updateArticle;
-        if (totOfLikes.count > 0) {
-          updateArticle = await Article.update(
-            {
-              favoritesCount: totOfLikes.count,
-            },
-            {
-              where: { slug, },
-              returning: true,
-              plain: true
-            }
-          );
-        } else {
-          updateArticle = await Article.update(
-            {
-              favorited: false,
-              favoritesCount: totOfLikes.count,
-            },
-            {
-              where: { slug, },
-              returning: true,
-              plain: true
-            }
-          );
-        }
-        return res.status(200).json({
-          status: 200,
-          data: { article: updateArticle }
-        });
-      }
-      return res.status(404).json({
-        status: 404,
-        message: 'Article has to be favorited first'
-      });
-    } catch (error) {
-      errorHandler.errorResponse(res, error);
-    }
-  }
+			const { user } = req;
+			const newLike = await ArticleLikes.findOrCreate({
+				where: {
+					articleId: result.id,
+					userId: user.id,
+				},
+				defaults: {
+					articleId: result.id,
+					userId: user.id,
+				},
+			});
+			if (!newLike[1]) {
+				return res.status(409).json({
+					status: 409,
+					message: 'You already liked this article'
+				});
+			}
+
+			const totOfLikes = await ArticleLikes.findAndCountAll({
+				where: { articleId: result.id }
+			});
+			const { slug } = req.params;
+			const updateArticle = await Article.update(
+				{
+					favorited: true,
+					favoritesCount: totOfLikes.count,
+				},
+				{
+					where: { slug, },
+					returning: true,
+					plain: true
+				}
+			);
+
+			Notifications.create({ userId: user.id, title: 'NEW Like', articleId: result.id });
+
+			return res.status(200).json({
+				status: 200,
+				data: { article: updateArticle[1].get() }
+			});
+		} catch (e) {
+			errorHandler.errorResponse(res, e);
+		}
+	}
 
   /**
  *
@@ -358,45 +273,128 @@ class Articles {
  * @returns {object} response
  * @memberof Articles
  */
-  static async share(req, res) {
-    const { slug, channel } = req.params;
-    const article = await Articles.checkArticle(slug);
-    if (!article) {
-      return res.status(404).json({
-        status: 404,
-        message: 'We didn\'t find that article would you like to write one?'
-      });
-    }
-    const url = `https://ah-kgl-wakanda-staging.herokuapp.com/api/articles/${slug}/share/${channel}`;
-    switch (channel) {
-      case 'facebook':
-        open(`https:www.facebook.com/sharer/sharer.php?u=${url}`);
-        res.status(200).json({
-          status: 200,
-          message: `Article shared to ${channel}`,
-          url,
-        });
-        break;
-      case 'twitter':
-        open(`https://twitter.com/intent/tweet?url=${url}`);
-        res.status(200).json({
-          status: 200,
-          message: `Article shared to ${channel}`,
-          url,
-        });
-        break;
-      case 'mail':
-        open(`mailto:?subject=${slug}&body=${url}`);
-        res.status(200).json({
-          status: 200,
-          message: `Article shared to ${channel}`,
-          url,
-        });
-        break;
-      default:
-        break;
-    }
-  }
+	static async unlike(req, res) {
+		try {
+			const { user } = req;
+			const { slug } = req.params;
+			const article = await Article.findOne({
+				include: [{
+					model: Tags
+				}],
+				where: { slug }
+			});
+
+			if (!article) {
+				return res.status(404).json({
+					status: 404,
+					message: 'Article not found'
+				});
+			}
+			const isLiked = await ArticleLikes.findOne({
+				where: {
+					articleId: article.id,
+					userId: user.id,
+				}
+			});
+			if (isLiked) {
+				await ArticleLikes.destroy({
+					where: {
+						articleId: article.id,
+						userId: user.id,
+					},
+					returning: true,
+				});
+
+				const totOfLikes = await ArticleLikes.findAndCountAll({
+					where: { articleId: article.id }
+				});
+				let updateArticle;
+				if (totOfLikes.count > 0) {
+					updateArticle = await Article.update(
+						{
+							favoritesCount: totOfLikes.count,
+						},
+						{
+							where: { slug, },
+							returning: true,
+							plain: true
+						}
+					);
+				} else {
+					updateArticle = await Article.update(
+						{
+							favorited: false,
+							favoritesCount: totOfLikes.count,
+						},
+						{
+							where: { slug, },
+							returning: true,
+							plain: true
+						}
+					);
+				}
+				return res.status(200).json({
+					status: 200,
+					data: { article: updateArticle }
+				});
+			}
+			return res.status(404).json({
+				status: 404,
+				message: 'Article has to be favorited first'
+			});
+		} catch (error) {
+			errorHandler.errorResponse(res, error);
+		}
+	}
+
+  /**
+ *
+ *
+ * @static
+ * @param {*} req
+ * @param {*} res
+ * @returns {object} response
+ * @memberof Articles
+ */
+	static async share(req, res) {
+		const { slug, channel } = req.params;
+		const article = await Articles.checkArticle(slug);
+		if (!article) {
+			return res.status(404).json({
+				status: 404,
+				message: 'We didn\'t find that article would you like to write one?'
+			});
+		}
+		const url = `https://ah-kgl-wakanda-staging.herokuapp.com/api/articles/${slug}/share/${channel}`;
+		switch (channel) {
+			case 'facebook':
+				open(`https:www.facebook.com/sharer/sharer.php?u=${url}`);
+				res.status(200).json({
+					status: 200,
+					message: `Article shared to ${channel}`,
+					url,
+				});
+				break;
+			case 'twitter':
+				open(`https://twitter.com/intent/tweet?url=${url}`);
+				res.status(200).json({
+					status: 200,
+					message: `Article shared to ${channel}`,
+					url,
+				});
+				break;
+			case 'mail':
+				open(`mailto:?subject=${slug}&body=${url}`);
+				res.status(200).json({
+					status: 200,
+					message: `Article shared to ${channel}`,
+					url,
+				});
+				break;
+			default:
+				break;
+		}
+	}
 
   /**
  *
@@ -406,19 +404,19 @@ class Articles {
  * @returns {object} response
  * @memberof Articles
  */
-  static async checkArticle(slug) {
-    try {
-      const article = await Article.findOne({
-        include: [{
-          model: Tags
-        }],
-        where: { slug }
-      });
-      return article;
-    } catch (error) {
-      return null;
-    }
-  }
+	static async checkArticle(slug) {
+		try {
+			const article = await Article.findOne({
+				include: [{
+					model: Tags
+				}],
+				where: { slug }
+			});
+			return article;
+		} catch (error) {
+			return null;
+		}
+	}
 
   /**
    * @static
@@ -426,12 +424,12 @@ class Articles {
    * @param {string} tag
    * @returns {string[]} tagList
   */
-  static tagsToArray(tag) {
-    const tagList = tag.split(/[ ,]+/)
-      .filter(Boolean)
-      .map(item => item.replace(/,+/g, ''));
-    return tagList;
-  }
+	static tagsToArray(tag) {
+		const tagList = tag.split(/[ ,]+/)
+			.filter(Boolean)
+			.map(item => item.replace(/,+/g, ''));
+		return tagList;
+	}
 
   /**
    * search filter for articles
@@ -442,46 +440,46 @@ class Articles {
    * @returns {object} response
    * @memberof Articles
   */
-  static async search(req, res) {
-    // get query string
-    const {
-      author, title, tag, keyword, offset = 0, limit = 20
-    } = req.query;
+	static async search(req, res) {
+		// get query string
+		const {
+			author, title, tag, keyword, offset = 0, limit = 20
+		} = req.query;
 
-    const pagination = { offset, limit };
-    let result;
+		const pagination = { offset, limit };
+		let result;
 
-    try {
-      if (author) {
-        result = await Articles.filterByAuthor(author, pagination);
-      } else if (title) {
-        result = await Articles.filterByTitle(title, pagination);
-      } else if (keyword) {
-        result = await Articles.filterByKeywords(keyword, pagination);
+		try {
+			if (author) {
+				result = await Articles.filterByAuthor(author, pagination);
+			} else if (title) {
+				result = await Articles.filterByTitle(title, pagination);
+			} else if (keyword) {
+				result = await Articles.filterByKeywords(keyword, pagination);
 
-        // If we don't find article inside title, body or description
-        // we search it inside tag
-        if (result.length === 0) {
-          result = await Articles.filterByTags(keyword);
-        }
-      } else if (tag) {
-        result = await Articles.filterByTags(tag);
-      } else {
-        return res.status(400).json({
-          message: 'search paramater are required'
-        });
-      }
+				// If we don't find article inside title, body or description
+				// we search it inside tag
+				if (result.length === 0) {
+					result = await Articles.filterByTags(keyword);
+				}
+			} else if (tag) {
+				result = await Articles.filterByTags(tag);
+			} else {
+				return res.status(400).json({
+					message: 'search paramater are required'
+				});
+			}
 
-      return res.status(200).json({
-        status: 200,
-        data: { articles: result }
-      });
-    } catch (e) {
-      return res.status(500).json({
-        message: 'Failed to search article'
-      });
-    }
-  }
+			return res.status(200).json({
+				status: 200,
+				data: { articles: result }
+			});
+		} catch (e) {
+			return res.status(500).json({
+				message: 'Failed to search article'
+			});
+		}
+	}
 
   /**
    * helps filter by author
@@ -494,33 +492,33 @@ class Articles {
    * @returns {object} response
    * @memberof Articles
   */
-  static async filterByAuthor(author, pagination) {
-    const where = {
-      username: { [Op.iLike]: `%${author}%` }
-    };
+	static async filterByAuthor(author, pagination) {
+		const where = {
+			username: { [Op.iLike]: `%${author}%` }
+		};
 
-    const result = await Article.findAll({
-      order: [['createdAt', 'DESC']],
-      limit: pagination.limit,
-      offset: pagination.offset,
-      include: [
-        {
-          model: User,
-          attributes: ['username', 'email', 'image'],
-          where,
-        },
-        {
-          model: Tags,
-        },
-        {
-          model: Rating,
-          attributes: ['rate']
-        }
-      ]
-    });
+		const result = await Article.findAll({
+			order: [['createdAt', 'DESC']],
+			limit: pagination.limit,
+			offset: pagination.offset,
+			include: [
+				{
+					model: User,
+					attributes: ['username', 'email', 'image'],
+					where,
+				},
+				{
+					model: Tags,
+				},
+				{
+					model: Rating,
+					attributes: ['rate']
+				}
+			]
+		});
 
-    return result;
-  }
+		return result;
+	}
 
   /**
    * helps filter by title
@@ -533,21 +531,21 @@ class Articles {
    * @returns {object} response
    * @memberof Articles
   */
-  static async filterByTitle(title, pagination) {
-    const where = {
-      title: { [Op.iLike]: `%${title}%` }
-    };
+	static async filterByTitle(title, pagination) {
+		const where = {
+			title: { [Op.iLike]: `%${title}%` }
+		};
 
-    const result = await Article.findAll({
-      order: [['createdAt', 'DESC']],
-      limit: pagination.limit,
-      offset: pagination.offset,
-      where,
-      include: includeQuery
-    });
+		const result = await Article.findAll({
+			order: [['createdAt', 'DESC']],
+			limit: pagination.limit,
+			offset: pagination.offset,
+			where,
+			include: includeQuery
+		});
 
-    return result;
-  }
+		return result;
+	}
 
   /**
    * helps filter by keyword
@@ -559,25 +557,25 @@ class Articles {
    * @returns {object} response
    * @memberof Articles
   */
-  static async filterByKeywords(keywords, pagination) {
-    const where = {
-      [Op.or]: [
-        { title: { [Op.iLike]: `%${keywords}%` } },
-        { body: { [Op.iLike]: `%${keywords}%` } },
-        { description: { [Op.iLike]: `%${keywords}%` } }
-      ]
-    };
+	static async filterByKeywords(keywords, pagination) {
+		const where = {
+			[Op.or]: [
+				{ title: { [Op.iLike]: `%${keywords}%` } },
+				{ body: { [Op.iLike]: `%${keywords}%` } },
+				{ description: { [Op.iLike]: `%${keywords}%` } }
+			]
+		};
 
-    const result = await Article.findAll({
-      order: [['createdAt', 'DESC']],
-      limit: pagination.limit,
-      offset: pagination.offset,
-      where,
-      include: includeQuery
-    });
+		const result = await Article.findAll({
+			order: [['createdAt', 'DESC']],
+			limit: pagination.limit,
+			offset: pagination.offset,
+			where,
+			include: includeQuery
+		});
 
-    return result;
-  }
+		return result;
+	}
 
   /**
    * helps filter by tag
@@ -588,33 +586,33 @@ class Articles {
    * @returns {object} response
    * @memberof Articles
   */
-  static async filterByTags(tags) {
-    const tagsList = Articles.tagsToArray(tags);
-    const where = {
-      [Op.or]: [
-        { tagName: tagsList }
-      ]
-    };
+	static async filterByTags(tags) {
+		const tagsList = Articles.tagsToArray(tags);
+		const where = {
+			[Op.or]: [
+				{ tagName: tagsList }
+			]
+		};
 
-    const result = await Tags.findAll({
-      where,
-      include: [{
-        model: Article,
-        include: [
-          {
-            model: User,
-            attributes: ['username', 'email', 'image'],
-          },
-          {
-            model: Rating,
-            attributes: ['rate']
-          }
-        ],
-        order: [['createdAt', 'DESC']],
-      }]
-    });
+		const result = await Tags.findAll({
+			where,
+			include: [{
+				model: Article,
+				include: [
+					{
+						model: User,
+						attributes: ['username', 'email', 'image'],
+					},
+					{
+						model: Rating,
+						attributes: ['rate']
+					}
+				],
+				order: [['createdAt', 'DESC']],
+			}]
+		});
 
-    return result;
-  }
+		return result;
+	}
 }
 export default Articles;
