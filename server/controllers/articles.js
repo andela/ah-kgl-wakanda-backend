@@ -1,6 +1,7 @@
 import slugify from '@sindresorhus/slugify';
 import open from 'open';
-import { Article, Tags, ArticleLikes } from '../models';
+import { Op } from 'sequelize';
+import { Article, User, Tags, ArticleLikes, Rating } from '../models';
 import errorHandler from '../helpers/errorHandler';
 import includeQuery from '../helpers/includeQuery';
 import readTime from '../helpers/readTime';
@@ -12,14 +13,14 @@ import Notifications from './notifications';
  */
 class Articles {
   /**
-   *
-   *
-   * @static
-   * @param {object} res
-   * @param {string} string
-   * @returns {string} slug
-   * @memberof Articles
-   */
+     *
+     *
+     * @static
+     * @param {object} res
+     * @param {string} string
+     * @returns {string} slug
+     * @memberof Articles
+     */
   static async createSlug(res, string) {
     try {
       const slug = `${await slugify(string)}-${Math.floor(Math.random() * 999999999) + 100000000}`;
@@ -30,14 +31,14 @@ class Articles {
   }
 
   /**
-   *
-   *
-   * @static
-   * @param {object} req
-   * @param {object} res
-   * @returns {object} response
-   * @memberof Articles
-   */
+     *
+     *
+     * @static
+     * @param {object} req
+     * @param {object} res
+     * @returns {object} response
+     * @memberof Articles
+     */
   static async create(req, res) {
     try {
       const { article } = req.body;
@@ -58,14 +59,14 @@ class Articles {
   }
 
   /**
-   *
-   *
-   * @static
-   * @param {*} req
-   * @param {*} res
-   * @returns {object} response
-   * @memberof Articles
-   */
+     *
+     *
+     * @static
+     * @param {*} req
+     * @param {*} res
+     * @returns {object} response
+     * @memberof Articles
+     */
   static async getAll(req, res) {
     // get query string
     const { limit = 20, offset = 0 } = req.query;
@@ -94,14 +95,14 @@ class Articles {
   }
 
   /**
-   *
-   *
-   * @static
-   * @param {*} req
-   * @param {*} res
-   * @returns {object} response
-   * @memberof Articles
-   */
+     *
+     *
+     * @static
+     * @param {*} req
+     * @param {*} res
+     * @returns {object} response
+     * @memberof Articles
+     */
   static async get(req, res) {
     try {
       let result = await Article.findOne({
@@ -132,14 +133,14 @@ class Articles {
   }
 
   /**
-   *
-   *
-   * @static
-   * @param {*} req
-   * @param {*} res
-   * @returns {object} response
-   * @memberof Articles
-   */
+     *
+     *
+     * @static
+     * @param {*} req
+     * @param {*} res
+     * @returns {object} response
+     * @memberof Articles
+     */
   static async update(req, res) {
     try {
       const { article } = req.body;
@@ -164,14 +165,14 @@ class Articles {
   }
 
   /**
- *
- *
- * @static
- * @param {*} req
- * @param {*} res
- * @returns {object} response
- * @memberof Articles
- */
+   *
+   *
+   * @static
+   * @param {*} req
+   * @param {*} res
+   * @returns {object} response
+   * @memberof Articles
+   */
   static async delete(req, res) {
     try {
       const { slug } = req.params;
@@ -194,14 +195,14 @@ class Articles {
   }
 
   /**
- *
- *
- * @static
- * @param {*} req
- * @param {*} res
- * @returns {object} response
- * @memberof Articles
- */
+   *
+   *
+   * @static
+   * @param {*} req
+   * @param {*} res
+   * @returns {object} response
+   * @memberof Articles
+   */
   static async like(req, res) {
     try {
       const result = await Article.findOne({
@@ -264,14 +265,14 @@ class Articles {
   }
 
   /**
- *
- *
- * @static
- * @param {*} req
- * @param {*} res
- * @returns {object} response
- * @memberof Articles
- */
+   *
+   *
+   * @static
+   * @param {*} req
+   * @param {*} res
+   * @returns {object} response
+   * @memberof Articles
+   */
   static async unlike(req, res) {
     try {
       const { user } = req;
@@ -347,14 +348,14 @@ class Articles {
   }
 
   /**
- *
- *
- * @static
- * @param {*} req
- * @param {*} res
- * @returns {object} response
- * @memberof Articles
- */
+   *
+   *
+   * @static
+   * @param {*} req
+   * @param {*} res
+   * @returns {object} response
+   * @memberof Articles
+   */
   static async share(req, res) {
     const { slug, channel } = req.params;
     const article = await Articles.checkArticle(slug);
@@ -396,13 +397,13 @@ class Articles {
   }
 
   /**
- *
- *
- * @static
- * @param {string} slug
- * @returns {object} response
- * @memberof Articles
- */
+   *
+   *
+   * @static
+   * @param {string} slug
+   * @returns {object} response
+   * @memberof Articles
+   */
   static async checkArticle(slug) {
     try {
       const article = await Article.findOne({
@@ -415,6 +416,203 @@ class Articles {
     } catch (error) {
       return null;
     }
+  }
+
+  /**
+     * @static
+     * @description convert mutliple tags separeted by space or commas into an array of tags
+     * @param {string} tag
+     * @returns {string[]} tagList
+    */
+  static tagsToArray(tag) {
+    const tagList = tag.split(/[ ,]+/)
+      .filter(Boolean)
+      .map(item => item.replace(/,+/g, ''));
+    return tagList;
+  }
+
+  /**
+     * search filter for articles
+     * @author Mutombo jean-vincent
+     * @static
+     * @param {*} req
+     * @param {*} res
+     * @returns {object} response
+     * @memberof Articles
+    */
+  static async search(req, res) {
+    // get query string
+    const {
+      author, title, tag, keyword, offset = 0, limit = 20
+    } = req.query;
+
+    const pagination = { offset, limit };
+    let result;
+
+    try {
+      if (author) {
+        result = await Articles.filterByAuthor(author, pagination);
+      } else if (title) {
+        result = await Articles.filterByTitle(title, pagination);
+      } else if (keyword) {
+        result = await Articles.filterByKeywords(keyword, pagination);
+
+        // If we don't find article inside title, body or description
+        // we search it inside tag
+        if (result.length === 0) {
+          result = await Articles.filterByTags(keyword);
+        }
+      } else if (tag) {
+        result = await Articles.filterByTags(tag);
+      } else {
+        return res.status(400).json({
+          message: 'search paramater are required'
+        });
+      }
+
+      return res.status(200).json({
+        status: 200,
+        data: { articles: result }
+      });
+    } catch (e) {
+      return res.status(500).json({
+        message: 'Failed to search article'
+      });
+    }
+  }
+
+  /**
+     * helps filter by author
+     *
+     * @description Check whether title matches or
+     * if title contains the value passed as params
+     * @static
+     * @param {string} author
+     * @param {object} pagination
+     * @returns {object} response
+     * @memberof Articles
+    */
+  static async filterByAuthor(author, pagination) {
+    const where = {
+      username: { [Op.iLike]: `%${author}%` }
+    };
+
+    const result = await Article.findAll({
+      order: [['createdAt', 'DESC']],
+      limit: pagination.limit,
+      offset: pagination.offset,
+      include: [
+        {
+          model: User,
+          attributes: ['username', 'email', 'image'],
+          where,
+        },
+        {
+          model: Tags,
+        },
+        {
+          model: Rating,
+          attributes: ['rate']
+        }
+      ]
+    });
+
+    return result;
+  }
+
+  /**
+     * helps filter by title
+     *
+     * @description Check whether title matches or
+     * if title contains the value passed as params
+     * @static
+     * @param {string} title
+     * @param {object} pagination
+     * @returns {object} response
+     * @memberof Articles
+    */
+  static async filterByTitle(title, pagination) {
+    const where = {
+      title: { [Op.iLike]: `%${title}%` }
+    };
+
+    const result = await Article.findAll({
+      order: [['createdAt', 'DESC']],
+      limit: pagination.limit,
+      offset: pagination.offset,
+      where,
+      include: includeQuery
+    });
+
+    return result;
+  }
+
+  /**
+     * helps filter by keyword
+     *
+     * @description search the keyword inside the article title, body or description
+     * @static
+     * @param {string} keywords
+     * @param {object} pagination
+     * @returns {object} response
+     * @memberof Articles
+    */
+  static async filterByKeywords(keywords, pagination) {
+    const where = {
+      [Op.or]: [
+        { title: { [Op.iLike]: `%${keywords}%` } },
+        { body: { [Op.iLike]: `%${keywords}%` } },
+        { description: { [Op.iLike]: `%${keywords}%` } }
+      ]
+    };
+
+    const result = await Article.findAll({
+      order: [['createdAt', 'DESC']],
+      limit: pagination.limit,
+      offset: pagination.offset,
+      where,
+      include: includeQuery
+    });
+
+    return result;
+  }
+
+  /**
+     * helps filter by tag
+     *
+     * @description search if tagName contains tags pass in params
+     * @static
+     * @param {string[]} tags
+     * @returns {object} response
+     * @memberof Articles
+    */
+  static async filterByTags(tags) {
+    const tagsList = Articles.tagsToArray(tags);
+    const where = {
+      [Op.or]: [
+        { tagName: tagsList }
+      ]
+    };
+
+    const result = await Tags.findAll({
+      where,
+      include: [{
+        model: Article,
+        include: [
+          {
+            model: User,
+            attributes: ['username', 'email', 'image'],
+          },
+          {
+            model: Rating,
+            attributes: ['rate']
+          }
+        ],
+        order: [['createdAt', 'DESC']],
+      }]
+    });
+
+    return result;
   }
 }
 export default Articles;

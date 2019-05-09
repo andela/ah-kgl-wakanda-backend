@@ -5,6 +5,7 @@ import readTime from '../helpers/readTime';
 import dummyUsers from './config/users';
 
 import app from '../../app';
+import Articles from '../controllers/articles';
 
 // Chai configuration
 const { expect } = chai;
@@ -40,10 +41,16 @@ const slug = ['how-to-train-your-dragon', 'how-to-train-your-cat'];
 let loginToken;
 
 const lorem = 'Lorem ipsum dolor sit amet'.repeat(100);
+const title = 'How to train your dog';
+const author = 'mutombo';
+const keyword = 'Ever wonder how';
+const tags = {
+  cat: 'cat',
+  dog: 'dog'
+};
 
 after(() => {
   Article.destroy({ truncate: true });
-  // Users.destroy({ truncate: true });
 });
 
 describe('Signing up a new user', () => {
@@ -517,6 +524,156 @@ describe('Article endpoints', () => {
       expect(readTime('', '', '')).to.be.equals('Less than a minute');
       expect(readTime(article.title, article.description, article.body)).to.be.equals('Less than a minute');
       expect(readTime(article.title, article.description, lorem)).to.be.equals('2 min');
+    });
+  });
+
+  describe('The endpoint for article search', () => {
+    describe('Filter by article title', () => {
+      it('should search article by title', (done) => {
+        chai.request(app)
+          .get(`/api/search?title=${title}`)
+          .end((error, res) => {
+            expect(res.status).to.be.equal(200);
+            expect(res.body).to.have.property('data');
+            expect(res.body.data).to.have.property('articles');
+            done();
+          });
+      });
+
+      it('should fail if title not provided', (done) => {
+        chai.request(app)
+          .get('/api/search?title=')
+          .end((error, res) => {
+            expect(res.status).to.be.equal(400);
+            expect(res.body).to.have.property('message');
+            expect(res.body.message).to.have.equals('title is not allowed to be empty');
+            done();
+          });
+      });
+    });
+
+    describe('Filter by article author', () => {
+      it('should search article by author', (done) => {
+        chai.request(app)
+          .get(`/api/search?author=${author}`)
+          .end((error, res) => {
+            expect(res.status).to.be.equal(200);
+            expect(res.body).to.have.property('data');
+            expect(res.body.data).to.have.property('articles');
+            done();
+          });
+      });
+
+      it('should fail if author not provided', (done) => {
+        chai.request(app)
+          .get('/api/search?author=')
+          .end((error, res) => {
+            expect(res.status).to.be.equal(400);
+            expect(res.body).to.have.property('message');
+            expect(res.body.message).to.have.equals('author is not allowed to be empty');
+            done();
+          });
+      });
+    });
+
+    describe('Filter by article keywords', () => {
+      it('should search article by keyword', (done) => {
+        chai.request(app)
+          .get(`/api/search?keyword=${keyword}`)
+          .end((error, res) => {
+            expect(res.status).to.be.equal(200);
+            expect(res.body).to.have.property('data');
+            expect(res.body.data).to.have.property('articles');
+            done();
+          });
+      });
+
+      it('should search keyword inside the tagList', (done) => {
+        chai.request(app)
+          .get('/api/search?keyword=keyword_not_exist')
+          .end((error, res) => {
+            expect(res.status).to.be.equal(200);
+            expect(res.body).to.have.property('data');
+            expect(res.body.data).to.have.property('articles');
+            done();
+          });
+      });
+
+      it('should fail if keyword not provided', (done) => {
+        chai.request(app)
+          .get('/api/search?keyword=')
+          .end((error, res) => {
+            expect(res.status).to.be.equal(400);
+            expect(res.body).to.have.property('message');
+            expect(res.body.message).to.have.equals('keyword is not allowed to be empty');
+            done();
+          });
+      });
+    });
+
+    describe('Filter by article tags', () => {
+      it('should search article by tags = cat', (done) => {
+        chai.request(app)
+          .get(`/api/search?tag=${tags.cat}`)
+          .end((error, res) => {
+            expect(res.status).to.be.equal(200);
+            expect(res.body).to.have.property('data');
+            expect(res.body.data).to.have.property('articles');
+            done();
+          });
+      });
+
+      it('should search article by multiple tags = cat,dog', (done) => {
+        chai.request(app)
+          .get(`/api/search?tag=${tags.cat},${tags.dog}`)
+          .end((error, res) => {
+            expect(res.status).to.be.equal(200);
+            expect(res.body).to.have.property('data');
+            expect(res.body.data).to.have.property('articles');
+            done();
+          });
+      });
+
+      it('should fail if tag not provided', (done) => {
+        chai.request(app)
+          .get('/api/search?tag=')
+          .end((error, res) => {
+            expect(res.status).to.be.equal(400);
+            expect(res.body).to.have.property('message');
+            expect(res.body.message).to.have.equals('tag is not allowed to be empty');
+            done();
+          });
+      });
+    });
+
+    it('should respond search paramater are required', (done) => {
+      chai.request(app)
+        .get('/api/search')
+        .end((error, res) => {
+          expect(res.status).to.be.equal(400);
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).to.have.equals('search paramater are required');
+          done();
+        });
+    });
+  });
+
+  describe('The Article controller structure', () => {
+    it('should be a function', () => {
+      expect(Articles.createSlug).to.be.a('function');
+      expect(Articles.create).to.be.a('function');
+      expect(Articles.getAll).to.be.a('function');
+      expect(Articles.get).to.be.a('function');
+      expect(Articles.update).to.be.a('function');
+      expect(Articles.delete).to.be.a('function');
+      expect(Articles.like).to.be.a('function');
+      expect(Articles.unlike).to.be.a('function');
+      expect(Articles.tagsToArray).to.be.a('function');
+      expect(Articles.search).to.be.a('function');
+      expect(Articles.filterByAuthor).to.be.a('function');
+      expect(Articles.filterByTitle).to.be.a('function');
+      expect(Articles.filterByKeywords).to.be.a('function');
+      expect(Articles.filterByTags).to.be.a('function');
     });
   });
 });
