@@ -14,6 +14,7 @@ router.get('/articles/:slug', ArticleValidations.get, Articles.get);
 router.put('/articles/:slug', ArticleValidations.update, Articles.update);
 router.delete('/articles/:slug', ArticleValidations.get, Articles.delete);
 router.post('/articles/:slug/share/:channel', validate(schema.params, true), Articles.share);
+router.get('/articles/:slug/stats', checkToken, ArticleValidations.get, Articles.stats);
 
 
 export default router;

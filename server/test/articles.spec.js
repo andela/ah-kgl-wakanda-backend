@@ -88,6 +88,7 @@ describe('Article endpoints', () => {
             .set('Authorization', `Bearer ${resp.body.user.token}`)
             .send({ article })
             .end((error, res) => {
+              slug[3] = res.body.data.article.slug;
               expect(res.body.status).to.be.equal(201);
               expect(res.body).to.have.property('data');
               expect(res.body.data).to.have.property('article');
@@ -517,6 +518,44 @@ describe('Article endpoints', () => {
       expect(readTime('', '', '')).to.be.equals('Less than a minute');
       expect(readTime(article.title, article.description, article.body)).to.be.equals('Less than a minute');
       expect(readTime(article.title, article.description, lorem)).to.be.equals('2 min');
+    });
+  });
+
+  describe('The endpoint to get the read stats', () => {
+    it('Should return the read stats', (done) => {
+      chai.request(app)
+        .get(`/api/articles/${slug[3]}/stats`)
+        .set('Content-Type', 'application/json')
+        .set('Authorization', loginToken)
+        .end((err, res) => {
+          expect(res.status).to.equals(200);
+          expect(res.body.article.slug).to.be.equals(slug[3]);
+          done();
+        });
+    });
+
+    it('Should when the article is not found', (done) => {
+      chai.request(app)
+        .get(`/api/articles/${slug[0]}/stats`)
+        .set('Content-Type', 'application/json')
+        .set('Authorization', loginToken)
+        .end((err, res) => {
+          expect(res.status).to.equals(404);
+          expect(res.body.message).to.be.equals('Article not found');
+          done();
+        });
+    });
+
+    it('Should fail if the article does not belong to the current user', (done) => {
+      chai.request(app)
+        .get(`/api/articles/${slug[3]}/stats`)
+        .set('Content-Type', 'application/json')
+        .set('Authorization', userToken)
+        .end((err, res) => {
+          expect(res.status).to.equals(401);
+          expect(res.body.message).to.be.equals('Only the owner can view the read stats');
+          done();
+        });
     });
   });
 });

@@ -112,13 +112,28 @@ class Articles {
       });
 
       if (result) {
+        // Increment an article reads
+        const { slug } = result;
+        let { reads } = result;
+        reads += 1;
+
+        let article = await Article.update({ reads }, {
+          where: { slug, },
+          returning: true,
+          plain: true
+        });
+
         result = Object.assign(result.dataValues, {
           readTime: readTime(result.title, result.description, result.body)
         });
 
+        article = article[1].get();
+
+        article.reads = undefined;
+
         return res.status(200).json({
           status: 200,
-          data: { article: result }
+          data: { article }
         });
       }
 
@@ -414,6 +429,47 @@ class Articles {
       return article;
     } catch (error) {
       return null;
+    }
+  }
+
+  /**
+   * Gets the article statistic
+   * about the number of reads
+   *
+   * @static
+   * @param {*} req
+   * @param {*} res
+   * @returns {object} article
+   * @memberof Articles
+   */
+  static async stats(req, res) {
+    const { slug } = req.params;
+
+    try {
+      const article = await Article.findOne({ where: { slug }, attributes: ['userId', 'slug', 'title', 'reads'] });
+
+      if (!article) {
+        return res.status(404).json({
+          status: 404,
+          message: 'Article not found',
+        });
+      }
+
+      if (req.user.id !== article.userId) {
+        return res.status(401).json({
+          status: 401,
+          message: 'Only the owner can view the read stats',
+        });
+      }
+
+      article.userId = undefined;
+
+      return res.status(200).json({
+        status: 200,
+        article,
+      });
+    } catch (e) {
+      errorHandler.errorResponse(res, e);
     }
   }
 }

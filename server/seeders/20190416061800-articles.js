@@ -10,6 +10,15 @@ module.exports = {
 			updatedAt: new Date()
 		},
 		{
+			title: 'How to train your dog',
+			description: 'Ever wonder how?',
+			body: 'It takes a Jacobian',
+			slug: 'how-to-train-your-dog',
+			images: ['https://image.jpg'],
+			createdAt: new Date(),
+			updatedAt: new Date()
+		},
+		{
 			title: 'How to train your cat',
 			description: 'Ever wonder how?',
 			body: 'It takes a Jacobian',
