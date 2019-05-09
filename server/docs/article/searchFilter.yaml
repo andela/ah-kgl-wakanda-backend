@@ -1,12 +1,10 @@
 paths:
-  ? /search?author={value}&title={value}&tag={value}&keyword={value}&offset={value}&limit={value}
-  : get:
+  /search?author={value}&title={value}&tag={value}&keyword={value}:
+    get:
       tags:
         - Articles
       summary: Search article filtering by title, author, tag or keyword
-      description:
-        Authentication not required, return all articles satisfying the filter
-        criteria
+      description: Authentication not required, support pagination for title, author and tag filter
       consumes:
         - application/json
       produces:
