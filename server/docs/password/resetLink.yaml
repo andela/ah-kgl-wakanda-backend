@@ -1,0 +1,30 @@
+paths:
+  /users/reset_password:
+    post:
+      tags:
+        - User
+      summary: Enable sending reset password link to the user
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/reset-email-info"
+      responses:
+        200:
+          description: Reset Password email successfully delivered
+        404:
+          description: No user found with this email address
+        500:
+          description: Fail to send the reset email
+definitions:
+  reset-email-info:
+    type: object
+    properties:
+      email:
+        type: string
+        format: email

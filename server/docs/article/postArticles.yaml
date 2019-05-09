@@ -1,0 +1,42 @@
+paths:
+  /articles:
+    post:
+      tags:
+        - Articles
+      summary: Create an article
+      description: Authentication required, returns an article
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/createArticle"
+      responses:
+        200:
+          description: Ok
+        400:
+          description: Invalid parameter
+        401:
+          description: Unauthorized request
+definitions:
+  createArticle:
+    type: object
+    properties:
+      title:
+        type: string
+      description:
+        type: string
+      body:
+        type: string
+      images:
+        type: array
+        items:
+          type: string
+      Tags:
+        type: array
+        items:
+          type: string

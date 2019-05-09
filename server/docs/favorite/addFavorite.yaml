@@ -1,0 +1,24 @@
+paths:
+  /articles/{slug}/favorite:
+    post:
+      tags:
+        - Articles
+      summary: User will be able to like articles
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: slug
+          required: true
+          description: Alphanumeric id that uniquely identify an article
+      responses:
+        200:
+          description: User successfully liked the article
+        401:
+          description: Authorization is missing
+        404:
+          description: Article was not found
+        500:
+          description: Fail to like the article

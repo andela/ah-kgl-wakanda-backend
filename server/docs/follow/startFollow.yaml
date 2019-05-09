@@ -1,0 +1,22 @@
+paths:
+  /profiles/{username}/follow:
+    post:
+      tags:
+        - Profiles
+      summary: Follow user
+      description:
+        Authentication required, returns a Profile. No additional parameters
+        required
+      produces:
+        - application/json
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+          description: The username of the user will be followed
+      responses:
+        200:
+          description: Successful operation
+        404:
+          description: User not found

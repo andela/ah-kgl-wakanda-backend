@@ -1,0 +1,19 @@
+paths:
+  /articles/{slug}/comments/{id}:
+    delete:
+      tags:
+        - Comment
+      summary: Delete a comment
+      description: Authentication required. No additional parameters required
+      produces:
+        - application/json
+      parameters:
+        - name: slug
+          description: The slug of the article
+        - name: id
+          description: The id of the comment
+      responses:
+        200:
+          description: The success message
+        404:
+          description: The article was not found or The comment was not found

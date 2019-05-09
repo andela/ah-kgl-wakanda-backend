@@ -1,0 +1,18 @@
+paths:
+  /users:
+    get:
+      tags:
+        - User
+      summary: Gets the list of users
+      description: Authentication required
+      consumes:
+        - application/json
+      produces:
+        - application/xml
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Ok
+        401:
+          description: Unauthorized

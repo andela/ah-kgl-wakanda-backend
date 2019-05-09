@@ -1,0 +1,25 @@
+paths:
+  /notifications/{id}:
+    put:
+      tags:
+        - Notifications
+      summary: mark one notification as read
+      description:
+        Authentication required, returns the updated notification, no additional
+        parameter
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: The notification to be mark as read
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Successful
+        404:
+          description: This notification is either read or does not exist
