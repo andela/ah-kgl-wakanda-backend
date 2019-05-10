@@ -1,0 +1,42 @@
+paths:
+  /users/{username}:
+    put:
+      tags:
+        - Profiles
+      summary: Update the user profile
+      description:
+        Authentication required, returns the updated user. No additional
+        parameters required
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: username
+          description: The user's username
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/profile"
+      responses:
+        200:
+          description: Updated user object
+        401:
+          description: Unauthorized request
+        404:
+          description: User was not found
+definitions:
+  profile:
+    type: object
+    properties:
+      user:
+        type: object
+        properties:
+          email:
+            type: string
+            format: email
+          bio:
+            type: string
+          image:
+            type: string

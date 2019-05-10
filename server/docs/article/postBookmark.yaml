@@ -1,0 +1,23 @@
+paths:
+  /articles/{slug}/bookmark:
+    post:
+      tags:
+        - Articles
+      summary: Bookmark an article
+      description:
+        Authentication required, returns a bookmarked article. No additional
+        parameters required
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: slug
+          schema:
+            type: string
+          required: true
+          description: The artice will be bookmarked
+      responses:
+        200:
+          description: Successful operation
+        404:
+          description: Article not found

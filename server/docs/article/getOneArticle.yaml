@@ -1,0 +1,23 @@
+paths:
+  /article/{slug}:
+    get:
+      tags:
+        - Articles
+      summary: Get a single article
+      description:
+        Authentication required, returns a article. No additional parameters
+        required
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: slug
+          description: The slug of the article
+      responses:
+        200:
+          description: The article object
+        401:
+          description: Unauthorized request
+        404:
+          description: The article was not found

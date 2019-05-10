@@ -1,0 +1,25 @@
+paths:
+  /articles?offset={value}&limit={value}:
+    get:
+      tags:
+        - Articles
+      summary: Get all articles, Add pagination support with offset and limit
+      description: Add pagination support with offset and limit
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: The number of items to skip before starting to collect the result set
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return
+      responses:
+        401:
+          description: Unauthorized request

@@ -1,0 +1,16 @@
+paths:
+  /profiles/follow:
+    get:
+      tags:
+        - Profiles
+      summary: View followers and followees
+      description:
+        Authentication required, returns the followers and followees of the
+        authenticated user. No additional parameters required
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Successful operation
+        401:
+          description: Unauthorized access

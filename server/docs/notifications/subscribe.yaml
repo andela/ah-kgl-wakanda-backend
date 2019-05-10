@@ -1,0 +1,18 @@
+paths:
+  /notifications/subscribe:
+    put:
+      tags:
+        - Notifications
+      summary: User should be able to subscribe or unsubscribe for email notifications
+      description:
+        Authentication required, returns the updated user, no additional
+        parameter
+      produces:
+        - application/json
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Successfully unsubscribe or subscribe
+        400:
+          description: No email address provided
