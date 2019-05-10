@@ -99,7 +99,6 @@ describe('Admin', () => {
         .delete('/api/admin/account/hadadus')
         .send(dummyUsers.adminUpdate)
         .end((err, res) => {
-          console.log();
           expect(res.status).to.equal(200);
           expect(res.body.message).to.equal('User hadadus deleted successfully');
           done();
