@@ -14,6 +14,7 @@ import permissions from './permissions';
 import admin from './admin';
 import roles from './roles';
 import permissions from './permissions';
+import admin from './admin';
 
 const router = express.Router();
 
@@ -32,5 +33,6 @@ router.use(permissions);
 router.use(admin);
 router.use(roles);
 router.use(permissions);
+router.use(admin);
 
 export default router;
