@@ -119,7 +119,7 @@ class Admin {
         message: `User ${user.get().username} deleted successfully`,
       });
     } catch (error) {
-      return error;
+      Admin.errorHandler(res, error);
     }
   }
 
@@ -159,7 +159,7 @@ class Admin {
         user: newAdmin[1][0],
       });
     } catch (error) {
-      return error;
+      Admin.errorHandler(res, error);
     }
   }
 
@@ -200,7 +200,7 @@ class Admin {
         user: newAdmin[1][0],
       });
     } catch (error) {
-      return error;
+      Admin.errorHandler(res, error);
     }
   }
 
