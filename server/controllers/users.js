@@ -198,11 +198,14 @@ class Users {
   static async update(req, res) {
     try {
       const { username } = req.params;
+      const {
+        email, bio, image
+      } = req.body;
       const result = await User.update(
         {
-          email: req.body.email,
-          bio: req.body.bio,
-          image: req.body.image,
+          email,
+          bio,
+          image,
         },
         {
           where: { username },
@@ -243,6 +246,27 @@ class Users {
       });
     } catch (e) {
       errorHandler.errorResponse(res, e);
+    }
+  }
+
+  /**
+   *
+   *
+   * @static
+   * @param {string} username
+   * @param {string} res
+   * @returns {object} response
+   * @memberof User
+   */
+  static async getUser(username,) {
+    try {
+      const user = await User.findOne({
+        where: { username },
+        returning: true,
+      });
+      return user;
+    } catch (error) {
+      return error;
     }
   }
 }

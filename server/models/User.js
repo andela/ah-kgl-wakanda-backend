@@ -6,6 +6,15 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       unique: true,
     },
+    firstname: {
+      type: DataTypes.STRING,
+    },
+    lastname: {
+      type: DataTypes.STRING,
+    },
+    roles: {
+      type: DataTypes.STRING,
+    },
     email: {
       type: DataTypes.STRING,
     },
