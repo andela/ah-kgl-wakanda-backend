@@ -1,9 +1,9 @@
 paths:
-  /admin/account/:username:
-    put:
+  /admin/account/:username/isadmin:
+    delete:
       tags:
         - Admin
-      summary: update a user
+      summary: make an admin a normal user
       description: Authentication required (admin)
       consumes:
         - application/json
@@ -19,9 +19,7 @@ paths:
           description: Ok
         404:
           description: Not found
-        400:
-          description: validation error
         409:
-          description: Email already exists
+          description: already an admin
         401:
           description: Unauthorized

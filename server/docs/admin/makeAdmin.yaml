@@ -11,6 +11,9 @@ paths:
         - application/xml
       security:
         - bearerAuth: []
+      parameters:
+        - name: username
+          description: The username of the user
       responses:
         200:
           description: Ok
