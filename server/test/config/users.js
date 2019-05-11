@@ -98,6 +98,14 @@ const users = {
     image: 'http://hdsjsdhsj.zx',
     bio: 'sdjhsjdhsjdhs'
   },
+  adminUpdateSameEmail: {
+    firstname: 'hadad1',
+    lastname: 'bwenge',
+    email: 'hadad.bwenge@andela.com',
+    password: 'Hadd2dd',
+    image: 'http://hdsjsdhsj.zx',
+    bio: 'sdjhsjdhsjdhs'
+  },
 
 };
 

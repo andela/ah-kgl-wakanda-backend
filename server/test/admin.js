@@ -72,10 +72,21 @@ describe('Admin', () => {
           done();
         });
     });
-    it('should update the user', (done) => {
+    it('should update the user when changing the email', (done) => {
       chai.request(app)
         .put('/api/admin/account/hadadus')
         .send(dummyUsers.adminUpdate)
+        .end((err, res) => {
+          expect(res.status).to.equal(200);
+          expect(res.body.user).to.be.an('object');
+          expect(res.body.message).to.equal('A token has been sent to the new email (hadad.bwenge@andela.com) for verification');
+          done();
+        });
+    });
+    it('should update the user', (done) => {
+      chai.request(app)
+        .put('/api/admin/account/hadadus')
+        .send(dummyUsers.adminUpdateSameEmail)
         .end((err, res) => {
           expect(res.status).to.equal(200);
           expect(res.body.user).to.be.an('object');

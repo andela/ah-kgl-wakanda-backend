@@ -258,7 +258,7 @@ class Users {
    * @returns {object} response
    * @memberof User
    */
-  static async getUser(username,) {
+  static async getUser(username) {
     try {
       const user = await User.findOne({
         where: { username },
