@@ -117,6 +117,44 @@ describe('Comments endpoints ', () => {
         });
     });
   });
+  describe('Enpoint to like a comment', () => {
+    it('should like the comment', (done) => {
+      chai.request(app)
+        .post(`/api/articles/how-to-dougie-177804958/comments/${commentId}/favorite`)
+        .set('Content-Type', 'application/json')
+        .set('Authorization', loginToken)
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body).to.have.property('data');
+          expect(res.body.data).to.have.property('comment');
+          expect(res.body.data.comment).to.have.property('body');
+          expect(res.body.data.comment.body).equals('Good job');
+          expect(res.body.data.comment).to.have.property('userId');
+          expect(res.body.data.comment).to.have.property('articleId');
+          expect(res.body.data.comment).to.have.property('favorited');
+          expect(res.body.data.comment.favorited).equals(true);
+          done();
+        });
+    });
+    it('should unLike the comment', (done) => {
+      chai.request(app)
+        .delete(`/api/articles/how-to-dougie-177804958/comments/${commentId}/favorite`)
+        .set('Content-Type', 'application/json')
+        .set('Authorization', loginToken)
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body).to.have.property('data');
+          expect(res.body.data).to.have.property('comment');
+          expect(res.body.data.comment).to.have.property('body');
+          expect(res.body.data.comment.body).equals('Good job');
+          expect(res.body.data.comment).to.have.property('userId');
+          expect(res.body.data.comment).to.have.property('articleId');
+          expect(res.body.data.comment).to.have.property('favorited');
+          expect(res.body.data.comment.favorited).equals(false);
+          done();
+        });
+    });
+  });
   describe('Enpoint to update a comment', () => {
     it('should update the comment', (done) => {
       chai.request(app)

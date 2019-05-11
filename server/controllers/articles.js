@@ -1,7 +1,9 @@
 import slugify from '@sindresorhus/slugify';
 import open from 'open';
 import { Op } from 'sequelize';
-import { Article, User, Tags, ArticleLikes, Rating } from '../models';
+import {
+  Article, User, Tags, ArticleLikes, Rating
+} from '../models';
 import errorHandler from '../helpers/errorHandler';
 import includeQuery from '../helpers/includeQuery';
 import readTime from '../helpers/readTime';
