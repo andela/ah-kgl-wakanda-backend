@@ -145,10 +145,10 @@ describe('Admin', () => {
         });
     });
   });
-  describe('when making a user an admin', () => {
+  describe('when making an admin a normal user', () => {
     it('should not succeed when user is not found', (done) => {
       chai.request(app)
-        .post('/api/admin/account/papbita/isadmin')
+        .delete('/api/admin/account/papbita/isadmin')
         .end((err, res) => {
           expect(res.status).to.equal(404);
           expect(res.body.message).to.equal('User not found');

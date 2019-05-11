@@ -104,23 +104,19 @@ class Admin {
    * @returns {void}
   */
   static async deleteUsers(req, res) {
-    try {
-      const { username } = req.params;
-      const user = await Users.getUser(username, res);
-      if (!user) {
-        return res.status(404).json({
-          status: 404,
-          message: 'User not found',
-        });
-      }
-      await User.destroy({ where: { username, }, returning: true });
-      return res.status(200).json({
-        status: 200,
-        message: `User ${user.get().username} deleted successfully`,
+    const { username } = req.params;
+    const user = await Users.getUser(username, res);
+    if (!user) {
+      return res.status(404).json({
+        status: 404,
+        message: 'User not found',
       });
-    } catch (error) {
-      Admin.errorHandler(res, error);
     }
+    await User.destroy({ where: { username, }, returning: true });
+    return res.status(200).json({
+      status: 200,
+      message: `User ${user.get().username} deleted successfully`,
+    });
   }
 
   /**
@@ -130,37 +126,33 @@ class Admin {
    * @returns {void}
   */
   static async makeAdmin(req, res) {
-    try {
-      const { username } = req.params;
-      const user = await Users.getUser(username, res);
-      if (!user) {
-        return res.status(404).json({
-          status: 404,
-          message: 'User not found',
-        });
-      }
-      if (user.get().roles === 'admin') {
-        return res.status(400).json({
-          status: 400,
-          message: `${username} is already an admin`,
-        });
-      }
-      const newAdmin = await User.update(
-        { roles: 'admin', },
-        {
-          where: { username },
-          returning: true
-        }
-      );
-      delete newAdmin[1][0].get().password;
-      return res.status(200).json({
-        status: 200,
-        message: `${username} is now an admin`,
-        user: newAdmin[1][0],
+    const { username } = req.params;
+    const user = await Users.getUser(username, res);
+    if (!user) {
+      return res.status(404).json({
+        status: 404,
+        message: 'User not found',
       });
-    } catch (error) {
-      Admin.errorHandler(res, error);
     }
+    if (user.get().roles === 'admin') {
+      return res.status(400).json({
+        status: 400,
+        message: `${username} is already an admin`,
+      });
+    }
+    const newAdmin = await User.update(
+      { roles: 'admin', },
+      {
+        where: { username },
+        returning: true
+      }
+    );
+    delete newAdmin[1][0].get().password;
+    return res.status(200).json({
+      status: 200,
+      message: `${username} is now an admin`,
+      user: newAdmin[1][0],
+    });
   }
 
 
@@ -171,37 +163,33 @@ class Admin {
    * @returns {void}
   */
   static async makeUser(req, res) {
-    try {
-      const { username } = req.params;
-      const user = await Users.getUser(username, res);
-      if (!user) {
-        return res.status(404).json({
-          status: 404,
-          message: 'User not found',
-        });
-      }
-      if (user.get().roles === 'user') {
-        return res.status(400).json({
-          status: 400,
-          message: `${username} is already a normal user`,
-        });
-      }
-      const newAdmin = await User.update(
-        { roles: 'user', },
-        {
-          where: { username },
-          returning: true
-        }
-      );
-      delete newAdmin[1][0].get().password;
-      return res.status(200).json({
-        status: 200,
-        message: `${username} is now a normal user`,
-        user: newAdmin[1][0],
+    const { username } = req.params;
+    const user = await Users.getUser(username, res);
+    if (!user) {
+      return res.status(404).json({
+        status: 404,
+        message: 'User not found',
       });
-    } catch (error) {
-      Admin.errorHandler(res, error);
     }
+    if (user.get().roles === 'user') {
+      return res.status(400).json({
+        status: 400,
+        message: `${username} is already a normal user`,
+      });
+    }
+    const newAdmin = await User.update(
+      { roles: 'user', },
+      {
+        where: { username },
+        returning: true
+      }
+    );
+    delete newAdmin[1][0].get().password;
+    return res.status(200).json({
+      status: 200,
+      message: `${username} is now a normal user`,
+      user: newAdmin[1][0],
+    });
   }
 
   /**
