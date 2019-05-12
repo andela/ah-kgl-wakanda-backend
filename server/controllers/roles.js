@@ -1,4 +1,4 @@
-import { Role, Permission } from '../models';
+import { Role } from '../models';
 
 /**
  * @author Mutombo Jean-vincent
@@ -97,41 +97,13 @@ class Roles {
   /**
    *
    * @author Mutombo Jean-vincent
-   * @description get all permissions for a specific the role
-   * @static
-   * @param {req} req
-   * @param {res} res
-   * @returns {void}
-   */
-  static async getRolePermissions(req, res) {
-    try {
-      const { roleId } = req.params;
-      const result = await Permission.findAll({
-        where: { roleId },
-        attributes: ['roleId'],
-        include: [{ model: Role }]
-      });
-      return res.status(500).json({
-        data: result
-      });
-    } catch (error) {
-      return res.status(500).json({
-        message:
-          'Fail to get the permission list for this role'
-      });
-    }
-  }
-
-  /**
-   *
-   * @author Mutombo Jean-vincent
    * @description update specific the role
    * @static
    * @param {req} req
    * @param {res} res
    * @returns {void}
    */
-  static async updateRole(req, res) {
+  static async update(req, res) {
     try {
       const { roleId } = req.params;
       const { name, description } = req.body;
@@ -172,7 +144,7 @@ class Roles {
    * @param {res} res
    * @returns {void}
    */
-  static async deleteRole(req, res) {
+  static async delete(req, res) {
     try {
       const { roleId } = req.params;
 
