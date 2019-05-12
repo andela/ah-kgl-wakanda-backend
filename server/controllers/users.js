@@ -3,6 +3,7 @@ import { User } from '../models/index';
 import encrypt from '../helpers/encrypt';
 import sendMail from '../helpers/sendVerificationEmail';
 import errorHandler from '../helpers/errorHandler';
+import setPermission from '../helpers/setPermission';
 
 dotenv.config();
 
@@ -19,8 +20,18 @@ class Users {
   static async signUp(req, res) {
     try {
       const hashedPassword = encrypt.hashPassword(req.body.password);
+
+      // set default roles for the user
+      const setRole = await setPermission();
+      const roleId = setRole.id;
+
       const { username, email } = req.body;
-      const newUser = await User.create({ username, email, password: hashedPassword });
+      const newUser = await User.create({
+        username,
+        email,
+        password: hashedPassword,
+        roleId,
+      });
       const token = await Users.generateToken(newUser.get());
       if (process.env.NODE_ENV !== 'test') await sendMail(email, username, token);
       return Users.send(res, newUser, token);
@@ -68,8 +79,11 @@ class Users {
       id,
       username,
       email,
+      roleId,
     } = user;
-    return encrypt.generateToken({ id, username, email });
+    return encrypt.generateToken({
+      id, username, email, roleId,
+    });
   }
 
   /**
