@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/roles', Validation.validateRoles, Roles.create);
 router.get('/roles', Roles.getAll);
 router.get('/roles/:id');
-router.get('/roles/:id/permissions', Permissions.getRolePermissions);
+router.get('/roles/:roleId/permissions', Permissions.getRolePermissions);
 router.put('/roles/:id', Validation.validateRoles, Roles.update);
 router.delete('/roles/:id', Roles.delete);
 
