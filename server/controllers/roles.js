@@ -72,11 +72,11 @@ class Roles {
    * @returns {void}
    */
   static async get(req, res) {
-    const { roleId } = req.params;
+    const { id } = req.params;
 
     try {
       const role = await Role.findOne({
-        where: { id: roleId }
+        where: { id }
       });
 
       if (!role) {
@@ -105,11 +105,11 @@ class Roles {
    */
   static async update(req, res) {
     try {
-      const { roleId } = req.params;
+      const { id } = req.params;
       const { name, description } = req.body;
 
       const role = await Role.findOne({
-        where: { id: roleId }
+        where: { id }
       });
 
       if (!role) {
@@ -146,11 +146,11 @@ class Roles {
    */
   static async delete(req, res) {
     try {
-      const { roleId } = req.params;
+      const { id } = req.params;
 
       // check if the role already exist
       const role = await Role.findOne({
-        where: { id: roleId }
+        where: { id }
       });
 
       if (!role) {
@@ -160,7 +160,7 @@ class Roles {
       }
 
       await role.destroy({
-        where: { id: roleId }
+        where: { id }
       });
 
       return res.status(200).json({
