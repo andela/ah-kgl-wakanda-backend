@@ -1,0 +1,16 @@
+paths:
+  /permissions:
+    get:
+      tags:
+        - Permissions
+      summary: Get all permissions
+      description: For admin, super-admin or any user with admin privileges
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      responses:
+        200:
+          description: Ok
+        500:
+          description: Fail to retrieve all permissions

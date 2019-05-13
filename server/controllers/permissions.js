@@ -43,12 +43,19 @@ class Permissions {
       const permission = await Permission.findOne({
         where: { id: permissionId }
       });
+
+      if (!permission) {
+        return res.status(404).json({
+          message: 'The permission was not found'
+        });
+      }
+
       return res.status(200).json({
         permission
       });
     } catch (error) {
       return res.status(500).json({
-        message: 'Fail to get the permissions'
+        message: 'Fail to get the permission'
       });
     }
   }
@@ -83,7 +90,7 @@ class Permissions {
         include: [{ model: Role }]
       });
 
-      return res.status(500).json({
+      return res.status(200).json({
         data: result
       });
     } catch (err) {
@@ -134,7 +141,7 @@ class Permissions {
         canDelete,
       });
       return res.status(201).json({
-        message: 'Permission granted',
+        message: 'The Permission was successfully granted',
         permission
       });
     } catch (error) {
@@ -179,7 +186,7 @@ class Permissions {
         }
       });
       return res.status(200).json({
-        message: 'Permission revoked'
+        message: 'The permission was successfully revoked'
       });
     } catch (error) {
       return res.status(500).json({

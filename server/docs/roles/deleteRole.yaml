@@ -1,0 +1,24 @@
+paths:
+  /roles/{id}:
+    get:
+      tags:
+        - Roles
+      summary: Delete a specific role
+      description: For admin, super-admin or any user with admin privileges
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+          description: The id of the role
+      responses:
+        200:
+          description: Ok
+        404:
+          description: The role was not found
+        500:
+          description: "Fail to delete the role"

@@ -129,8 +129,7 @@ class Roles {
       });
     } catch (error) {
       return res.status(500).json({
-        message:
-          'Fail to update the role'
+        message: 'Fail to update the role'
       });
     }
   }
@@ -138,7 +137,7 @@ class Roles {
   /**
    *
    * @author Mutombo Jean-vincent
-   * @description delete a specific the role
+   * @description delete a specific role
    * @static
    * @param {req} req
    * @param {res} res
