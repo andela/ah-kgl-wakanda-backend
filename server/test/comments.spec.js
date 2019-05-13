@@ -136,6 +136,31 @@ describe('Comments endpoints ', () => {
           done();
         });
     });
+
+    it('should not like the comment', (done) => {
+      chai.request(app)
+        .post(`/api/articles/how-to-dougie-177804958/comments/${commentId}/favorite`)
+        .set('Content-Type', 'application/json')
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(401);
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).equal('Authorization is missing');
+          done();
+        });
+    });
+    it('should not like the comment', (done) => {
+      chai.request(app)
+        .post(`/api/articles/how-to-dougie-177804958/comments/${commentId}/favorite`)
+        .set('Content-Type', 'application/json')
+        .set('Authorization', loginToken)
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(400);
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).equal('You already liked this comment');
+          done();
+        });
+    });
+
     it('should unLike the comment', (done) => {
       chai.request(app)
         .delete(`/api/articles/how-to-dougie-177804958/comments/${commentId}/favorite`)
@@ -151,6 +176,17 @@ describe('Comments endpoints ', () => {
           expect(res.body.data.comment).to.have.property('articleId');
           expect(res.body.data.comment).to.have.property('favorited');
           expect(res.body.data.comment.favorited).equals(false);
+          done();
+        });
+    });
+    it('should not unlike the comment', (done) => {
+      chai.request(app)
+        .post(`/api/articles/how-to-dougie-177804958/comments/${commentId}/favorite`)
+        .set('Content-Type', 'application/json')
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(401);
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).equal('Authorization is missing');
           done();
         });
     });
