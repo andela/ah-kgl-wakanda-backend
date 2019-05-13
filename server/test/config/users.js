@@ -107,6 +107,11 @@ const users = {
     image: 'http://hdsjsdhsj.zx',
     bio: 'sdjhsjdhsjdhs'
   },
+  correctUserForReport: {
+    username: 'karlReport',
+    email: 'karl_test_Report@andela.com',
+    password: 'Hadad12@'
+  },
 
 };
 

@@ -49,7 +49,7 @@ const tags = {
 };
 
 after(() => {
-  Article.destroy({ truncate: true });
+  Article.destroy({ truncate: { cascade: true } });
 });
 
 describe('Signing up a new user', () => {

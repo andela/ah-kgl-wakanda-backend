@@ -13,11 +13,13 @@ import roles from './roles';
 import permissions from './permissions';
 import admin from './admin';
 
+import Report from './report';
 
 const router = express.Router();
 
 router.use(users);
 router.use(bookmarking);
+router.use(Report);
 router.use(articles);
 router.use(socialLogin);
 router.use(password);
@@ -29,8 +31,6 @@ router.use(notifications);
 router.use(roles);
 router.use(permissions);
 router.use(admin);
-router.use(roles);
-router.use(permissions);
-router.use(admin);
+router.use(Report);
 
 export default router;

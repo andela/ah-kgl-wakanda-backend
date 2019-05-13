@@ -104,6 +104,10 @@ class Notifications {
           receiverIds = [followedId];
           content = `${user.username} has started to follow you`;
           break;
+        case 'NEW Report':
+          receiverIds = await NotificationReceivers.getAdmins();
+          content = `${user.username} has started to follow you`;
+          break;
         default: return null;
       }
       receiverIds = removeDuplicates(receiverIds);
