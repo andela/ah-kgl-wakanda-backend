@@ -1,6 +1,6 @@
 paths:
   /roles/{id}:
-    get:
+    delete:
       tags:
         - Roles
       summary: Delete a specific role
