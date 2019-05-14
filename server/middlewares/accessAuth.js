@@ -1,33 +1,12 @@
-import jwt from 'jsonwebtoken';
-import { User, Permission } from '../models';
+import { Permission } from '../models';
+import checkToken from './checkToken';
 
-const checkToken = async (req, res, next) => {
+const accessAuth = async (req, res, next) => {
   // get resource from endpoint URL
-  const { originalUrl } = req;
-  const [, , , resource] = originalUrl.split('/');
+  const { path } = req;
+  const [...resource] = path.split('/');
 
-  // get the token from header
-  const { authorization } = req.headers;
-  if (!authorization) {
-    return res.status(401).json({
-      status: 401,
-      message: 'Authorization is missing',
-    });
-  }
-
-  const token = authorization.split(' ')[1];
-
-  try {
-    const jwtPayload = jwt.verify(token, process.env.SECRET);
-    const user = await User.findOne({ where: { id: jwtPayload.id } });
-    if (!user.isLoggedIn) {
-      return res.status(403).json({
-        status: 403,
-        message: 'You need to first log in',
-      });
-    }
-    req.user = jwtPayload;
-
+  await checkToken(req, res, async () => {
     // now check role and permission
     const { roleId } = req.user;
     const permissionsList = await Permission.findAll({
@@ -36,8 +15,13 @@ const checkToken = async (req, res, next) => {
     });
 
     let access = false;
+
+    // iterate on each permissions
     permissionsList.map((perms) => {
-      if (perms.resource === resource) {
+      // find the first permission resource matching
+      // any resource from the endpoint URL
+      const resourceMatching = resource.find(el => perms.resource === el);
+      if (perms.resource === resourceMatching) {
         if (req.method === 'POST' && perms.canCreate) access = true;
         else if (req.method === 'GET' && perms.canRead) access = true;
         else if (req.method === 'PUT' && perms.canUpdate) access = true;
@@ -48,12 +32,7 @@ const checkToken = async (req, res, next) => {
 
     if (access) next();
     else return res.status(403).json({ message: 'Access not Granted' });
-  } catch (error) {
-    return res.status(400).json({
-      status: 400,
-      message: error.message,
-    });
-  }
+  });
 };
 
-export default checkToken;
+export default accessAuth;

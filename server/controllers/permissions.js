@@ -19,7 +19,7 @@ class Permissions {
     try {
       const permission = await Permission.findAll();
       return res.status(200).json({
-        permission
+        data: permission
       });
     } catch (err) {
       return res.status(500).json({
@@ -51,7 +51,7 @@ class Permissions {
       }
 
       return res.status(200).json({
-        permission
+        data: permission
       });
     } catch (error) {
       return res.status(500).json({
@@ -142,7 +142,7 @@ class Permissions {
       });
       return res.status(201).json({
         message: 'The Permission was successfully granted',
-        permission
+        data: permission
       });
     } catch (error) {
       if (error.name === 'SequelizeUniqueConstraintError') {
@@ -170,7 +170,7 @@ class Permissions {
       const { permissionId } = req.params;
 
       // check if the permission exist or not
-      const permission = await Role.findOne({
+      const permission = await Permission.findOne({
         where: { id: permissionId }
       });
 
@@ -190,7 +190,7 @@ class Permissions {
       });
     } catch (error) {
       return res.status(500).json({
-        message: 'Fail to delete the permission'
+        message: 'Fail to revoke the permission'
       });
     }
   }
@@ -216,7 +216,7 @@ class Permissions {
       } = req.body;
 
       // check if the permission exist or not
-      const permission = await Role.findOne({
+      const permission = await Permission.findOne({
         where: { id: permissionId }
       });
 
@@ -235,7 +235,7 @@ class Permissions {
       });
 
       return res.status(200).json({
-        message: 'The permission successfully updated',
+        message: 'The permission was successfully updated',
         data: update
       });
     } catch (error) {

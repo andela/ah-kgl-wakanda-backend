@@ -34,7 +34,6 @@ module.exports = (sequelize, DataTypes) => {
     Permission.belongsTo(models.Role, {
       foreignKey: "roleId",
       targetKey: 'id',
-      onDelete: "SET NULL"
     });
   };
   return Permission;

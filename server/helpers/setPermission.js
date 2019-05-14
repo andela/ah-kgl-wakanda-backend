@@ -18,22 +18,36 @@ const permissions = [
     canCreate: true,
     canRead: true,
     canUpdate: true,
-    canDelete: false
+    canDelete: true
   },
   {
     resource: 'profiles',
     canCreate: true,
     canRead: true,
     canUpdate: true,
-    canDelete: false
+    canDelete: true
   },
   {
     resource: 'auth',
     canCreate: true,
     canRead: true,
     canUpdate: true,
-    canDelete: false
-  }
+    canDelete: true
+  },
+  {
+    resource: 'permissions',
+    canCreate: true,
+    canRead: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  {
+    resource: 'roles',
+    canCreate: true,
+    canRead: true,
+    canUpdate: true,
+    canDelete: true
+  },
 ];
 
 // create roles and attach permissions to them

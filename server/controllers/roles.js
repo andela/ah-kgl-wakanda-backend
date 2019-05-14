@@ -26,7 +26,7 @@ class Roles {
 
       return res.status(201).json({
         message: 'The role was successfully created',
-        role
+        data: role
       });
     } catch (err) {
       if (err.name === 'SequelizeUniqueConstraintError') {
@@ -53,7 +53,7 @@ class Roles {
     try {
       const roles = await Role.findAll();
       return res.status(200).json({
-        roles
+        data: roles
       });
     } catch (err) {
       return res.status(500).json({
@@ -85,7 +85,7 @@ class Roles {
         });
       }
       return res.status(200).json({
-        role
+        data: role
       });
     } catch (err) {
       return res.status(500).json({
