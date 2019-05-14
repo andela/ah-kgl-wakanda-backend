@@ -1,16 +1,10 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../../app';
-import { defaultRoles } from '../config/constant';
 
 // Chai configuration
 const { expect } = chai;
 chai.use(chaiHttp);
-
-const adminRole = {
-  name: defaultRoles.ADMIN,
-  description: 'admin can control our platform'
-};
 
 const testPermission = {
   resource: 'test',
