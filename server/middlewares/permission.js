@@ -1,10 +1,22 @@
 import { Permission } from '../models';
 import checkToken from './checkToken';
 
+/**
+ * @author Mutombo Jean-vincent
+ * The middleware should be placed to a group of endpoints
+ * For data access control and permission
+ * It can require an additional middleware for authorization
+ *
+ * @param {object} req
+ * @param {object} res
+ * @param {object} next
+ * @returns {void}
+ */
 const accessAuth = async (req, res, next) => {
   // get resource from endpoint URL
   const { path } = req;
   const [...resource] = path.split('/');
+
 
   await checkToken(req, res, async () => {
     // now check role and permission

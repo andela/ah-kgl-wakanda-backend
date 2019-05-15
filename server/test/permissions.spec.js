@@ -56,23 +56,6 @@ describe('Permissions endpoints', () => {
         });
     });
 
-    it('should respond The permission already exist', (done) => {
-      chai
-        .request(app)
-        .post(`/api/permissions/${roleId}`)
-        .send(testPermission)
-        .end((err, res) => {
-          expect(res.status).equals(409);
-          expect(res.status).to.be.a('number');
-          expect(res.body).to.be.an('object');
-          expect(res.body).to.have.property('message');
-
-          expect(res.body.message).to.be.a('string');
-          expect(res.body.message).equals('Permission already exist');
-          done();
-        });
-    });
-
     it('should validate resource', (done) => {
       chai
         .request(app)

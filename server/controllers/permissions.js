@@ -145,11 +145,6 @@ class Permissions {
         data: permission
       });
     } catch (error) {
-      if (error.name === 'SequelizeUniqueConstraintError') {
-        return res.status(409).json({
-          message: 'Permission already exist'
-        });
-      }
       return res.status(500).json({
         message: 'Fail to grant permissions to this role'
       });

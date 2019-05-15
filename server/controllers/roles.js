@@ -9,40 +9,6 @@ class Roles {
   /**
    *
    * @author Mutombo Jean-vincent
-   * @description create the role
-   * @static
-   * @param {req} req
-   * @param {res} res
-   * @returns {void}
-   */
-  static async create(req, res) {
-    try {
-      const { name, description } = req.body;
-
-      const role = await Role.create({
-        name: name.toLowerCase(),
-        description
-      });
-
-      return res.status(201).json({
-        message: 'The role was successfully created',
-        data: role
-      });
-    } catch (err) {
-      if (err.name === 'SequelizeUniqueConstraintError') {
-        return res.status(409).json({
-          message: 'The role already exist'
-        });
-      }
-      return res.status(500).json({
-        message: 'Fail to create the role'
-      });
-    }
-  }
-
-  /**
-   *
-   * @author Mutombo Jean-vincent
    * @description get all roles
    * @static
    * @param {req} req

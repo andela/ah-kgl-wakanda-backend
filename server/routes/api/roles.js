@@ -5,7 +5,6 @@ import Validation from '../../middlewares/validations/roles';
 
 const router = express.Router();
 
-router.post('/roles', Validation.validateRoles, Roles.create);
 router.get('/roles', Roles.getAll);
 router.get('/roles/:id', Validation.params, Roles.get);
 router.get('/roles/:roleId/permissions', Permissions.getRolePermissions);

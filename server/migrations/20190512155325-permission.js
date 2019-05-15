@@ -10,7 +10,6 @@ module.exports = {
         },
         resource: {
           type: Sequelize.STRING,
-          unique: true
         },
         canCreate: {
           type: Sequelize.BOOLEAN

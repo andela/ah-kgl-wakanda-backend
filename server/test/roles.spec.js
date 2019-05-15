@@ -7,92 +7,14 @@ import { defaultRoles } from '../config/constant';
 const { expect } = chai;
 chai.use(chaiHttp);
 
-const adminRole = {
-  name: defaultRoles.ADMIN,
-  description: 'admin can control our platform'
+const userRole = {
+  name: defaultRoles.USER,
+  description: 'This is a simple user'
 };
 
-let roleId;
+const roleId = 1;
 
 describe('Roles endpoints', () => {
-  describe('Create role', () => {
-    it('should successfully create admin role', (done) => {
-      chai
-        .request(app)
-        .post('/api/roles')
-        .send(adminRole)
-        .end((err, res) => {
-          expect(res.status).equals(201);
-          expect(res.status).to.be.a('number');
-          expect(res.body).to.be.an('object');
-          expect(res.body).to.have.property('data');
-          expect(res.body).to.have.property('message');
-
-          expect(res.body.data).to.have.property('id');
-          expect(res.body.data).to.have.property('name');
-          expect(res.body.data).to.have.property('description');
-          expect(res.body.data).to.have.property('createdAt');
-          expect(res.body.data).to.have.property('updatedAt');
-
-          expect(res.body.message).to.be.a('string');
-          expect(res.body.message).equals('The role was successfully created');
-          roleId = res.body.data.id;
-          done();
-        });
-    });
-
-    it('should respond The role already exist', (done) => {
-      chai
-        .request(app)
-        .post('/api/roles')
-        .send(adminRole)
-        .end((err, res) => {
-          expect(res.status).equals(409);
-          expect(res.status).to.be.a('number');
-          expect(res.body).to.be.an('object');
-          expect(res.body).to.have.property('message');
-
-          expect(res.body.message).to.be.a('string');
-          expect(res.body.message).equals('The role already exist');
-          done();
-        });
-    });
-
-    it('Should validate empty name', (done) => {
-      chai
-        .request(app)
-        .post('/api/roles')
-        .send({
-          description: adminRole.description
-        })
-        .end((err, res) => {
-          expect(res.status).to.be.equal(400);
-          expect(res.status).to.be.a('number');
-          expect(res.body).to.be.an('object');
-          expect(res.body).to.have.property('message');
-          expect(res.body.message).equals('name is required');
-          done();
-        });
-    });
-
-    it('Should validate empty description', (done) => {
-      chai
-        .request(app)
-        .post('/api/roles')
-        .send({
-          name: adminRole.name
-        })
-        .end((err, res) => {
-          expect(res.status).to.be.equal(400);
-          expect(res.status).to.be.a('number');
-          expect(res.body).to.be.an('object');
-          expect(res.body).to.have.property('message');
-          expect(res.body.message).equals('description is required');
-          done();
-        });
-    });
-  });
-
   describe('Get all roles', () => {
     it('should successfully get all roles', (done) => {
       chai
@@ -167,12 +89,12 @@ describe('Roles endpoints', () => {
   });
 
   describe('Update role', () => {
-    it('should successfully update admin role', (done) => {
+    it('should successfully update user role', (done) => {
       chai
         .request(app)
         .put(`/api/roles/${roleId}`)
         .send({
-          name: adminRole.name,
+          name: userRole.name,
           description: 'just to update'
         })
         .end((err, res) => {
@@ -198,7 +120,7 @@ describe('Roles endpoints', () => {
       chai
         .request(app)
         .put('/api/roles/46272')
-        .send(adminRole)
+        .send(userRole)
         .end((err, res) => {
           expect(res.status).equals(404);
           expect(res.status).to.be.a('number');
@@ -217,7 +139,7 @@ describe('Roles endpoints', () => {
         .put(`/api/roles/${roleId}`)
         .send({
           name: 12,
-          description: adminRole.description,
+          description: userRole.description,
         })
         .end((err, res) => {
           expect(res.status).to.be.equal(400);
@@ -245,7 +167,7 @@ describe('Roles endpoints', () => {
   });
 
   describe('Delete role', () => {
-    it('should successfully delete admin role', (done) => {
+    it('should successfully delete user role', (done) => {
       chai
         .request(app)
         .delete(`/api/roles/${roleId}`)

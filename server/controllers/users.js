@@ -1,9 +1,9 @@
 import dotenv from 'dotenv';
-import { User } from '../models/index';
+import { User, Role } from '../models/index';
 import encrypt from '../helpers/encrypt';
 import sendMail from '../helpers/sendVerificationEmail';
 import errorHandler from '../helpers/errorHandler';
-import setPermission from '../helpers/setPermission';
+import { defaultRoles } from '../config/constant';
 
 dotenv.config();
 
@@ -21,10 +21,14 @@ class Users {
     try {
       const hashedPassword = encrypt.hashPassword(req.body.password);
 
-      // set default roles for the user
-      const setRole = await setPermission();
-      const roleId = setRole.id;
+      // get the roleId for the user
+      const role = Role.findOne({
+        where: {
+          name: defaultRoles.USER,
+        }
+      });
 
+      const roleId = role.id;
       const { username, email } = req.body;
       const newUser = await User.create({
         username,

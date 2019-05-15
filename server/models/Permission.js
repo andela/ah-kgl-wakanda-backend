@@ -4,7 +4,6 @@ module.exports = (sequelize, DataTypes) => {
     {
       resource: {
         allowNull: false,
-        unique: true,
         type: DataTypes.STRING
       },
       canCreate: {
