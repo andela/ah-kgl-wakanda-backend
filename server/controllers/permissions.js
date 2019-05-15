@@ -86,7 +86,6 @@ class Permissions {
 
       const result = await Permission.findAll({
         where: { roleId },
-        attributes: ['roleId'],
         include: [{ model: Role }]
       });
 
