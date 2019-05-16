@@ -1,7 +1,13 @@
 import slugify from '@sindresorhus/slugify';
 import open from 'open';
 import { Op } from 'sequelize';
-import { Article, User, Tags, ArticleLikes, Rating } from '../models';
+import {
+  Article,
+  User,
+  Tags,
+  ArticleLikes,
+  Rating
+} from '../models';
 import errorHandler from '../helpers/errorHandler';
 import includeQuery from '../helpers/includeQuery';
 import readTime from '../helpers/readTime';
@@ -75,7 +81,8 @@ class Articles {
         order: [['createdAt', 'DESC']],
         limit,
         offset,
-        include: includeQuery
+        include: includeQuery,
+        where: { active: true }
       });
 
       result = result.map((item) => {
@@ -87,7 +94,7 @@ class Articles {
 
       return res.status(200).json({
         status: 200,
-        data: { articles: result }
+        data: { articles: result, articlesCount: result.length }
       });
     } catch (e) {
       errorHandler.errorResponse(res, e);
@@ -109,7 +116,7 @@ class Articles {
         include: [{
           model: Tags
         }],
-        where: { slug: req.params.slug }
+        where: { slug: req.params.slug, active: true }
       });
 
       if (result) {
@@ -151,7 +158,7 @@ class Articles {
 
       const { slug } = req.params;
       const result = await Article.update(article, {
-        where: { slug, },
+        where: { slug, active: true },
         returning: true,
         plain: true
       });
@@ -176,18 +183,23 @@ class Articles {
   static async delete(req, res) {
     try {
       const { slug } = req.params;
-      const result = await Article.destroy({ where: { slug, }, returning: true });
-
-      if (result > 0) {
-        return res.status(200).json({
-          status: 200,
-          message: 'Article successfully deleted'
+      const result = await Article.update(
+        { active: false },
+        {
+          where: { slug, active: true },
+          returning: true
+        }
+      );
+      if (result[0] <= 0) {
+        return res.status(404).json({
+          status: 404,
+          message: 'Article not found'
         });
       }
 
-      return res.status(404).json({
-        status: 404,
-        message: 'Article not found'
+      return res.status(200).json({
+        status: 200,
+        message: 'Article successfully deleted'
       });
     } catch (e) {
       errorHandler.errorResponse(res, e);
