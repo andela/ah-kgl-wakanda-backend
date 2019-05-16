@@ -67,6 +67,11 @@ class Users {
         status: 401,
         message: 'The credentials you provided is incorrect',
       });
+    } if (user.isDisabled) {
+      return res.status(403).json({
+        status: 403,
+        message: 'This account has been disabled',
+      });
     }
     await User.update({ isLoggedIn: true }, { where: { id: user.id } });
     const token = await Users.generateToken(user.get());
@@ -238,7 +243,8 @@ class Users {
       const result = await User.findAll({
         attributes: {
           exclude: ['password', 'provider', 'isLoggedIn', 'createdAt', 'updatedAt']
-        }
+        },
+        where: { isDisabled: false }
       });
       return res.status(200).json({
         status: 200,

@@ -44,6 +44,14 @@ module.exports = {
 				createdAt,
 				updatedAt,
 			},
+			{
+				username: 'hadadus2',
+				email: 'hadadus2@gmail.com',
+				password: password,
+				isDisabled: true,
+				createdAt,
+				updatedAt,
+			},
 
 	], {});
 	},

@@ -111,7 +111,20 @@ describe('Admin', () => {
         .send(dummyUsers.adminUpdate)
         .end((err, res) => {
           expect(res.status).to.equal(200);
-          expect(res.body.message).to.equal('User hadadus deleted successfully');
+          expect(res.body.message).to.equal('User hadadus has been disabled');
+          done();
+        });
+    });
+    it('should not login disabled users', (done) => {
+      chai.request(app)
+        .post('/api/auth/login')
+        .send({
+          email: 'hadadus2@gmail.com',
+          password: 'My_password12',
+        })
+        .end((err, res) => {
+          expect(res.status).to.equal(403);
+          expect(res.body.message).to.equal('This account has been disabled');
           done();
         });
     });

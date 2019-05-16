@@ -15,6 +15,9 @@ export default (sequelize, DataTypes) => {
     roles: {
       type: DataTypes.STRING,
     },
+    isDisabled: {
+      type: DataTypes.BOOLEAN,
+    },
     email: {
       type: DataTypes.STRING,
     },

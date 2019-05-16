@@ -112,10 +112,13 @@ class Admin {
         message: 'User not found',
       });
     }
-    await User.destroy({ where: { username, }, returning: true });
+    await User.update(
+      { isDisabled: true },
+      { where: { username, }, returning: true }
+    );
     return res.status(200).json({
       status: 200,
-      message: `User ${user.get().username} deleted successfully`,
+      message: `User ${user.get().username} has been disabled`,
     });
   }
 

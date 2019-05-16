@@ -21,6 +21,12 @@ const checkToken = async (req, res, next) => {
         message: 'You need to first log in',
       });
     }
+    if (user.isDisabled) {
+      return res.status(403).json({
+        status: 403,
+        message: 'This account has been disabled',
+      });
+    }
     req.user = jwtPayload;
     next();
   } catch (error) {

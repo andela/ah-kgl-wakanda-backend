@@ -3,7 +3,7 @@ paths:
     delete:
       tags:
         - Admin
-      summary: delete a user
+      summary: disable a user
       description: Authentication required (admin)
       consumes:
         - application/json
