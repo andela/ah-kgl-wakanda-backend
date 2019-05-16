@@ -120,7 +120,7 @@ describe('Admin', () => {
         .post('/api/auth/login')
         .send({
           email: 'hadadus2@gmail.com',
-          password: 'My_password12',
+          password: process.env.USER_PASSWORD,
         })
         .end((err, res) => {
           expect(res.status).to.equal(403);
