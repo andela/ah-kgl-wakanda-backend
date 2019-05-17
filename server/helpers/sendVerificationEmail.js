@@ -1,5 +1,7 @@
+import dotenv from 'dotenv';
 import mailer from './mailer';
 
+dotenv.config();
 /**
  * Send a link containing a token,
  * returns an object with a sent
@@ -11,7 +13,7 @@ import mailer from './mailer';
  * @returns {object} {sent,error}
  */
 const sendToken = async (email, name, token) => {
-  const link = `app.heroku.com/api/v1/auth/verification/${token}`;
+  const link = `${process.env.URL}/api/v1/auth/verification/${token}`;
   const body = `
             Thank you for registering at Authors Haven,
             your account has been created and must be activated before you can use it 

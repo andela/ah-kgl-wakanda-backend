@@ -1,6 +1,9 @@
 import Sequelize from 'sequelize';
+import dotenv from 'dotenv';
 import mailer from './mailer';
 import { Article, User } from '../models';
+
+dotenv.config();
 
 /**
  * Send an email notification ,
@@ -21,9 +24,9 @@ const sendNotifications = async (receiverIds, body, subject, articleId = null) =
       const article = await Article.findOne({
         where: { id: articleId }
       });
-      link = `https://ah-kgl-wakanda-staging.herokuapp.com/api/articles/${article.slug}`;
+      link = `${process.env.URL}/api/articles/${article.slug}`;
     } else {
-      link = 'https://ah-kgl-wakanda-staging.herokuapp.com/';
+      link = `${process.env.URL}`;
     }
 
     const objIds = receiverIds.map((id) => {

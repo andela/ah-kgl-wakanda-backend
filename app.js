@@ -26,6 +26,10 @@ app.use(session({
 
 app.use(routes);
 
+app.use('*', (req, res) => {
+  res.status(400).json({ status: 400, message: 'Bad request' });
+});
+
 // finally, let's start our server...
 const server = app.listen(process.env.PORT || LOCAL_PORT, () => { });
 

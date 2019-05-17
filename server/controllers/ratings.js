@@ -1,4 +1,6 @@
 import { Article, Rating } from '../models';
+import errorHandler from '../helpers/errorHandler';
+
 /**
  * @author Gisele Iradukunda
  * @class Rating
@@ -61,9 +63,7 @@ class Ratings {
         data: ratingInfo,
       });
     } catch (err) {
-      return res.status(500).json({
-        message: 'Fail to rate the article',
-      });
+      errorHandler.errorResponse(res, err);
     }
   }
 
