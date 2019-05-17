@@ -1,0 +1,34 @@
+paths:
+  /roles:
+    post:
+      tags:
+        - Roles
+      summary: Create a role
+      description: For admin, super-admin or any user with admin privileges
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/createRole"
+      responses:
+        201:
+          description: The role was successfully created
+        400:
+          description: Invalid parameter
+        409:
+          description: The role already exist
+        401:
+          description: Unauthorized request
+definitions:
+  createRole:
+    type: object
+    properties:
+      name:
+        type: string
+      description:
+        type: string

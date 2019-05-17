@@ -1,0 +1,49 @@
+paths:
+  /permissions/{roleId}:
+    post:
+      tags:
+        - Permissions
+      summary: Grant permissions to a specific role
+      description: For admin, super-admin or any user with admin privileges
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          type: integer
+          description: The id of the role
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/createPermission"
+      responses:
+        201:
+          description: Permission granted
+        404:
+          description: The role was not found
+        409:
+          description: Permission already exist
+        500:
+          description: Fail to retrieve all permissions
+definitions:
+  createPermission:
+    type: object
+    properties:
+      resource:
+        type: string
+      canCreate:
+        type: boolean
+        example: false
+      canRead:
+        type: boolean
+        example: true
+      canUpdate:
+        type: boolean
+        example: true
+      canDelete:
+        type: boolean
+        example: false
