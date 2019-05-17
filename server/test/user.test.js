@@ -1,5 +1,6 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
+import jwt from 'jsonwebtoken';
 import Database from './config';
 import dummyUsers from './config/users';
 import app from '../../app';
@@ -8,7 +9,12 @@ const { expect } = chai;
 chai.use(chaiHttp);
 
 let userToken;
-const expiredToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJrYXJsIiwiZW1haWwiOiJrYXJsbXVzaW5nbzc3QGdtYWlsLmNvbSIsImlhdCI6MTU1NzUwMTY1NCwiZXhwIjoxNTU3NzYwODU0fQ.3QbgkPoqjLlI6_d8VbbO5Hzyp72wUEZLkPtzQ4AaaTY';
+
+const expiredToken = jwt.sign(
+  { id: 2, username: 'karl', email: 'karlmusingo@gmail.com' },
+  process.env.SECRET,
+  { expiresIn: '0.1s' }
+);
 
 describe('User ', () => {
   before(async () => {
@@ -144,25 +150,11 @@ describe('User ', () => {
           done();
         });
     });
-    // it('should not be able to login when the account is not verified', (done) => {
-    //   chai.request(app)
-    //     .post('/api/auth/login')
-    //     .send(dummyUsers.correctLogInfo)
-    //     .end((err, res) => {
-    //       expect(res.status).to.equal(400);
-    //       expect(res).to.be.an('object');
-    //       expect(res.body).to.have.property('message');
-    //       expect(res.body.message).to.equal('Please, check your email for account verification');
-    //       done();
-    //     });
-    // });
     it('should be able to login', (done) => {
       chai.request(app)
         .post('/api/auth/login')
         .send(dummyUsers.correctLogInfo)
         .end((err, res) => {
-          console.log('>>>>>>>>>>>>>>>>>>>>>>>>', res.body);
-
           userToken = `Bearer ${res.body.user.token}`;
           expect(res.status).to.equal(200);
           expect(res).to.be.an('object');
