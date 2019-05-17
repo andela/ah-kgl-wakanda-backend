@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import { User, Role } from '../models/index';
+import jwt from 'jsonwebtoken';
 import encrypt from '../helpers/encrypt';
 import sendMail from '../helpers/sendVerificationEmail';
 import errorHandler from '../helpers/errorHandler';
@@ -73,8 +74,15 @@ class Users {
         message: 'This account has been disabled',
       });
     }
-    await User.update({ isLoggedIn: true }, { where: { id: user.id } });
     const token = await Users.generateToken(user.get());
+    if (user.verified === false) {
+      if (process.env.NODE_ENV !== 'test') sendMail(body.email, user.username, token);
+      return res.status(400).json({
+        status: 400,
+        message: 'Please, check your email for account verification',
+      });
+    }
+    await User.update({ isLoggedIn: true }, { where: { id: user.id } });
     return Users.send(res, user, token);
   }
 
@@ -273,6 +281,40 @@ class Users {
       return user;
     } catch (error) {
       return error;
+    }
+  }
+
+  /**
+   * update the verified column to true
+   * @static
+   * @param {*} req
+   * @param {*} res
+   * @returns {object} response
+   * @memberof User
+   */
+  static async verifyEmail(req, res) {
+    try {
+      const { token } = req.params;
+      const jwtPayload = jwt.verify(token, process.env.SECRET);
+      const user = await User.findOne({ where: { id: jwtPayload.id, verified: false, } });
+      if (!user) {
+        return res.status(400).json({
+          status: 400,
+          message: 'Your account has already been verified'
+        });
+      }
+      await User.update({ verified: true }, { where: { id: user.id } });
+      return res.status(200).json({
+        status: 200,
+        message: 'Your account has been verified successfully',
+      });
+    } catch (e) {
+      let { message } = e;
+      if (message === 'jwt expired') message = 'Your verification email has expired, try to login to receive a new one';
+      return res.status(401).json({
+        status: 401,
+        message,
+      });
     }
   }
 }

@@ -1,6 +1,4 @@
-import dotenv from 'dotenv';
 import mailer from './mailer';
-
 
 const bodyDefault = `
         Thank you for registering at Authors Haven,
@@ -19,7 +17,7 @@ const bodyDefault = `
  * @returns {object} {sent,error}
  */
 const sendToken = async (email, name, token, body = bodyDefault) => {
-  const link = `app.heroku.com/api/v1/auth/verification/${token}`;
+  const link = `${process.env.URL}/api/auth/verification/${token}`;
 
   try {
     const response = await mailer({

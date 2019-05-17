@@ -8,6 +8,7 @@ const { expect } = chai;
 chai.use(chaiHttp);
 
 let userToken;
+const expiredToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJrYXJsIiwiZW1haWwiOiJrYXJsbXVzaW5nbzc3QGdtYWlsLmNvbSIsImlhdCI6MTU1NzUwMTY1NCwiZXhwIjoxNTU3NzYwODU0fQ.3QbgkPoqjLlI6_d8VbbO5Hzyp72wUEZLkPtzQ4AaaTY';
 
 describe('User ', () => {
   before(async () => {
@@ -86,9 +87,46 @@ describe('User ', () => {
         .post('/api/auth/signup')
         .send(dummyUsers.correct)
         .end((err, res) => {
+          userToken = `Bearer ${res.body.user.token}`;
           expect(res.status).to.equal(200);
           expect(res).to.be.an('object');
           expect(res.body).to.have.property('user');
+          done();
+        });
+    });
+  });
+
+  describe('Email verification', () => {
+    it('should not verify the account when the token has expired', (done) => {
+      chai.request(app)
+        .get(`/api/auth/verification/${expiredToken}`)
+        .end((err, res) => {
+          expect(res.status).to.equal(401);
+          expect(res).to.be.an('object');
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).to.equal('Your verification email has expired, try to login to receive a new one');
+          done();
+        });
+    });
+    it('should verify the account', (done) => {
+      chai.request(app)
+        .get(`/api/auth/verification/${userToken.split(' ')[1]}`)
+        .end((err, res) => {
+          expect(res.status).to.equal(200);
+          expect(res).to.be.an('object');
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).to.equal('Your account has been verified successfully');
+          done();
+        });
+    });
+    it('should verify the account twice', (done) => {
+      chai.request(app)
+        .get(`/api/auth/verification/${userToken.split(' ')[1]}`)
+        .end((err, res) => {
+          expect(res.status).to.equal(400);
+          expect(res).to.be.an('object');
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).to.equal('Your account has already been verified');
           done();
         });
     });
@@ -106,11 +144,25 @@ describe('User ', () => {
           done();
         });
     });
+    // it('should not be able to login when the account is not verified', (done) => {
+    //   chai.request(app)
+    //     .post('/api/auth/login')
+    //     .send(dummyUsers.correctLogInfo)
+    //     .end((err, res) => {
+    //       expect(res.status).to.equal(400);
+    //       expect(res).to.be.an('object');
+    //       expect(res.body).to.have.property('message');
+    //       expect(res.body.message).to.equal('Please, check your email for account verification');
+    //       done();
+    //     });
+    // });
     it('should be able to login', (done) => {
       chai.request(app)
         .post('/api/auth/login')
         .send(dummyUsers.correctLogInfo)
         .end((err, res) => {
+          console.log('>>>>>>>>>>>>>>>>>>>>>>>>', res.body);
+
           userToken = `Bearer ${res.body.user.token}`;
           expect(res.status).to.equal(200);
           expect(res).to.be.an('object');

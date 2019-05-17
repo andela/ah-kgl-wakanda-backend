@@ -58,20 +58,6 @@ describe('Signing up a new user', () => {
       .post('/api/auth/signup')
       .send(user[0])
       .end((err, res) => {
-        expect(res.status).to.equal(200);
-        expect(res).to.be.an('object');
-        expect(res.body).to.have.property('user');
-        done();
-      });
-  });
-});
-
-describe('logging a new user', () => {
-  it('should be able to login', (done) => {
-    chai.request(app)
-      .post('/api/auth/login')
-      .send(user[1])
-      .end((err, res) => {
         userToken = `Bearer ${res.body.user.token}`;
         expect(res.status).to.equal(200);
         expect(res).to.be.an('object');

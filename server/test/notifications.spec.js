@@ -13,7 +13,7 @@ describe('Notifications', () => {
   describe('Subsribe to email notification', () => {
     it('should unsubscribe the user to email notification', (done) => {
       chai.request(app)
-        .post('/api/auth/login')
+        .post('/api/auth/signup')
         .send(dummyUsers.correctNotificationArticle)
         .end((err, resp) => {
           loginToken = `Bearer ${resp.body.user.token}`;

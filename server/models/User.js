@@ -25,6 +25,9 @@ export default (sequelize, DataTypes) => {
     isLoggedIn: {
       type: DataTypes.BOOLEAN,
     },
+    verified: {
+      type: DataTypes.BOOLEAN,
+    },
     allowEmailNotification: {
       type: DataTypes.BOOLEAN,
     },

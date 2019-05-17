@@ -1,0 +1,30 @@
+paths:
+  /auth/verification/{token}:
+    get:
+      tags:
+        - User
+      summary: Verifies the account through the email sent on sign up
+      description: Authentication not required
+      consumes:
+        - application/json
+      produces:
+        - application/xml
+      parameters:
+        - in: path
+          name: token
+          required: true
+          schema:
+            $ref: "#/definitions/emailVerification"
+      responses:
+        200:
+          description: Ok
+        208:
+          description: Account already verified
+        401:
+          description: Verification Email has expired
+definitions:
+  emailVerification:
+    type: string
+    properties:
+      token:
+        type: string

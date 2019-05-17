@@ -42,7 +42,7 @@ const mailer = async ({
         to: usersInfo || [{ email, name }],
         dynamic_template_data: {
           name,
-          link,
+          link: link.toString(),
           linkText,
           subject,
           title,
