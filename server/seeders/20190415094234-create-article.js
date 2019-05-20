@@ -21,6 +21,7 @@ module.exports = {
 			userId: 1,
 			createdAt,
 			updatedAt,
+			active: true
 		}], {});
 	},
 	down: (queryInterface, Sequelize) => {

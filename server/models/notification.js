@@ -13,18 +13,26 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
+    commentId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
     isRead: {
       type: DataTypes.BOOLEAN,
     },
     content: DataTypes.STRING,
     title: {
       type: DataTypes.ENUM,
-      values: ['NEW Article', 'NEW Comment', 'NEW Like', 'NEW Follower'],
+      values: ['NEW Article', 'NEW Comment', 'NEW Like', 'NEW Follower', 'NEW Like on Comment'],
     },
   }, {});
   Notification.associate = function (models) {
     Notification.belongsTo(models.Article, {
       foreignKey: 'articleId',
+      targetKey: 'id'
+    });
+    Notification.belongsTo(models.Comment, {
+      foreignKey: 'commentId',
       targetKey: 'id'
     });
     Notification.belongsTo(models.User, {

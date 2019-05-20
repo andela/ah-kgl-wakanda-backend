@@ -16,6 +16,12 @@ export default {
 		articleId: {
 			type: Sequelize.INTEGER
 		},
+		favorited: {
+			type: Sequelize.BOOLEAN
+		},
+		favoritesCount: {
+			type: Sequelize.INTEGER
+		},
 		createdAt: {
 			allowNull: false,
 			type: Sequelize.DATE

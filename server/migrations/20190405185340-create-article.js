@@ -31,6 +31,9 @@ module.exports = {
 		favoritesCount: {
 			type: Sequelize.INTEGER
 		},
+		active: {
+			type: Sequelize.BOOLEAN
+		},
 		userId: {
 			type: Sequelize.INTEGER
 		},
