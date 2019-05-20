@@ -27,6 +27,11 @@ module.exports = (sequelize, DataTypes) => {
           is: ['(http(s?):)([/|.|[A-Za-z0-9_-]| |-])*.(?:jpg|jpeg|gif|png)', 'i']
         }
       },
+      reads: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        allowNull: false
+      },
       favorited: {
         type: DataTypes.BOOLEAN,
         allowNull: false,

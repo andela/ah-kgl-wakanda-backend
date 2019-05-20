@@ -22,6 +22,9 @@ module.exports = {
 		images: {
 			type: Sequelize.ARRAY(Sequelize.STRING)
 		},
+		reads: {
+			type: Sequelize.INTEGER
+		},
 		favorited: {
 			type: Sequelize.BOOLEAN
 		},

@@ -15,6 +15,7 @@ router.get('/articles/:slug', Articles.get);
 router.put('/articles/:slug', validate(articleSchema.update), Articles.update);
 router.delete('/articles/:slug', Articles.delete);
 router.post('/articles/:slug/share/:channel', validate(schema.params, true), Articles.share);
+router.get('/articles/:slug/stats', checkToken, Articles.stats);
 router.get('/search', SearchFilter.validateFilter, Articles.search);
 
 
