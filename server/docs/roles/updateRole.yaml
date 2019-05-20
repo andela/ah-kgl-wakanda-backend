@@ -1,0 +1,39 @@
+paths:
+  /roles/{id}:
+    put:
+      tags:
+        - Roles
+      summary: Update a specific role
+      description: For admin, super-admin or any user with admin privileges
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+          description: The id of the role
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/updateRole"
+      responses:
+        200:
+          description: The role was successfully updated
+        400:
+          description: Invalid parameter
+        404:
+          description: The role was not found
+        401:
+          description: Unauthorized request
+definitions:
+  updateRole:
+    type: object
+    properties:
+      name:
+        type: string
+      description:
+        type: string
