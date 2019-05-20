@@ -32,6 +32,7 @@ export default (sequelize, DataTypes) => {
         min: 8
       }
     },
+    roleId: DataTypes.INTEGER,
   }, {});
   User.associate = (models) => {
     User.hasMany(models.Article, {
@@ -44,7 +45,11 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'userId',
       targetKey: 'id',
     });
+    User.belongsTo(models.Role, {
+      foreignKey: "roleId",
+      targetKey: 'id',
+    });
   };
 
-	return User;
+  return User;
 };

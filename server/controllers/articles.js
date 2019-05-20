@@ -380,7 +380,7 @@ class Articles {
     const url = `https://ah-kgl-wakanda-staging.herokuapp.com/api/articles/${slug}/share/${channel}`;
     switch (channel) {
       case 'facebook':
-        open(`https:www.facebook.com/sharer/sharer.php?u=${url}`);
+        if (process.env.NODE_ENV !== 'test') { open(`https:www.facebook.com/sharer/sharer.php?u=${url}`); }
         res.status(200).json({
           status: 200,
           message: `Article shared to ${channel}`,
@@ -388,7 +388,7 @@ class Articles {
         });
         break;
       case 'twitter':
-        open(`https://twitter.com/intent/tweet?url=${url}`);
+        if (process.env.NODE_ENV !== 'test') { open(`https://twitter.com/intent/tweet?url=${url}`); }
         res.status(200).json({
           status: 200,
           message: `Article shared to ${channel}`,
@@ -396,7 +396,7 @@ class Articles {
         });
         break;
       case 'mail':
-        open(`mailto:?subject=${slug}&body=${url}`);
+        if (process.env.NODE_ENV !== 'test') { open(`mailto:?subject=${slug}&body=${url}`); }
         res.status(200).json({
           status: 200,
           message: `Article shared to ${channel}`,

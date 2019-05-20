@@ -9,6 +9,8 @@ import comments from './comments';
 import following from './following';
 import bookmarking from './bookmarking';
 import notifications from './notifications';
+import roles from './roles';
+import permissions from './permissions';
 
 const router = express.Router();
 
@@ -22,5 +24,7 @@ router.use(articleLikes);
 router.use(comments);
 router.use(following);
 router.use(notifications);
+router.use(roles);
+router.use(permissions);
 
 export default router;
