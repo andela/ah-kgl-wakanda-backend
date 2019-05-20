@@ -22,9 +22,9 @@ class Users {
       const hashedPassword = encrypt.hashPassword(req.body.password);
 
       // get the roleId for the user
-      const role = Role.findOne({
+      const role = await Role.findOne({
         where: {
-          name: defaultRoles.USER,
+          name: 'user',
         }
       });
 
