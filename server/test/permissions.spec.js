@@ -31,12 +31,11 @@ describe('Permissions endpoints', () => {
           expect(res.body).to.have.property('data');
           expect(res.body.data).to.be.an('array');
           role = res.body.data.shift();
-          roleId = role[Object.keys(role)[0]];
+          roleId = Object.values(role)[Object.values(role).length - 3];
           done();
         });
     });
   });
-
   describe('Grant permissions', () => {
     it('should successfully grant admin permissions', (done) => {
       chai
@@ -52,6 +51,7 @@ describe('Permissions endpoints', () => {
           expect(res.body.message).to.be.a('string');
           expect(res.body.message).equals('The Permission was successfully granted');
           permissionId = res.body.data.id;
+          console.log('permissionId----- :', permissionId);
           done();
         });
     });
@@ -169,7 +169,7 @@ describe('Permissions endpoints', () => {
     it('should successfully permissions for a specific role', (done) => {
       chai
         .request(app)
-        .get('/api/roles/1/permissions')
+        .get(`/api/roles/${roleId}/permissions`)
         .end((err, res) => {
           expect(res.status).equals(200);
           expect(res.status).to.be.a('number');

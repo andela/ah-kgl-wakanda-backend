@@ -315,12 +315,13 @@ describe('Article endpoints', () => {
         });
     });
   });
+  // Updating an article
 
   describe('The endpoint to update an article', () => {
     it('Should update an article ', (done) => {
       chai.request(app)
         .put(`/api/articles/${slug[0]}`)
-        .set('Authorization', 'Bearer <token>')
+        .set('Authorization', loginToken)
         .send({ article: { title: 'new title' } })
         .end((error, res) => {
           expect(res.body.status).to.be.equal(200);
@@ -331,11 +332,12 @@ describe('Article endpoints', () => {
           done();
         });
     });
+    // Updating an unexisting article
 
     it('Should fail to update an article ', (done) => {
       chai.request(app)
         .put('/api/articles/wrong-slug')
-        .set('Authorization', 'Bearer <token>')
+        .set('Authorization', loginToken)
         .send({ article: { title: 'My article', description: 'new description' } })
         .end((error, res) => {
           expect(res.body.status).to.be.equal(404);
@@ -450,7 +452,7 @@ describe('Article endpoints', () => {
       it('Should delete an article ', (done) => {
         chai.request(app)
           .delete(`/api/articles/${slug[1]}`)
-          .set('Authorization', 'Bearer <token>')
+          .set('Authorization', loginToken)
           .end((error, res) => {
             expect(res.body.status).to.be.equal(200);
             expect(res.body.message).to.equals('Article successfully deleted');
@@ -461,7 +463,7 @@ describe('Article endpoints', () => {
       it('Should fail to delete an article ', (done) => {
         chai.request(app)
           .delete('/api/articles/wrong-slug')
-          .set('Authorization', 'Bearer <token>')
+          .set('Authorization', loginToken)
           .end((error, res) => {
             expect(res.body.status).to.be.equal(404);
             expect(res.body.message).to.equals('Article not found');
@@ -475,6 +477,7 @@ describe('Article endpoints', () => {
     it('should not share if the the channel is not the ones predefined', (done) => {
       chai.request(app)
         .post(`/api/articles/${slug[2]}/share/maily`)
+        .set('Authorization', loginToken)
         .end((error, res) => {
           expect(res.body.status).to.be.equal(400);
           expect(res.body.message).to.equals('channel must be one of facebook twitter mail');
@@ -484,6 +487,7 @@ describe('Article endpoints', () => {
     it('should not share if the article is not found', (done) => {
       chai.request(app)
         .post(`/api/articles/${slug[2]}/share/facebook`)
+        .set('Authorization', loginToken)
         .end((error, res) => {
           expect(res.body.status).to.be.equal(404);
           expect(res.body.message).to.equals('We didn\'t find that article would you like to write one?');
@@ -493,6 +497,7 @@ describe('Article endpoints', () => {
     it('should  share to facebook', (done) => {
       chai.request(app)
         .post(`/api/articles/${slug[0]}-177804958/share/facebook`)
+        .set('Authorization', loginToken)
         .end((error, res) => {
           expect(res.body.status).to.be.equal(200);
           expect(res.body.message).to.equals('Article shared to facebook');
@@ -502,6 +507,7 @@ describe('Article endpoints', () => {
     it('should  share to twitter', (done) => {
       chai.request(app)
         .post(`/api/articles/${slug[0]}-177804958/share/twitter`)
+        .set('Authorization', loginToken)
         .end((error, res) => {
           expect(res.body.status).to.be.equal(200);
           expect(res.body.message).to.equals('Article shared to twitter');
@@ -511,6 +517,7 @@ describe('Article endpoints', () => {
     it('should  share to mail', (done) => {
       chai.request(app)
         .post(`/api/articles/${slug[0]}-177804958/share/mail`)
+        .set('Authorization', loginToken)
         .end((error, res) => {
           expect(res.body.status).to.be.equal(200);
           expect(res.body.message).to.equals('Article shared to mail');

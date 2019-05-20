@@ -2,6 +2,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../../app';
 import { defaultRoles } from '../config/constant';
+import { Role } from '../models';
 
 // Chai configuration
 const { expect } = chai;
@@ -12,9 +13,14 @@ const userRole = {
   description: 'This is a simple user'
 };
 
-const roleId = 1;
-
-describe('Roles endpoints', () => {
+describe('Roles endpoints', async () => {
+  // find User role ID
+  const role = await Role.findOne({
+    attribute: ['id'],
+    where: { name: userRole.name }
+  });
+  const roleId = role.id;
+  console.log('roleId :', roleId);
   describe('Get all roles', () => {
     it('should successfully get all roles', (done) => {
       chai
