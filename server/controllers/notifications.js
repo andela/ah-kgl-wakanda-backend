@@ -65,6 +65,7 @@ class Notifications {
       const {
         userId,
         title,
+        commentId,
         articleId = null,
         followedId = null
       } = params;
@@ -85,12 +86,18 @@ class Notifications {
           content = `${user.username} has commented on this article`;
           break;
         }
+        case 'NEW Like on Comment': {
+          const commenter = await NotificationReceivers.getCommenter(commentId);
+          receiverIds = [commenter.userId];
+          content = `${user.username} liked your comment`;
+          break;
+        }
         case 'NEW Like': {
           const authorId = await NotificationReceivers.getAuthor(articleId);
           const commenters = await NotificationReceivers.getCommenters(articleId);
           const likers = await NotificationReceivers.getLikers(articleId);
           receiverIds = [...[authorId], ...commenters, ...likers];
-          content = `${user.username} has like this article`;
+          content = `${user.username} has liked this article`;
           break;
         }
         case 'NEW Follower':
