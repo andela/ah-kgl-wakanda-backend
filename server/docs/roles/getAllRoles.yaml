@@ -1,0 +1,16 @@
+paths:
+  /roles:
+    get:
+      tags:
+        - Roles
+      summary: Get all roles
+      description: For admin, super-admin or any user with admin privileges
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      responses:
+        200:
+          description: Ok
+        500:
+          description: Fail to get all roles

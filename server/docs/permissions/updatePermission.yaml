@@ -1,0 +1,49 @@
+paths:
+  /permissions/{permissionId}:
+    put:
+      tags:
+        - Permissions
+      summary: Update a specific permission
+      description: For admin, super-admin or any user with admin privileges
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - name: permissionId
+          in: path
+          required: true
+          type: integer
+          description: The id of the permission
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/updatePermission"
+      responses:
+        200:
+          description: The permission successfully updated
+        404:
+          description: The permission was not found
+        409:
+          description: Permission already exist
+        500:
+          description: Fail to update the permission
+definitions:
+  updatePermission:
+    type: object
+    properties:
+      resource:
+        type: string
+      canCreate:
+        type: boolean
+        example: false
+      canRead:
+        type: boolean
+        example: true
+      canUpdate:
+        type: boolean
+        example: true
+      canDelete:
+        type: boolean
+        example: false
