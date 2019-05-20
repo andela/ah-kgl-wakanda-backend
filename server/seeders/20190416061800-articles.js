@@ -13,6 +13,7 @@ module.exports = {
 				createdAt: new Date(),
 				updatedAt: new Date(),
 				userId: 1,
+				active: true
 			},
 			{
 				title: 'How to train your cat',
@@ -23,6 +24,7 @@ module.exports = {
 				createdAt: new Date(),
 				updatedAt: new Date(),
 				userId: 1,
+				active: true
 			},
 			{
 				title: 'How to train your dog',
@@ -33,6 +35,7 @@ module.exports = {
 				createdAt: new Date(),
 				updatedAt: new Date(),
 				userId: 1,
+				active: true
 			}
 		], {});
 
