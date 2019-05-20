@@ -134,6 +134,7 @@ class Users {
         defaults: { ...user }
       });
       const {
+        id,
         username,
         email,
         image,
@@ -145,7 +146,7 @@ class Users {
         username,
         email,
       };
-
+      if (!newUser[1]) await User.update({ isLoggedIn: true }, { where: { id, } });
       const status = newUser[1] ? 201 : 200;
 
       return res.status(status).json({
