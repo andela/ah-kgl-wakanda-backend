@@ -20,13 +20,17 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: true
       },
+      commentId: {
+        type: Sequelize.INTEGER,
+        allowNull: true
+      },
       content: {
         type: Sequelize.STRING,
         allowNull: false,
       },
       title: {
         type: Sequelize.ENUM,
-        values: ['NEW Article', 'NEW Comment', 'NEW Like', 'NEW Follower'],
+        values: ['NEW Article', 'NEW Comment', 'NEW Like', 'NEW Follower', 'NEW Like on Comment'],
       },
       createdAt: {
         allowNull: false,

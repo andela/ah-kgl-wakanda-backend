@@ -1,0 +1,48 @@
+paths:
+  /articles/{slug}/comments/{id}/favorite:
+    post:
+      tags:
+        - Comment
+      summary: Like a comment
+      description:
+        Authentication required, returns the liked comment. No additional
+        parameters required
+      produces:
+        - application/json
+      parameters:
+        - name: slug
+          description: The slug of the article
+          required: true
+        - name: id
+          description: The comment id
+          required: true
+      responses:
+        200:
+          description: Comment liked
+        404:
+          description: Comment not found
+        401:
+          description: Not authenticated
+    delete:
+      tags:
+        - Comment
+      summary: UnLike a comment
+      description:
+        Authentication required, returns the unliked comment. No additional
+        parameters required
+      produces:
+        - application/json
+      parameters:
+        - name: slug
+          description: The slug of the article
+          required: true
+        - name: id
+          description: The comment id
+          required: true
+      responses:
+        200:
+          description: Comment liked
+        404:
+          description: Comment not found      
+        401:
+          description: Not authenticated

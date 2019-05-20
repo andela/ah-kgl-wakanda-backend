@@ -1,5 +1,6 @@
-// eslint-disable-next-line object-curly-newline
-import { Following, Comment, ArticleLikes, Article } from '../models';
+import {
+  Following, Comment, ArticleLikes, Article
+} from '../models';
 
 /**
  * Get notification receivers
@@ -32,6 +33,24 @@ class NotificationReceivers {
   static async getAuthor(id) {
     const author = await Article.findOne({ where: { id, }, attributes: ['userId'] });
     return author.userId;
+  }
+
+  /**
+     *
+     *
+     * @static
+     * @param {integer} commentId
+     * @returns {array} Ids of users who have commented on this article
+     * @memberof NotificationReceivers
+     */
+  static async getCommenter(commentId) {
+    const commenter = await Comment.findOne({
+      where: {
+        id: commentId
+      },
+      attributes: ['userId']
+    });
+    return commenter;
   }
 
   /**

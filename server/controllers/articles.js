@@ -1,6 +1,7 @@
 import slugify from '@sindresorhus/slugify';
 import open from 'open';
 import { Op } from 'sequelize';
+import dotenv from 'dotenv';
 import {
   Article,
   User,
@@ -12,6 +13,9 @@ import errorHandler from '../helpers/errorHandler';
 import includeQuery from '../helpers/includeQuery';
 import readTime from '../helpers/readTime';
 import Notifications from './notifications';
+
+dotenv.config();
+
 /**
  *
  *
@@ -350,8 +354,8 @@ class Articles {
           data: { article: updateArticle }
         });
       }
-      return res.status(404).json({
-        status: 404,
+      return res.status(409).json({
+        status: 409,
         message: 'Article has to be favorited first'
       });
     } catch (error) {
@@ -377,7 +381,7 @@ class Articles {
         message: 'We didn\'t find that article would you like to write one?'
       });
     }
-    const url = `https://ah-kgl-wakanda-staging.herokuapp.com/api/articles/${slug}/share/${channel}`;
+    const url = `${process.env.URL}/api/articles/${slug}/share/${channel}`;
     switch (channel) {
       case 'facebook':
         if (process.env.NODE_ENV !== 'test') { open(`https:www.facebook.com/sharer/sharer.php?u=${url}`); }
