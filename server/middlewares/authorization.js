@@ -46,7 +46,7 @@ const admin = async (req, res, next) => {
 
     // check if it is admin
     if (roleName === defaultRoles.ADMIN) {
-      next();
+      return next();
     }
 
     return res.status(403).json({
@@ -94,7 +94,7 @@ const superAdmin = async (req, res, next) => {
     const { roleId } = req.user;
 
     // get the roleId for the user
-    const role = Role.findOne({
+    const role = await Role.findOne({
       where: {
         id: roleId
       }
@@ -105,12 +105,12 @@ const superAdmin = async (req, res, next) => {
 
     // check if it is admin
     if (roleName === defaultRoles.SUPER_ADMIN) {
-      next();
+      return next();
     }
 
     return res.status(403).json({
       status: 403,
-      message: 'Access forbidden: only admin is authorized',
+      message: 'Access forbidden: only super-admin is authorized',
     });
   } catch (error) {
     return res.status(400).json({
@@ -149,11 +149,12 @@ const adminOrSuperAdmin = async (req, res, next) => {
     }
     req.user = jwtPayload;
 
+
     // get the roleId
     const { roleId } = req.user;
 
     // get the roleId for the user
-    const role = Role.findOne({
+    const role = await Role.findOne({
       where: {
         id: roleId
       }
@@ -164,12 +165,12 @@ const adminOrSuperAdmin = async (req, res, next) => {
 
     // check if it is admin
     if (roleName === defaultRoles.ADMIN || roleName === defaultRoles.SUPER_ADMIN) {
-      next();
+      return next();
     }
 
     return res.status(403).json({
       status: 403,
-      message: 'Access forbidden: only admin is authorized',
+      message: 'Access forbidden: only super-admin and admin are authorized',
     });
   } catch (error) {
     return res.status(400).json({

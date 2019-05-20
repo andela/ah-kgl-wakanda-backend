@@ -1,7 +1,8 @@
-import { User } from '../models/index';
+import { User, Role } from '../models/index';
 import Users from './users';
 import encrypt from '../helpers/encrypt';
 import sendMail from '../helpers/sendVerificationEmail';
+import { defaultRoles } from '../config/constant';
 
 
 /**
@@ -130,6 +131,7 @@ class Admin {
   */
   static async makeAdmin(req, res) {
     const { username } = req.params;
+    const { ADMIN } = defaultRoles;
     const user = await Users.getUser(username, res);
     if (!user) {
       return res.status(404).json({
@@ -137,14 +139,23 @@ class Admin {
         message: 'User not found',
       });
     }
-    if (user.get().roles === 'admin') {
+    // get the roleId for the user
+    const role = await Role.findOne({
+      where: {
+        name: ADMIN,
+      }
+    });
+    if (user.get().roles === ADMIN) {
       return res.status(400).json({
         status: 400,
         message: `${username} is already an admin`,
       });
     }
     const newAdmin = await User.update(
-      { roles: 'admin', },
+      {
+        roles: ADMIN,
+        roleId: role.id,
+      },
       {
         where: { username },
         returning: true
@@ -167,6 +178,7 @@ class Admin {
   */
   static async makeUser(req, res) {
     const { username } = req.params;
+    const { USER } = defaultRoles;
     const user = await Users.getUser(username, res);
     if (!user) {
       return res.status(404).json({
@@ -174,14 +186,23 @@ class Admin {
         message: 'User not found',
       });
     }
-    if (user.get().roles === 'user') {
+    // get the roleId for the user
+    const role = await Role.findOne({
+      where: {
+        name: USER,
+      }
+    });
+    if (user.get().roles === USER) {
       return res.status(400).json({
         status: 400,
         message: `${username} is already a normal user`,
       });
     }
     const newAdmin = await User.update(
-      { roles: 'user', },
+      {
+        roles: USER,
+        roleId: role.id,
+      },
       {
         where: { username },
         returning: true

@@ -44,7 +44,9 @@ export default (sequelize, DataTypes) => {
         min: 8
       }
     },
-    roleId: DataTypes.INTEGER,
+    roleId: {
+      type: DataTypes.INTEGER,
+    },
   }, {});
   User.associate = (models) => {
     User.hasMany(models.Article, {

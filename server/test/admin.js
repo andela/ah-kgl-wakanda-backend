@@ -7,7 +7,23 @@ import dummyUsers from './config/users';
 const { expect } = chai;
 chai.use(chaiHttp);
 
+let adminToken;
+
 describe('Admin', () => {
+  describe('signin the admin', () => {
+    it('should login the admin', (done) => {
+      chai.request(app)
+        .post('/api/auth/login')
+        .send({
+          email: 'hadadus@gmail.com',
+          password: 'My_password12',
+        })
+        .end((err, res) => {
+          adminToken = `Bearer ${res.body.user.token}`;
+          done();
+        });
+    });
+  });
   describe('when creating a user', () => {
     it('should not succeed without firstname and lastname', (done) => {
       chai.request(app)
@@ -23,6 +39,7 @@ describe('Admin', () => {
     it('should not succeed with an existing username', (done) => {
       chai.request(app)
         .post('/api/admin/account')
+        .set('Authorization', adminToken)
         .send(dummyUsers.adminCreateWrongUsername)
         .end((err, res) => {
           expect(res.status).to.equal(400);
@@ -33,6 +50,7 @@ describe('Admin', () => {
     it('should create a user successfully', (done) => {
       chai.request(app)
         .post('/api/admin/account')
+        .set('Authorization', adminToken)
         .send(dummyUsers.adminCreateUser)
         .end((err, res) => {
           expect(res.status).to.equal(200);
@@ -45,6 +63,7 @@ describe('Admin', () => {
     it('should not succeed when user is not found', (done) => {
       chai.request(app)
         .put('/api/admin/account/papbita')
+        .set('Authorization', adminToken)
         .send(dummyUsers.adminUpdate)
         .end((err, res) => {
           expect(res.status).to.equal(404);
@@ -55,6 +74,7 @@ describe('Admin', () => {
     it('should not succeed when changed email to an existing one', (done) => {
       chai.request(app)
         .put('/api/admin/account/hadadus')
+        .set('Authorization', adminToken)
         .send(dummyUsers.adminUpdateWrongEmail)
         .end((err, res) => {
           expect(res.status).to.equal(409);
@@ -65,6 +85,7 @@ describe('Admin', () => {
     it('should not succeed when image url is not an valid url', (done) => {
       chai.request(app)
         .put('/api/admin/account/dusmel111')
+        .set('Authorization', adminToken)
         .send(dummyUsers.adminUpdateWrongImageurl)
         .end((err, res) => {
           expect(res.status).to.equal(400);
@@ -75,6 +96,7 @@ describe('Admin', () => {
     it('should update the user when changing the email', (done) => {
       chai.request(app)
         .put('/api/admin/account/hadadus')
+        .set('Authorization', adminToken)
         .send(dummyUsers.adminUpdate)
         .end((err, res) => {
           expect(res.status).to.equal(200);
@@ -86,6 +108,7 @@ describe('Admin', () => {
     it('should update the user', (done) => {
       chai.request(app)
         .put('/api/admin/account/hadadus')
+        .set('Authorization', adminToken)
         .send(dummyUsers.adminUpdateSameEmail)
         .end((err, res) => {
           expect(res.status).to.equal(200);
@@ -98,6 +121,7 @@ describe('Admin', () => {
     it('should not succeed when user is not found', (done) => {
       chai.request(app)
         .delete('/api/admin/account/papbita')
+        .set('Authorization', adminToken)
         .send(dummyUsers.adminUpdate)
         .end((err, res) => {
           expect(res.status).to.equal(404);
@@ -108,6 +132,7 @@ describe('Admin', () => {
     it('should succeed when deleting a user', (done) => {
       chai.request(app)
         .delete('/api/admin/account/hadadus')
+        .set('Authorization', adminToken)
         .send(dummyUsers.adminUpdate)
         .end((err, res) => {
           expect(res.status).to.equal(200);
@@ -133,6 +158,7 @@ describe('Admin', () => {
     it('should not succeed when user is not found', (done) => {
       chai.request(app)
         .post('/api/admin/account/papbita/isadmin')
+        .set('Authorization', adminToken)
         .end((err, res) => {
           expect(res.status).to.equal(404);
           expect(res.body.message).to.equal('User not found');
@@ -142,6 +168,7 @@ describe('Admin', () => {
     it('should succeed making a user an admin', (done) => {
       chai.request(app)
         .post('/api/admin/account/hadadus1/isadmin')
+        .set('Authorization', adminToken)
         .end((err, res) => {
           expect(res.status).to.equal(200);
           expect(res.body.message).to.equal('hadadus1 is now an admin');
@@ -151,6 +178,7 @@ describe('Admin', () => {
     it('should not succeed when user is already an admin', (done) => {
       chai.request(app)
         .post('/api/admin/account/hadadus1/isadmin')
+        .set('Authorization', adminToken)
         .end((err, res) => {
           expect(res.status).to.equal(400);
           expect(res.body.message).to.equal('hadadus1 is already an admin');
@@ -162,6 +190,7 @@ describe('Admin', () => {
     it('should not succeed when user is not found', (done) => {
       chai.request(app)
         .delete('/api/admin/account/papbita/isadmin')
+        .set('Authorization', adminToken)
         .end((err, res) => {
           expect(res.status).to.equal(404);
           expect(res.body.message).to.equal('User not found');
@@ -171,6 +200,7 @@ describe('Admin', () => {
     it('should succeed making an admin a normal user', (done) => {
       chai.request(app)
         .delete('/api/admin/account/hadadus1/isadmin')
+        .set('Authorization', adminToken)
         .end((err, res) => {
           expect(res.status).to.equal(200);
           expect(res.body.message).to.equal('hadadus1 is now a normal user');
@@ -180,6 +210,7 @@ describe('Admin', () => {
     it('should not succeed when user is already an admin', (done) => {
       chai.request(app)
         .delete('/api/admin/account/hadadus1/isadmin')
+        .set('Authorization', adminToken)
         .end((err, res) => {
           expect(res.status).to.equal(400);
           expect(res.body.message).to.equal('hadadus1 is already a normal user');

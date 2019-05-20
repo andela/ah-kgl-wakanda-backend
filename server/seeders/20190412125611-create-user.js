@@ -34,6 +34,7 @@ module.exports = {
 				email: 'hadadus@gmail.com',
 				password: password,
 				roles: 'admin',
+				roleId: 3,
 				createdAt,
 				updatedAt,
 			},
