@@ -12,8 +12,8 @@ import notifications from './notifications';
 import roles from './roles';
 import permissions from './permissions';
 import admin from './admin';
-
 import Report from './report';
+import highlight from './highlight';
 
 const router = express.Router();
 
@@ -32,5 +32,6 @@ router.use(roles);
 router.use(permissions);
 router.use(admin);
 router.use(Report);
+router.use(highlight);
 
 export default router;
