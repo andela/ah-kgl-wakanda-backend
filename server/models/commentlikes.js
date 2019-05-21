@@ -4,15 +4,15 @@ module.exports = (sequelize, DataTypes) => {
     userId: DataTypes.INTEGER,
     commentId: DataTypes.INTEGER
   }, {});
-  CommentLikes.associate = function(models) {
+  CommentLikes.associate = function (models) {
     CommentLikes.belongsTo(models.Comment, {
       foreignKey: 'commentId',
       targetKey: 'id'
-  });
-  CommentLikes.belongsTo(models.User, {
+    });
+    CommentLikes.belongsTo(models.User, {
       foreignKey: 'userId',
       targetKey: 'id'
-  });
+    });
   };
   return CommentLikes;
 };

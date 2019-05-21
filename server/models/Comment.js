@@ -1,3 +1,4 @@
+'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Comment = sequelize.define('Comment', {
     body: {
@@ -23,10 +24,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 0
     },
-    history: {
-      type: DataTypes.ARRAY(DataTypes.OBJECT),
-      allowNull: true,
-    },
   }, {});
   Comment.associate = function (models) {
     Comment.belongsTo(models.Article, {
@@ -42,10 +39,16 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'commentId',
       targetKey: 'id',
     });
+<<<<<<< HEAD
     Comment.hasOne(models.Highlight, {
       foreignKey: 'id',
       targetKey: 'HighlightId',
       onDelete: "CASCADE"
+=======
+    Comment.hasMany(models.History, {
+      foreignKey: 'commentId',
+      sourceKey: 'id'
+>>>>>>> [ft 165020145] Add history functionality
     });
   };
   return Comment;
