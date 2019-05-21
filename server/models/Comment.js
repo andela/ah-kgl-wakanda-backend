@@ -23,6 +23,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 0
     },
+    history: {
+      type: DataTypes.ARRAY(DataTypes.OBJECT),
+      allowNull: true,
+    },
   }, {});
   Comment.associate = function (models) {
     Comment.belongsTo(models.Article, {

@@ -161,8 +161,8 @@ class Comments {
           message: 'This is not your comment'
         });
       }
-
-      const { body } = req.body.comment;
+      const history = { comment: commentOwner.body, date: new Date() };
+      const { body } = { comment: req.body.comment, history };
       const result = await Comment.update({ body, }, {
         where: { id, },
         returning: true,
@@ -251,7 +251,7 @@ class Comments {
 
   /**
      *
-     * like a comment.
+     * Unlike a comment.
      * @static
      * @param {object} req
      * @param {object} res
@@ -336,6 +336,30 @@ class Comments {
       errorHandler.errorResponse(res, e);
     }
   }
+//  /**
+//      *
+//      * Comment's history.
+//      * @static
+//      * @param {object} req
+//      * @param {object} res
+//      * @returns {object} object
+//      * @memberof Comments
+//      */
+//   static async history() {
+//     try {
+//       const articleId = await checkSlug(req, res);
+//       if (typeof articleId !== 'number') {
+//         return false;
+//       }
+//       const { id } = req.params;
+//       const result = await Comment.findOne({ attributes: ['id'], where: { id } });
+//       if (!result) {
+//         return res.status(404).json({
+//           status: 404,
+//           message: 'Comment not found'
+//         });
+//       }
+//   }
 }
 
 export default Comments;
