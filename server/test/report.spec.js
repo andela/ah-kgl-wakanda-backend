@@ -2,7 +2,6 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../../app';
 import dummyUsers from './config/users';
-import { User } from '../models';
 
 // Chai configuration
 const { expect } = chai;
@@ -179,8 +178,6 @@ describe('Report endpoints', () => {
         .set('Content-Type', 'application/json')
         .set('Authorization', loginToken)
         .end((error, res) => {
-          console.log(res.body);
-
           expect(res.body.status).to.be.equal(200);
           expect(res.body).to.have.property('message');
           expect(res.body.message).equals('Report successfully deleted');
