@@ -172,18 +172,20 @@ class Articles {
           slug: req.params.slug,
         }
       });
+      if (!articleOwner) {
+        return res.status(404).json({
+          status: 404,
+          message: 'Article not found'
+        });
+      }
+
       if (articleOwner.userId !== id) {
         return res.status(401).json({
           status: 401,
           message: 'This is not your article'
         });
       }
-      if (!articleOwner) {
-        return res.status(401).json({
-          status: 404,
-          message: 'Article not found'
-        });
-      }
+
       if (article.title) {
         article.slug = await Articles.createSlug(res, article.title);
       }
@@ -221,18 +223,21 @@ class Articles {
           slug: req.params.slug,
         }
       });
-      if (articleOwner.userId !== id) {
-        return res.status(401).json({
-          status: 401,
-          message: 'This is not your article'
-        });
-      }
+
       if (!articleOwner) {
         return res.status(401).json({
           status: 404,
           message: 'Article not found'
         });
       }
+
+      if (articleOwner.userId !== id) {
+        return res.status(401).json({
+          status: 401,
+          message: 'This is not your article'
+        });
+      }
+      
       const result = await Article.destroy({ where: { slug, }, returning: true });
 
       if (result > 0) {

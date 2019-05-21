@@ -18,7 +18,7 @@ const commentWithoutBody = {
 };
 
 describe('Comments endpoints ', () => {
-  describe('The endpoint to post a comment', () => {
+  describe('The endpoint to create a comment', () => {
     it('Should post a comment', (done) => {
       chai.request(app)
         .post('/api/auth/signup')

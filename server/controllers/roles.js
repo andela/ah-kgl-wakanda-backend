@@ -99,44 +99,6 @@ class Roles {
       });
     }
   }
-
-  /**
-   *
-   * @author Mutombo Jean-vincent
-   * @description delete a specific role
-   * @static
-   * @param {req} req
-   * @param {res} res
-   * @returns {void}
-   */
-  static async delete(req, res) {
-    try {
-      const { id } = req.params;
-
-      // check if the role already exist
-      const role = await Role.findOne({
-        where: { id }
-      });
-
-      if (!role) {
-        return res.status(404).json({
-          message: 'The role was not found'
-        });
-      }
-
-      await role.destroy({
-        where: { id }
-      });
-
-      return res.status(200).json({
-        message: 'The role was successfully deleted'
-      });
-    } catch (error) {
-      return res.status(500).json({
-        message: 'Fail to delete the role'
-      });
-    }
-  }
 }
 
 export default Roles;

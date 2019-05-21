@@ -51,7 +51,6 @@ describe('Permissions endpoints', () => {
           expect(res.body.message).to.be.a('string');
           expect(res.body.message).equals('The Permission was successfully granted');
           permissionId = res.body.data.id;
-          console.log('permissionId----- :', permissionId);
           done();
         });
     });

@@ -98,16 +98,16 @@ class Comments {
           id,
         }
       });
-      if (commentOwner.userId !== req.user.id) {
-        return res.status(401).json({
-          status: 401,
-          message: 'This is not your comment'
-        });
-      }
       if (!commentOwner) {
         return res.status(401).json({
           status: 404,
           message: 'Comment not found'
+        });
+      }
+      if (commentOwner.userId !== req.user.id) {
+        return res.status(401).json({
+          status: 401,
+          message: 'This is not your comment'
         });
       }
       const result = await Comment.destroy({ where: { id, }, returning: true });
@@ -149,16 +149,16 @@ class Comments {
           id,
         }
       });
-      if (commentOwner.userId !== req.user.id) {
-        return res.status(401).json({
-          status: 401,
-          message: 'This is not your comment'
-        });
-      }
       if (!commentOwner) {
         return res.status(401).json({
           status: 404,
           message: 'Comment not found'
+        });
+      }
+      if (commentOwner.userId !== req.user.id) {
+        return res.status(401).json({
+          status: 401,
+          message: 'This is not your comment'
         });
       }
 
