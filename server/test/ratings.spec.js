@@ -55,7 +55,8 @@ before(() => {
 
 
 const user = {
-  email: 'vera.iradu@andela.com',
+  username: 'vera.iradu',
+  email: 'vera.iradukunda@andela.com',
   password: 'Hadad12@'
 };
 
@@ -63,7 +64,7 @@ let userToken;
 describe('logging a new user', () => {
   it('should be able to login', (done) => {
     chai.request(app)
-      .post('/api/auth/login')
+      .post('/api/auth/signup')
       .send(user)
       .end((err, res) => {
         userToken = `Bearer ${res.body.user.token}`;

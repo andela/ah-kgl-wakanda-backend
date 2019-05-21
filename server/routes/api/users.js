@@ -13,4 +13,6 @@ router.get('/users', checkToken, userController.listUsers);
 
 router.put('/user/:username', checkToken, userController.update);
 
+router.get('/auth/verification/:token', userController.verifyEmail);
+
 export default router;
