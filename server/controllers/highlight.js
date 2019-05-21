@@ -1,6 +1,4 @@
-import {
-  Highlight, Article, Comment
-} from '../models';
+import { Highlight, Article, Comment } from '../models';
 import errorHandler from '../helpers/errorHandler';
 import checkSlug from '../helpers/checkSlug';
 // import Notifications from './notifications';
@@ -217,12 +215,10 @@ class Highlights {
       if (typeof articleId !== 'number') {
         return false;
       }
-      const result = await Highlight.destroy(
-        {
-          where: { id, userId },
-          returning: true,
-        }
-      );
+      const result = await Highlight.destroy({
+        where: { id, userId },
+        returning: true,
+      });
 
       if (result > 0) {
         return res.status(200).json({
