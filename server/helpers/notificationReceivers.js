@@ -1,6 +1,6 @@
-import {
-  Following, Comment, ArticleLikes, Article
-} from '../models';
+/* eslint-disable object-curly-newline */
+import Sequelize from 'sequelize';
+import { Following, Comment, ArticleLikes, Article, User } from '../models';
 
 /**
  * Get notification receivers
@@ -89,6 +89,23 @@ class NotificationReceivers {
     });
     const likerIds = likers.map(liker => liker.userId);
     return likerIds;
+  }
+
+  /**
+   * @static
+   * @returns {array} Ids of admins
+   * @memberof NotificationReceivers
+   */
+  static async getAdmins() {
+    const admins = await User.findAll({
+      where: {
+        [Sequelize.Op.or]: [{ roles: 'admin' }, { roles: 'superadmin' }],
+        allowEmailNotification: true,
+      },
+      attributes: ['id']
+    });
+    const adminIds = admins.map(admin => admin.id);
+    return adminIds;
   }
 }
 

@@ -1,0 +1,27 @@
+paths:
+  /articles/{slug}/report:
+    delete:
+      tags:
+        - Report
+      summary: delete a reported article
+      description: Authentication required
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: slug
+          schema:
+            type: string
+          required: true
+          description: The artice reported to be deleted
+      responses:
+        200:
+          description: Ok
+        401:
+          description: Unauthorized request
+        404:
+          description: Article not found or the article is not reported

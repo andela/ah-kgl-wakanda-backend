@@ -52,30 +52,35 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
 
-  Article.associate = function (models) {
-    Article.belongsTo(models.User, {
-      foreignKey: 'userId',
-      targetKey: 'id'
-    });
-    Article.hasMany(models.Comment, {
-      foreignKey: 'articleId',
-      sourceKey: 'id'
-    });
-    Article.belongsToMany(models.Tags, {
-      through: 'TagsArticle',
-      foreignKey: 'articleId',
-      targetKey: 'id',
-    });
-    Article.hasMany(models.Rating, {
-      foreignKey: 'articleId',
-      sourceKey: 'id'
-    });
-    Article.belongsToMany(models.User, {
-      through: 'ArticleLikes',
-      foreignKey: 'articleId',
-      targetKey: 'id',
-    });
-  };
+	Article.associate = function (models) {
+		Article.belongsTo(models.User, {
+			foreignKey: 'userId',
+			targetKey: 'id'
+		});
+		Article.hasMany(models.Comment, {
+			foreignKey: 'articleId',
+			sourceKey: 'id'
+		});
+		Article.belongsToMany(models.Tags, {
+			through: 'TagsArticle',
+			foreignKey: 'articleId',
+			targetKey: 'id',
+		});
+		Article.hasMany(models.Rating, {
+			foreignKey: 'articleId',
+			sourceKey: 'id'
+		});
+		Article.belongsToMany(models.User, {
+			through: 'ArticleLikes',
+			foreignKey: 'articleId',
+			targetKey: 'id',
+		});
+		Article.hasMany(models.Report, {
+			foreignKey: 'articleId',
+			sourceKey: 'id',
+			onDelete: 'CASCADE'
+		});
+	};
 
   return Article;
 };

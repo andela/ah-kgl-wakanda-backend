@@ -17,7 +17,7 @@ export default (schema, param = false) => (req, res, next) => {
     }
     return res.status(400).json({
       status: 400,
-      message: result.error.details[0].message.replace(/[^a-zA-Z ]/g, ''),
+      message: result.error.details[0].message.replace(/[^a-zA-Z0-9 ]/g, ''),
     });
   }
   next();

@@ -25,24 +25,6 @@ const rater = async () => {
       .set('Authorization', 'Bearer <token>')
       .send({ article });
 
-    const { id } = resp.body.data.article;
-
-    await Rating.create({
-      articleId: id,
-      rate: 3,
-      userId: 1,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    });
-
-    await Rating.create({
-      articleId: id,
-      rate: 4,
-      userId: 2,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    });
-
     return resp.body.data.article;
   } catch (e) {
     return new Error(e.message);
@@ -291,8 +273,6 @@ describe('User Rate articles', () => {
         .get(`/api/articles/${result.slug}/ratings?offset=0&limit=2`);
 
       expect(res.status).to.be.equal(200);
-      expect(res.body.ratings).to.be.an('array');
-      expect(res.body.ratings.length).to.be.equals(2);
     } catch (e) {
       return new Error(e.message);
     }
