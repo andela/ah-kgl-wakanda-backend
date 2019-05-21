@@ -177,14 +177,14 @@ class Highlights {
           returning: true,
         }
       );
-      if (comment) {
-        const HighlightId = highlight[1][0].dataValues.id;
-        await Comment.update({ body: comment }, {
-          where: { HighlightId, }
-        });
-      }
-
+      
       if (highlight[1][0]) {
+        if (comment) {
+          const HighlightId = highlight[1][0].dataValues.id;
+          await Comment.update({ body: comment }, {
+            where: { HighlightId, }
+          });
+        }
         return res.status(200).json({
           status: 200,
           highlight: highlight[1][0].dataValues
