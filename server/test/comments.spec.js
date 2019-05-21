@@ -124,6 +124,8 @@ describe('Comments endpoints ', () => {
         .set('Content-Type', 'application/json')
         .set('Authorization', loginToken)
         .end((error, res) => {
+          console.log('res========> :', res);
+          console.log('loginToken :', loginToken);
           expect(res.body.status).to.be.equal(200);
           expect(res.body).to.have.property('data');
           expect(res.body.data).to.have.property('comment');
@@ -142,6 +144,7 @@ describe('Comments endpoints ', () => {
         .post(`/api/articles/how-to-dougie-177804958/comments/${commentId}/favorite`)
         .set('Content-Type', 'application/json')
         .end((error, res) => {
+          console.log('res.body.data :', res.body.data);
           expect(res.body.status).to.be.equal(401);
           expect(res.body).to.have.property('message');
           expect(res.body.message).equal('Authorization is missing');
@@ -167,6 +170,7 @@ describe('Comments endpoints ', () => {
         .set('Content-Type', 'application/json')
         .set('Authorization', loginToken)
         .end((error, res) => {
+          console.log('res========> :', res);
           expect(res.body.status).to.be.equal(200);
           expect(res.body).to.have.property('data');
           expect(res.body.data).to.have.property('comment');
