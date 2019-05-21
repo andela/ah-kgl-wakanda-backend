@@ -235,7 +235,6 @@ class Articles {
           message: 'This is not your article'
         });
       }
-      
       const result = await Article.destroy({ where: { slug, }, returning: true });
 
       if (result > 0) {
