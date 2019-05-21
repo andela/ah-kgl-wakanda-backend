@@ -177,7 +177,7 @@ class Highlights {
           returning: true,
         }
       );
-      
+
       if (highlight[1][0]) {
         if (comment) {
           const HighlightId = highlight[1][0].dataValues.id;
