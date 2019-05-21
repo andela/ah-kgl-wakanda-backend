@@ -2,12 +2,14 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../../app';
 import dummyUsers from './config/users';
+import { User } from '../models';
 
 // Chai configuration
 const { expect } = chai;
 chai.use(chaiHttp);
 
 let loginToken;
+let adminToken;
 let reportId;
 
 const report = {
@@ -16,6 +18,20 @@ const report = {
 };
 
 describe('Report endpoints', () => {
+  describe('signin the admin', () => {
+    it('should login the admin', (done) => {
+      chai.request(app)
+        .post('/api/auth/login')
+        .send({
+          email: 'karlmusingo@gmail.com',
+          password: 'My_password12',
+        })
+        .end(async (err, res) => {
+          adminToken = `Bearer ${res.body.user.token}`;
+          done();
+        });
+    });
+  });
   describe('The endpoint to post a report', () => {
     it('Should post a report', (done) => {
       chai.request(app)
@@ -69,7 +85,7 @@ describe('Report endpoints', () => {
       chai.request(app)
         .get('/api/articles/report')
         .set('Content-Type', 'application/json')
-        .set('Authorization', loginToken)
+        .set('Authorization', adminToken)
         .end((error, res) => {
           expect(res.body.status).to.be.equal(200);
           expect(res.body).to.have.property('articles');
@@ -83,7 +99,7 @@ describe('Report endpoints', () => {
       chai.request(app)
         .get('/api/articles/how-to-dougie-177804958/report')
         .set('Content-Type', 'application/json')
-        .set('Authorization', loginToken)
+        .set('Authorization', adminToken)
         .end((error, res) => {
           expect(res.body.status).to.be.equal(200);
           expect(res.body).to.have.property('article');
@@ -96,7 +112,7 @@ describe('Report endpoints', () => {
       chai.request(app)
         .get('/api/articles/how-to-train-your-dragon-177804958/report')
         .set('Content-Type', 'application/json')
-        .set('Authorization', loginToken)
+        .set('Authorization', adminToken)
         .end((error, res) => {
           expect(res.body.status).to.be.equal(404);
           expect(res.body).to.have.property('message');
@@ -108,7 +124,7 @@ describe('Report endpoints', () => {
       chai.request(app)
         .get('/api/articles/how-to-train-your-drn-177804958/report')
         .set('Content-Type', 'application/json')
-        .set('Authorization', loginToken)
+        .set('Authorization', adminToken)
         .end((error, res) => {
           expect(res.body.status).to.be.equal(404);
           expect(res.body).to.have.property('message');
@@ -122,7 +138,7 @@ describe('Report endpoints', () => {
       chai.request(app)
         .get(`/api/articles/how-to-dougie-177804958/report/${reportId}`)
         .set('Content-Type', 'application/json')
-        .set('Authorization', loginToken)
+        .set('Authorization', adminToken)
         .end((error, res) => {
           expect(res.body.status).to.be.equal(200);
           expect(res.body).to.have.property('report');
@@ -135,7 +151,7 @@ describe('Report endpoints', () => {
       chai.request(app)
         .get(`/api/articles/how-to-dougie-177804958/report/${reportId + 1}`)
         .set('Content-Type', 'application/json')
-        .set('Authorization', loginToken)
+        .set('Authorization', adminToken)
         .end((error, res) => {
           expect(res.body.status).to.be.equal(404);
           expect(res.body).to.have.property('message');
@@ -147,7 +163,7 @@ describe('Report endpoints', () => {
       chai.request(app)
         .get(`/api/articles/how-to-dougie77804958/report/${reportId + 1}`)
         .set('Content-Type', 'application/json')
-        .set('Authorization', loginToken)
+        .set('Authorization', adminToken)
         .end((error, res) => {
           expect(res.body.status).to.be.equal(404);
           expect(res.body).to.have.property('message');
@@ -163,6 +179,8 @@ describe('Report endpoints', () => {
         .set('Content-Type', 'application/json')
         .set('Authorization', loginToken)
         .end((error, res) => {
+          console.log(res.body);
+
           expect(res.body.status).to.be.equal(200);
           expect(res.body).to.have.property('message');
           expect(res.body.message).equals('Report successfully deleted');
@@ -199,7 +217,7 @@ describe('Report endpoints', () => {
       chai.request(app)
         .delete('/api/articles/how-to-dougie-177804958/report')
         .set('Content-Type', 'application/json')
-        .set('Authorization', loginToken)
+        .set('Authorization', adminToken)
         .end((error, res) => {
           expect(res.body.status).to.be.equal(404);
           expect(res.body).to.have.property('message');
@@ -217,7 +235,7 @@ describe('Report endpoints', () => {
           chai.request(app)
             .delete('/api/articles/how-to-dougie-177804958/report')
             .set('Content-Type', 'application/json')
-            .set('Authorization', loginToken)
+            .set('Authorization', adminToken)
             .end((error, res) => {
               expect(res.body.status).to.be.equal(200);
               expect(res.body).to.have.property('message');
@@ -230,7 +248,7 @@ describe('Report endpoints', () => {
       chai.request(app)
         .delete('/api/articles/how-to-dougie54-177804958/report')
         .set('Content-Type', 'application/json')
-        .set('Authorization', loginToken)
+        .set('Authorization', adminToken)
         .end((error, res) => {
           expect(res.body.status).to.be.equal(404);
           expect(res.body).to.have.property('message');

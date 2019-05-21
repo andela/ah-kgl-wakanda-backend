@@ -41,6 +41,16 @@ module.exports = {
 				updatedAt,
 			},
 			{
+				username: 'karlmusingo',
+				email: 'karlmusingo@gmail.com',
+				password: password,
+				roles: 'admin',
+				roleId: 3,
+				verified: true,
+				createdAt,
+				updatedAt,
+			},
+			{
 				username: 'hadadus1',
 				email: 'hadadus1@gmail.com',
 				password: password,
