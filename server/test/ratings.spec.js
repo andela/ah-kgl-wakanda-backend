@@ -53,11 +53,35 @@ before(() => {
   Rating.destroy({ truncate: true });
 });
 
+
+const user = {
+  email: 'vera.iradu@andela.com',
+  password: 'Hadad12@'
+};
+
+let userToken;
+describe('logging a new user', () => {
+  it('should be able to login', (done) => {
+    chai.request(app)
+      .post('/api/auth/login')
+      .send(user)
+      .end((err, res) => {
+        userToken = `Bearer ${res.body.user.token}`;
+        expect(res.status).to.equal(200);
+        expect(res).to.be.an('object');
+        expect(res.body).to.have.property('user');
+        done();
+      });
+  });
+});
+
+
 describe('User Rate articles', () => {
   it('Should successfully create new rate on article', (done) => {
     chai
       .request(app)
       .post(`/api/articles/rate/${slug}`)
+      .set('Authorization', userToken)
       .send({
         userId,
         rate,
@@ -86,6 +110,7 @@ describe('User Rate articles', () => {
     chai
       .request(app)
       .post(`/api/articles/rate/${slug}`)
+      .set('Authorization', userToken)
       .send({
         userId,
         rate,
@@ -114,6 +139,7 @@ describe('User Rate articles', () => {
     chai
       .request(app)
       .post('/api/articles/rate/111-invalid-slug')
+      .set('Authorization', userToken)
       .send({
         userId,
         rate,
@@ -132,6 +158,7 @@ describe('User Rate articles', () => {
     chai
       .request(app)
       .post(`/api/articles/rate/${slug}`)
+      .set('Authorization', userToken)
       .send({
         userId: 'string',
         rate,
@@ -150,6 +177,7 @@ describe('User Rate articles', () => {
     chai
       .request(app)
       .post(`/api/articles/rate/${slug}`)
+      .set('Authorization', userToken)
       .send({
         rate,
       })
@@ -167,6 +195,7 @@ describe('User Rate articles', () => {
     chai
       .request(app)
       .post(`/api/articles/rate/${slug}`)
+      .set('Authorization', userToken)
       .send({
         userId,
         rate: 'string',
@@ -185,6 +214,7 @@ describe('User Rate articles', () => {
     chai
       .request(app)
       .post(`/api/articles/rate/${slug}`)
+      .set('Authorization', userToken)
       .send({
         userId,
       })
@@ -202,6 +232,7 @@ describe('User Rate articles', () => {
     chai
       .request(app)
       .post(`/api/articles/rate/${slug}`)
+      .set('Authorization', userToken)
       .end((err, res) => {
         expect(res.status).to.be.equal(400);
         expect(res.status).to.be.a('number');
@@ -216,6 +247,7 @@ describe('User Rate articles', () => {
     chai
       .request(app)
       .post(`/api/articles/rate/${slug}`)
+      .set('Authorization', userToken)
       .send({
         userId,
         rate: 10,
@@ -234,6 +266,7 @@ describe('User Rate articles', () => {
     chai
       .request(app)
       .post(`/api/articles/rate/${slug}`)
+      .set('Authorization', userToken)
       .send({
         userId,
         rate: 0,

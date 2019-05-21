@@ -2,13 +2,7 @@ import slugify from '@sindresorhus/slugify';
 import open from 'open';
 import { Op } from 'sequelize';
 import dotenv from 'dotenv';
-import {
-  Article,
-  User,
-  Tags,
-  ArticleLikes,
-  Rating
-} from '../models';
+import { Article, User, Tags, ArticleLikes, Rating } from '../models';
 import errorHandler from '../helpers/errorHandler';
 import includeQuery from '../helpers/includeQuery';
 import readTime from '../helpers/readTime';
@@ -170,6 +164,25 @@ class Articles {
   static async update(req, res) {
     try {
       const { article } = req.body;
+      const { id } = req.user;
+      const articleOwner = await Article.findOne({
+        where: {
+          slug: req.params.slug,
+        }
+      });
+      if (!articleOwner) {
+        return res.status(404).json({
+          status: 404,
+          message: 'Article not found'
+        });
+      }
+
+      if (articleOwner.userId !== id) {
+        return res.status(401).json({
+          status: 401,
+          message: 'This is not your article'
+        });
+      }
 
       if (article.title) {
         article.slug = await Articles.createSlug(res, article.title);
@@ -202,17 +215,32 @@ class Articles {
   static async delete(req, res) {
     try {
       const { slug } = req.params;
-      const result = await Article.update(
-        { active: false },
-        {
-          where: { slug, active: true },
-          returning: true
+      const { id } = req.user;
+      const articleOwner = await Article.findOne({
+        where: {
+          slug: req.params.slug,
         }
-      );
-      if (result[0] <= 0) {
-        return res.status(404).json({
+      });
+
+      if (!articleOwner) {
+        return res.status(401).json({
           status: 404,
           message: 'Article not found'
+        });
+      }
+
+      if (articleOwner.userId !== id) {
+        return res.status(401).json({
+          status: 401,
+          message: 'This is not your article'
+        });
+      }
+      const result = await Article.destroy({ where: { slug, }, returning: true });
+
+      if (result > 0) {
+        return res.status(200).json({
+          status: 200,
+          message: 'Article successfully deleted'
         });
       }
 

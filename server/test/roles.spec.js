@@ -2,6 +2,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../../app';
 import { defaultRoles } from '../config/constant';
+import { Role } from '../models';
 
 // Chai configuration
 const { expect } = chai;
@@ -12,9 +13,13 @@ const userRole = {
   description: 'This is a simple user'
 };
 
-const roleId = 1;
-
-describe('Roles endpoints', () => {
+describe('Roles endpoints', async () => {
+  // find User role ID
+  const role = await Role.findOne({
+    attribute: ['id'],
+    where: { name: userRole.name }
+  });
+  const roleId = role.id;
   describe('Get all roles', () => {
     it('should successfully get all roles', (done) => {
       chai
@@ -161,55 +166,6 @@ describe('Roles endpoints', () => {
           expect(res.body).to.be.an('object');
           expect(res.body).to.have.property('message');
           expect(res.body.message).equals('Fail to update the role');
-          done();
-        });
-    });
-  });
-
-  describe('Delete role', () => {
-    it('should successfully delete user role', (done) => {
-      chai
-        .request(app)
-        .delete(`/api/roles/${roleId}`)
-        .end((err, res) => {
-          expect(res.status).equals(200);
-          expect(res.status).to.be.a('number');
-          expect(res.body).to.be.an('object');
-          expect(res.body).to.have.property('message');
-          expect(res.body.message).to.be.a('string');
-          expect(res.body.message).equals('The role was successfully deleted');
-          done();
-        });
-    });
-
-    it('should respond The role was not found', (done) => {
-      chai
-        .request(app)
-        .delete('/api/roles/46272')
-        .end((err, res) => {
-          expect(res.status).equals(404);
-          expect(res.status).to.be.a('number');
-          expect(res.body).to.be.an('object');
-          expect(res.body).to.have.property('message');
-
-          expect(res.body.message).to.be.a('string');
-          expect(res.body.message).equals('The role was not found');
-          done();
-        });
-    });
-
-    it('should fail to delete', (done) => {
-      chai
-        .request(app)
-        .delete('/api/roles/4627290909080')
-        .end((err, res) => {
-          expect(res.status).equals(500);
-          expect(res.status).to.be.a('number');
-          expect(res.body).to.be.an('object');
-          expect(res.body).to.have.property('message');
-
-          expect(res.body.message).to.be.a('string');
-          expect(res.body.message).equals('Fail to delete the role');
           done();
         });
     });

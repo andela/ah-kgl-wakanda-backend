@@ -11,6 +11,6 @@ router.post('/auth/login', validate(schema.logIn), userController.logIn);
 router.delete('/users/signout', checkToken, userController.signout);
 router.get('/users', checkToken, userController.listUsers);
 
-router.put('/user/:username', userController.update);
+router.put('/user/:username', checkToken, userController.update);
 
 export default router;

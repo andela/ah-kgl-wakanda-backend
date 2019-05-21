@@ -93,6 +93,23 @@ class Comments {
         return false;
       }
       const { id } = req.params;
+      const commentOwner = await Comment.findOne({
+        where: {
+          id,
+        }
+      });
+      if (!commentOwner) {
+        return res.status(401).json({
+          status: 404,
+          message: 'Comment not found'
+        });
+      }
+      if (commentOwner.userId !== req.user.id) {
+        return res.status(401).json({
+          status: 401,
+          message: 'This is not your comment'
+        });
+      }
       const result = await Comment.destroy({ where: { id, }, returning: true });
 
       if (result > 0) {
@@ -127,6 +144,24 @@ class Comments {
         return false;
       }
       const { id } = req.params;
+      const commentOwner = await Comment.findOne({
+        where: {
+          id,
+        }
+      });
+      if (!commentOwner) {
+        return res.status(401).json({
+          status: 404,
+          message: 'Comment not found'
+        });
+      }
+      if (commentOwner.userId !== req.user.id) {
+        return res.status(401).json({
+          status: 401,
+          message: 'This is not your comment'
+        });
+      }
+
       const { body } = req.body.comment;
       const result = await Comment.update({ body, }, {
         where: { id, },

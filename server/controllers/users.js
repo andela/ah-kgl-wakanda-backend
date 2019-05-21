@@ -61,7 +61,7 @@ class Users {
   */
   static async logIn(req, res) {
     const { body } = req;
-    const user = await User.findOne({ where: { email: body.email } });
+    const user = await User.findOne({ where: { email: body.email, } });
     if (!user || !encrypt.comparePassword(user.get().password, body.password)) {
       return res.status(401).json({
         status: 401,

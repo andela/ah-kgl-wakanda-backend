@@ -129,6 +129,7 @@ describe('User ', () => {
     it('Should update user information', (done) => {
       chai.request(app)
         .put(`/api/user/${dummyUsers.correct.username}`)
+        .set('Authorization', userToken)
         .send(user)
         .end((error, res) => {
           expect(res.body.status).to.be.equal(200);

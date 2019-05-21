@@ -2,7 +2,6 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { Article } from '../models';
 import readTime from '../helpers/readTime';
-import dummyUsers from './config/users';
 
 import app from '../../app';
 import Articles from '../controllers/articles';
@@ -38,7 +37,7 @@ const user = [{
 
 let userToken;
 const slug = ['how-to-train-your-dragon', 'how-to-train-your-cat'];
-let loginToken;
+let slug1;
 
 const lorem = 'Lorem ipsum dolor sit amet'.repeat(100);
 const title = 'How to train your dog';
@@ -86,30 +85,24 @@ describe('Article endpoints', () => {
   describe('The endpoint to create an article', () => {
     it('Should create an article', (done) => {
       chai.request(app)
-        .post('/api/auth/signup')
-        .send(dummyUsers.correctCreateArticle)
-        .end((err, resp) => {
-          loginToken = `Bearer ${resp.body.user.token}`;
-          chai.request(app)
-            .post('/api/articles')
-            .set('Authorization', `Bearer ${resp.body.user.token}`)
-            .send({ article })
-            .end((error, res) => {
-              slug[3] = res.body.data.article.slug;
-              expect(res.body.status).to.be.equal(201);
-              expect(res.body).to.have.property('data');
-              expect(res.body.data).to.have.property('article');
-              expect(res.body.data.article).to.have.property('title');
-              expect(res.body.data.article.title).equals('How to train your dragon');
-              done();
-            });
+        .post('/api/articles')
+        .set('Authorization', userToken)
+        .send({ article })
+        .end((error, res) => {
+          slug1 = res.body.data.article.slug;
+          expect(res.body.status).to.be.equal(201);
+          expect(res.body).to.have.property('data');
+          expect(res.body.data).to.have.property('article');
+          expect(res.body.data.article).to.have.property('title');
+          expect(res.body.data.article.title).equals('How to train your dragon');
+          done();
         });
     });
 
     it('Should return a sequelize validation error', (done) => {
       chai.request(app)
         .post('/api/articles')
-        .set('Authorization', loginToken)
+        .set('Authorization', userToken)
         .send({ article: badArticle })
         .end((error, res) => {
           expect(res.body.status).to.be.equal(400);
@@ -121,7 +114,7 @@ describe('Article endpoints', () => {
     it('Should return a validation error', (done) => {
       chai.request(app)
         .post('/api/articles')
-        .set('Authorization', loginToken)
+        .set('Authorization', userToken)
         .send({ bad: 'request' })
         .end((error, res) => {
           expect(res.body.status).to.be.equal(400);
@@ -277,7 +270,7 @@ describe('Article endpoints', () => {
   describe('The endpoint to get a single article', () => {
     it('Should get a single article ', (done) => {
       chai.request(app)
-        .get(`/api/articles/${slug[1]}`)
+        .get(`/api/articles/${slug1}`)
         .set('Authorization', 'Bearer <token>')
         .send({ article })
         .end((error, res) => {
@@ -315,14 +308,16 @@ describe('Article endpoints', () => {
         });
     });
   });
+  // Updating an article
 
   describe('The endpoint to update an article', () => {
     it('Should update an article ', (done) => {
       chai.request(app)
-        .put(`/api/articles/${slug[0]}`)
-        .set('Authorization', 'Bearer <token>')
+        .put(`/api/articles/${slug1}`)
+        .set('Authorization', userToken)
         .send({ article: { title: 'new title' } })
         .end((error, res) => {
+          slug1 = res.body.data.article.slug;
           expect(res.body.status).to.be.equal(200);
           expect(res.body).to.have.property('data');
           expect(res.body.data).to.have.property('article');
@@ -331,11 +326,12 @@ describe('Article endpoints', () => {
           done();
         });
     });
+    // Updating an unexisting article
 
     it('Should fail to update an article ', (done) => {
       chai.request(app)
         .put('/api/articles/wrong-slug')
-        .set('Authorization', 'Bearer <token>')
+        .set('Authorization', userToken)
         .send({ article: { title: 'My article', description: 'new description' } })
         .end((error, res) => {
           expect(res.body.status).to.be.equal(404);
@@ -365,7 +361,7 @@ describe('Article endpoints', () => {
 
     it('Should successfully bookmark an article', (done) => {
       chai.request(app)
-        .post(`/api/articles/${slug[1]}/bookmark`)
+        .post(`/api/articles/${slug[0]}/bookmark`)
         .set('Content-Type', 'application/json')
         .set('Authorization', userToken)
         .end((err, res) => {
@@ -394,7 +390,7 @@ describe('Article endpoints', () => {
 
     it('Should not bookmark the article for the second time', (done) => {
       chai.request(app)
-        .post(`/api/articles/${slug[1]}/bookmark`)
+        .post(`/api/articles/${slug[0]}/bookmark`)
         .set('Content-Type', 'application/json')
         .set('Authorization', userToken)
         .end((err, res) => {
@@ -422,7 +418,7 @@ describe('Article endpoints', () => {
 
     it('Should successfully unbookmark the article', (done) => {
       chai.request(app)
-        .delete(`/api/articles/${slug[1]}/bookmark`)
+        .delete(`/api/articles/${slug[0]}/bookmark`)
         .set('Content-Type', 'application/json')
         .set('Authorization', userToken)
         .end((err, res) => {
@@ -437,7 +433,7 @@ describe('Article endpoints', () => {
 
     it('Should not unbookmark the unbookmarked article', (done) => {
       chai.request(app)
-        .delete(`/api/articles/${slug[1]}/bookmark`)
+        .delete(`/api/articles/${slug[0]}/bookmark`)
         .set('Content-Type', 'application/json')
         .set('Authorization', userToken)
         .end((err, res) => {
@@ -446,11 +442,53 @@ describe('Article endpoints', () => {
           done();
         });
     });
+    it('should not share if the article is not found', (done) => {
+      chai.request(app)
+        .post(`/api/articles/${slug[2]}/share/facebook`)
+        .set('Authorization', userToken)
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(404);
+          expect(res.body.message).to.equals('We didn\'t find that article would you like to write one?');
+          done();
+        });
+    });
+    it('should  share to facebook', (done) => {
+      chai.request(app)
+        .post(`/api/articles/${slug[0]}-177804958/share/facebook`)
+        .set('Authorization', userToken)
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body.message).to.equals('Article shared to facebook');
+          done();
+        });
+    });
+    it('should  share to twitter', (done) => {
+      chai.request(app)
+        .post(`/api/articles/${slug[0]}-177804958/share/twitter`)
+        .set('Authorization', userToken)
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body.message).to.equals('Article shared to twitter');
+          done();
+        });
+    });
+    it('should  share to mail', (done) => {
+      chai.request(app)
+        .post(`/api/articles/${slug[0]}-177804958/share/mail`)
+        .set('Authorization', userToken)
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body.message).to.equals('Article shared to mail');
+          done();
+        });
+    });
+  });
+  describe('Deleting', () => {
     describe('The endpoint to delete an article', () => {
       it('Should delete an article ', (done) => {
         chai.request(app)
-          .delete(`/api/articles/${slug[1]}`)
-          .set('Authorization', 'Bearer <token>')
+          .delete(`/api/articles/${slug1}`)
+          .set('Authorization', userToken)
           .end((error, res) => {
             expect(res.body.status).to.be.equal(200);
             expect(res.body.message).to.equals('Article successfully deleted');
@@ -461,7 +499,7 @@ describe('Article endpoints', () => {
       it('Should fail to delete an article ', (done) => {
         chai.request(app)
           .delete('/api/articles/wrong-slug')
-          .set('Authorization', 'Bearer <token>')
+          .set('Authorization', userToken)
           .end((error, res) => {
             expect(res.body.status).to.be.equal(404);
             expect(res.body.message).to.equals('Article not found');
@@ -471,54 +509,18 @@ describe('Article endpoints', () => {
     });
   });
 
-  describe('to share an article', () => {
+  describe('Sharing', () => {
     it('should not share if the the channel is not the ones predefined', (done) => {
       chai.request(app)
         .post(`/api/articles/${slug[2]}/share/maily`)
+        .set('Authorization', userToken)
         .end((error, res) => {
           expect(res.body.status).to.be.equal(400);
           expect(res.body.message).to.equals('channel must be one of facebook twitter mail');
           done();
         });
     });
-    it('should not share if the article is not found', (done) => {
-      chai.request(app)
-        .post(`/api/articles/${slug[2]}/share/facebook`)
-        .end((error, res) => {
-          expect(res.body.status).to.be.equal(404);
-          expect(res.body.message).to.equals('We didn\'t find that article would you like to write one?');
-          done();
-        });
-    });
-    it('should  share to facebook', (done) => {
-      chai.request(app)
-        .post(`/api/articles/${slug[0]}-177804958/share/facebook`)
-        .end((error, res) => {
-          expect(res.body.status).to.be.equal(200);
-          expect(res.body.message).to.equals('Article shared to facebook');
-          done();
-        });
-    });
-    it('should  share to twitter', (done) => {
-      chai.request(app)
-        .post(`/api/articles/${slug[0]}-177804958/share/twitter`)
-        .end((error, res) => {
-          expect(res.body.status).to.be.equal(200);
-          expect(res.body.message).to.equals('Article shared to twitter');
-          done();
-        });
-    });
-    it('should  share to mail', (done) => {
-      chai.request(app)
-        .post(`/api/articles/${slug[0]}-177804958/share/mail`)
-        .end((error, res) => {
-          expect(res.body.status).to.be.equal(200);
-          expect(res.body.message).to.equals('Article shared to mail');
-          done();
-        });
-    });
   });
-
   describe('Function to get the read time of an article', () => {
     it('Should return the read time', () => {
       expect(readTime).to.be.a('function');
@@ -554,7 +556,7 @@ describe('Article endpoints', () => {
     });
 
     describe('Filter by article author', () => {
-      it('should search article by author', (done) => {
+      it('Should search article by author', (done) => {
         chai.request(app)
           .get(`/api/search?author=${author}`)
           .end((error, res) => {
@@ -654,44 +656,6 @@ describe('Article endpoints', () => {
           expect(res.status).to.be.equal(400);
           expect(res.body).to.have.property('message');
           expect(res.body.message).to.have.equals('search paramater are required');
-          done();
-        });
-    });
-  });
-
-  describe('The endpoint to get the read stats', () => {
-    it('Should return the read stats', (done) => {
-      chai.request(app)
-        .get(`/api/articles/${slug[3]}/stats`)
-        .set('Content-Type', 'application/json')
-        .set('Authorization', loginToken)
-        .end((err, res) => {
-          expect(res.status).to.equals(200);
-          expect(res.body.article.slug).to.be.equals(slug[3]);
-          done();
-        });
-    });
-
-    it('Should when the article is not found', (done) => {
-      chai.request(app)
-        .get(`/api/articles/${slug[0]}/stats`)
-        .set('Content-Type', 'application/json')
-        .set('Authorization', loginToken)
-        .end((err, res) => {
-          expect(res.status).to.equals(404);
-          expect(res.body.message).to.be.equals('Article not found');
-          done();
-        });
-    });
-
-    it('Should fail if the article does not belong to the current user', (done) => {
-      chai.request(app)
-        .get(`/api/articles/${slug[3]}/stats`)
-        .set('Content-Type', 'application/json')
-        .set('Authorization', userToken)
-        .end((err, res) => {
-          expect(res.status).to.equals(401);
-          expect(res.body.message).to.be.equals('Only the owner can view the read stats');
           done();
         });
     });
