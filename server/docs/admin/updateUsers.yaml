@@ -1,0 +1,27 @@
+paths:
+  /admin/account/:username:
+    put:
+      tags:
+        - Admin
+      summary: update a user
+      description: Authentication required (admin)
+      consumes:
+        - application/json
+      produces:
+        - application/xml
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: username
+          description: The username of the user
+      responses:
+        200:
+          description: Ok
+        404:
+          description: Not found
+        400:
+          description: validation error
+        409:
+          description: Email already exists
+        401:
+          description: Unauthorized

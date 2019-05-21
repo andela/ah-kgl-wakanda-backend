@@ -1,0 +1,23 @@
+paths:
+  /admin/account:
+    post:
+      tags:
+        - Admin
+      summary: create a user
+      description: Authentication required (admin)
+      consumes:
+        - application/json
+      produces:
+        - application/xml
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Ok
+        409:
+          description: Email already exists
+        400:
+          description: validation error
+        401:
+          description: Unauthorized
+

@@ -1,0 +1,23 @@
+paths:
+  /admin/account/:username:
+    delete:
+      tags:
+        - Admin
+      summary: disable a user
+      description: Authentication required (admin)
+      consumes:
+        - application/json
+      produces:
+        - application/xml
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: username
+          description: The username of the user
+      responses:
+        200:
+          description: Ok
+        404:
+          description: Not found
+        401:
+          description: Unauthorized

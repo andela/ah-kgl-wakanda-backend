@@ -6,6 +6,18 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       unique: true,
     },
+    firstname: {
+      type: DataTypes.STRING,
+    },
+    lastname: {
+      type: DataTypes.STRING,
+    },
+    roles: {
+      type: DataTypes.STRING,
+    },
+    isDisabled: {
+      type: DataTypes.BOOLEAN,
+    },
     email: {
       type: DataTypes.STRING,
     },
@@ -32,7 +44,9 @@ export default (sequelize, DataTypes) => {
         min: 8
       }
     },
-    roleId: DataTypes.INTEGER,
+    roleId: {
+      type: DataTypes.INTEGER,
+    },
   }, {});
   User.associate = (models) => {
     User.hasMany(models.Article, {

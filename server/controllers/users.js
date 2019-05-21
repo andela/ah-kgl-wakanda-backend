@@ -22,9 +22,9 @@ class Users {
       const hashedPassword = encrypt.hashPassword(req.body.password);
 
       // get the roleId for the user
-      const role = Role.findOne({
+      const role = await Role.findOne({
         where: {
-          name: defaultRoles.USER,
+          name: 'user',
         }
       });
 
@@ -66,6 +66,11 @@ class Users {
       return res.status(401).json({
         status: 401,
         message: 'The credentials you provided is incorrect',
+      });
+    } if (user.isDisabled) {
+      return res.status(403).json({
+        status: 403,
+        message: 'This account has been disabled',
       });
     }
     await User.update({ isLoggedIn: true }, { where: { id: user.id } });
@@ -198,11 +203,14 @@ class Users {
   static async update(req, res) {
     try {
       const { username } = req.params;
+      const {
+        email, bio, image
+      } = req.body;
       const result = await User.update(
         {
-          email: req.body.email,
-          bio: req.body.bio,
-          image: req.body.image,
+          email,
+          bio,
+          image,
         },
         {
           where: { username },
@@ -235,7 +243,8 @@ class Users {
       const result = await User.findAll({
         attributes: {
           exclude: ['password', 'provider', 'isLoggedIn', 'createdAt', 'updatedAt']
-        }
+        },
+        where: { isDisabled: false }
       });
       return res.status(200).json({
         status: 200,
@@ -243,6 +252,27 @@ class Users {
       });
     } catch (e) {
       errorHandler.errorResponse(res, e);
+    }
+  }
+
+  /**
+   *
+   *
+   * @static
+   * @param {string} username
+   * @param {string} res
+   * @returns {object} response
+   * @memberof User
+   */
+  static async getUser(username) {
+    try {
+      const user = await User.findOne({
+        where: { username },
+        returning: true,
+      });
+      return user;
+    } catch (error) {
+      return error;
     }
   }
 }
