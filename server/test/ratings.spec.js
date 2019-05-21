@@ -7,7 +7,6 @@ import { Rating } from '../models';
 const { expect } = chai;
 chai.use(chaiHttp);
 
-const userId = 1;
 const rate = 2;
 const slug = 'how-to-dougie-177804958';
 
@@ -66,7 +65,6 @@ describe('User Rate articles', () => {
       .post(`/api/articles/rate/${slug}`)
       .set('Authorization', userToken)
       .send({
-        userId,
         rate,
       })
       .end((err, res) => {
@@ -95,7 +93,6 @@ describe('User Rate articles', () => {
       .post(`/api/articles/rate/${slug}`)
       .set('Authorization', userToken)
       .send({
-        userId,
         rate,
       })
       .end((err, res) => {
@@ -124,7 +121,6 @@ describe('User Rate articles', () => {
       .post('/api/articles/rate/111-invalid-slug')
       .set('Authorization', userToken)
       .send({
-        userId,
         rate,
       })
       .end((err, res) => {
@@ -137,50 +133,12 @@ describe('User Rate articles', () => {
       });
   });
 
-  it('Should validate invalid userId', (done) => {
-    chai
-      .request(app)
-      .post(`/api/articles/rate/${slug}`)
-      .set('Authorization', userToken)
-      .send({
-        userId: 'string',
-        rate,
-      })
-      .end((err, res) => {
-        expect(res.status).to.be.equal(400);
-        expect(res.status).to.be.a('number');
-        expect(res.body).to.be.an('object');
-        expect(res.body).to.have.property('message');
-        expect(res.body.message).equals('userId must be a number');
-        done();
-      });
-  });
-
-  it('Should validate empty userId', (done) => {
-    chai
-      .request(app)
-      .post(`/api/articles/rate/${slug}`)
-      .set('Authorization', userToken)
-      .send({
-        rate,
-      })
-      .end((err, res) => {
-        expect(res.status).to.be.equal(400);
-        expect(res.status).to.be.a('number');
-        expect(res.body).to.be.an('object');
-        expect(res.body).to.have.property('message');
-        expect(res.body.message).equals('userId is required');
-        done();
-      });
-  });
-
   it('Should validate invalid rate', (done) => {
     chai
       .request(app)
       .post(`/api/articles/rate/${slug}`)
       .set('Authorization', userToken)
       .send({
-        userId,
         rate: 'string',
       })
       .end((err, res) => {
@@ -189,24 +147,6 @@ describe('User Rate articles', () => {
         expect(res.body).to.be.an('object');
         expect(res.body).to.have.property('message');
         expect(res.body.message).equals('rate must be a number');
-        done();
-      });
-  });
-
-  it('Should validate empty rate', (done) => {
-    chai
-      .request(app)
-      .post(`/api/articles/rate/${slug}`)
-      .set('Authorization', userToken)
-      .send({
-        userId,
-      })
-      .end((err, res) => {
-        expect(res.status).to.be.equal(400);
-        expect(res.status).to.be.a('number');
-        expect(res.body).to.be.an('object');
-        expect(res.body).to.have.property('message');
-        expect(res.body.message).equals('rate is required');
         done();
       });
   });
@@ -232,7 +172,6 @@ describe('User Rate articles', () => {
       .post(`/api/articles/rate/${slug}`)
       .set('Authorization', userToken)
       .send({
-        userId,
         rate: 10,
       })
       .end((err, res) => {
@@ -251,7 +190,6 @@ describe('User Rate articles', () => {
       .post(`/api/articles/rate/${slug}`)
       .set('Authorization', userToken)
       .send({
-        userId,
         rate: 0,
       })
       .end((err, res) => {

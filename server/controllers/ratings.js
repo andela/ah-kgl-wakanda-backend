@@ -15,8 +15,8 @@ class Ratings {
    * @returns {Object} .
   */
   static async create(req, res) {
-    // get userId from jwt middleware
-    const { userId } = req.body;
+    // get id from jwt middleware
+    const { id } = req.user;
     const { rate } = req.body;
     const { slug } = req.params;
 
@@ -37,7 +37,7 @@ class Ratings {
       const ratedArticle = await Rating.findOne({
         where: {
           articleId: article.id,
-          userId,
+          userId: id,
         }
       });
 
@@ -54,7 +54,7 @@ class Ratings {
       }
       const ratingInfo = await Rating.create({
         articleId: article.id,
-        userId,
+        userId: id,
         rate,
       });
 
