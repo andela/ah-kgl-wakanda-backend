@@ -110,6 +110,7 @@ const users = {
   correctUserForReport: {
     username: 'karlReport',
     email: 'karl_test_Report@andela.com',
+    password: 'Hadad12@'
   },
   correctCreateHighligh: {
     username: 'karlHighlight',
