@@ -1,0 +1,40 @@
+paths:
+  /articles/{slug}/highlights/{id}:
+    delete:
+      tags:
+        - Highlight
+      summary: delete one highlight
+      description: returns a highlight
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: slug
+          required: true
+          schema:
+            $ref: "#/definitions/postHighlightSlug"
+        - in: path
+          name: id
+          required: true
+          schema:
+            $ref: "#/definitions/postHighlightId"
+      responses:
+        200:
+          description: Ok
+        403:
+          description: Unauthorized request
+        404:
+          description: Article or highlight not found
+definitions:
+  postHighlightSlug:
+    type: string
+    properties:
+      slug:
+        type: string
+  postHighlightId:
+    type: integer
+    properties:
+      slug:
+        type: integer

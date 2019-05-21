@@ -11,14 +11,13 @@ import checkSlug from '../helpers/checkSlug';
  */
 class Highlights {
   /**
-                                                                                                                                             *
-                                                                                                                                             * @description create a new highlight
-                                                                                                                                             * @static
-                                                                                                                                             * @param {object} req
-                                                                                                                                             * @param {object} res
-                                                                                                                                             * @returns {object} response
-                                                                                                                                             * @memberof Highlights
-                                                                                                                                             */
+   * @description create a new highlight
+   * @static
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} response
+   * @memberof Highlights
+   */
   static async create(req, res) {
     try {
       const { start, end } = req.query;
@@ -36,7 +35,7 @@ class Highlights {
       if (end > article.body.length) {
         return res.status(400).json({
           status: 400,
-          message: 'Please, provide a valid end endex,'
+          message: 'Please, provide a valid end endex'
         });
       }
 
@@ -56,7 +55,7 @@ class Highlights {
       });
 
       return res.status(201).json({
-        message: 'The article has successfully been highlighted',
+        status: 201,
         highlight: highlight.dataValues
       });
     } catch (e) {
@@ -65,14 +64,14 @@ class Highlights {
   }
 
   /**
-                                                                                                 *
-                                                                                                 * @description get all highlights on an article
-                                                                                                 * @static
-                                                                                                 * @param {object} req
-                                                                                                 * @param {object} res
-                                                                                                 * @returns {object} response
-                                                                                                 * @memberof Highlights
-                                                                                                 */
+   *
+   * @description get all highlights on an article
+   * @static
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} response
+   * @memberof Highlights
+   */
   static async getAll(req, res) {
     try {
       const articleId = await checkSlug(req, res);
@@ -87,8 +86,8 @@ class Highlights {
         }
       });
       res.status(200).json({
+        status: 200,
         highlights,
-        message: 'The highlights have been retrieved'
       });
     } catch (e) {
       errorHandler.errorResponse(res, e);
@@ -96,14 +95,14 @@ class Highlights {
   }
 
   /**
-                                                                                         *
-                                                                                         * @description get on highlight on an article
-                                                                                         * @static
-                                                                                         * @param {object} req
-                                                                                         * @param {object} res
-                                                                                         * @returns {object} response
-                                                                                         * @memberof Highlights
-                                                                                         */
+   *
+   * @description get on highlight on an article
+   * @static
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} response
+   * @memberof Highlights
+   */
   static async getOne(req, res) {
     try {
       const { id } = req.params;
@@ -163,7 +162,7 @@ class Highlights {
       if (end > article.body.length) {
         return res.status(400).json({
           status: 400,
-          message: 'Please, provide a valid end endex,'
+          message: 'Please, provide a valid end index'
         });
       }
 

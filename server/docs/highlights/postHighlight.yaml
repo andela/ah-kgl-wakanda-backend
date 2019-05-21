@@ -1,0 +1,54 @@
+paths:
+  /articles/{slug}/highlights:
+    post:
+      tags:
+        - Highlight
+      summary: Post a comment on highlighted text
+      description: Authentication required, returns a highlight
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/postHighlightBody"
+        - in: path
+          name: slug
+          required: true
+          schema:
+            $ref: "#/definitions/postHighlightSlug"
+        - in: query
+          name: start
+          required: true
+          schema:
+            type: integer
+          description: The starting index of text to be highlighted in the body of the article
+        - in: query
+          name: end
+          required: true
+          schema:
+            type: integer
+          description: The end index of text to be highlighted in the body of the article
+      responses:
+        201:
+          description: Ok
+        400:
+          description: Invalid parameter
+        403:
+          description: Unauthorized request
+        404:
+          description: Article not fount
+definitions:
+  postHighlightBody:
+    type: object
+    properties:
+      comment:
+        type: string
+  postHighlightSlug:
+    type: string
+    properties:
+      slug:
+        type: string
