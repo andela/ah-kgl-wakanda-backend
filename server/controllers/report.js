@@ -195,12 +195,13 @@ class Reports {
    */
   static async delete(req, res) {
     try {
+      const { id: userId } = req.user;
       const articleId = await checkSlug(req, res);
       if (typeof articleId !== 'number') {
         return false;
       }
       const { id } = req.params;
-      const result = await Report.destroy({ where: { id, }, returning: true });
+      const result = await Report.destroy({ where: { id, userId, }, returning: true });
 
       if (result > 0) {
         return res.status(200).json({
