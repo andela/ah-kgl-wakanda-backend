@@ -24,7 +24,7 @@ class Users {
       // get the roleId for the user
       const role = await Role.findOne({
         where: {
-          name: 'user',
+          name: defaultRoles.USER,
         }
       });
 
