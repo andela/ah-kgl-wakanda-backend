@@ -24,6 +24,7 @@ module.exports = {
 				image: 'img/mutombo.jpg',
 				isLoggedIn: true,
 				following: false,
+				verified: true,
 				password: password,
 				roles: 'admin',
 				createdAt,
@@ -35,6 +36,7 @@ module.exports = {
 				password: password,
 				roles: 'admin',
 				roleId: 3,
+				verified: true,
 				createdAt,
 				updatedAt,
 			},
@@ -42,6 +44,7 @@ module.exports = {
 				username: 'hadadus1',
 				email: 'hadadus1@gmail.com',
 				password: password,
+				verified: true,
 				createdAt,
 				updatedAt,
 			},
@@ -50,11 +53,12 @@ module.exports = {
 				email: 'hadadus2@gmail.com',
 				password: password,
 				isDisabled: true,
+				verified: true,
 				createdAt,
 				updatedAt,
 			},
 
-	], {});
+		], {});
 	},
 
 	down: (queryInterface, Sequelize) => {
