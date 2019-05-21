@@ -1,10 +1,9 @@
 import dotenv from 'dotenv';
-import { User, Role } from '../models/index';
 import jwt from 'jsonwebtoken';
+import { User, Role } from '../models/index';
 import encrypt from '../helpers/encrypt';
 import sendMail from '../helpers/sendVerificationEmail';
 import errorHandler from '../helpers/errorHandler';
-import { defaultRoles } from '../config/constant';
 
 dotenv.config();
 

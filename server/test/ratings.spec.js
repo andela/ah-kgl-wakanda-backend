@@ -67,8 +67,6 @@ describe('logging a new user', () => {
       .post('/api/auth/signup')
       .send(user)
       .end((err, res) => {
-        console.log(res.body);
-
         userToken = `Bearer ${res.body.user.token}`;
         expect(res.status).to.equal(200);
         expect(res).to.be.an('object');
