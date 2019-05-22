@@ -112,6 +112,11 @@ const users = {
     email: 'karl_test_Report@andela.com',
     password: 'Hadad12@'
   },
+  correctCreateHighligh: {
+    username: 'karlHighlight',
+    email: 'karl_test_Highlight@andela.com',
+    password: 'Hadad12@'
+  },
 
 };
 

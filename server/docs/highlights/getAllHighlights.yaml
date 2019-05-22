@@ -1,0 +1,30 @@
+paths:
+  /articles/{slug}/highlights:
+    get:
+      tags:
+        - Highlight
+      summary: get all highlight
+      description: returns a highlight
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: slug
+          required: true
+          schema:
+            $ref: "#/definitions/postHighlightSlug"
+      responses:
+        200:
+          description: Ok
+        403:
+          description: Unauthorized request
+        404:
+          description: Article not fount
+definitions:
+  postHighlightSlug:
+    type: string
+    properties:
+      slug:
+        type: string

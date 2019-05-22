@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     articleId: DataTypes.INTEGER,
+    HighlightId: DataTypes.INTEGER,
     favorited: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
@@ -36,6 +37,11 @@ module.exports = (sequelize, DataTypes) => {
       through: 'CommentLikes',
       foreignKey: 'commentId',
       targetKey: 'id',
+    });
+    Comment.hasOne(models.Highlight, {
+      foreignKey: 'id',
+      targetKey: 'HighlightId',
+      onDelete: "CASCADE"
     });
   };
   return Comment;
