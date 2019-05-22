@@ -5,7 +5,14 @@ node_js:
 before_script:
   - NODE_ENV=test npx sequelize db:migrate
   - rm -rf node_modules/bcrypt
+  - npm install -g node-gyp
   - npm i
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-5
 script:
   - npm test
 after_success:
