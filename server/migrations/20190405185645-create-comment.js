@@ -22,9 +22,6 @@ export default {
     favoritesCount: {
       type: Sequelize.INTEGER
     },
-    // history: {
-    //   type: Sequelize.ARRAY(Sequelize.OBJECT)
-    // },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE
