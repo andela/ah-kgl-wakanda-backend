@@ -1,6 +1,4 @@
-import {
-  Comment, User, CommentLikes, History
-} from '../models';
+import { Comment, User, CommentLikes, History } from '../models';
 import errorHandler from '../helpers/errorHandler';
 import checkSlug from '../helpers/checkSlug';
 import Notifications from './notifications';
