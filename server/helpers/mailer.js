@@ -51,7 +51,7 @@ const mailer = async ({
         subject
       }
     ],
-    from: { email: 'noreply@authorshaven.com' },
+    from: { email: 'karlmusingo77@gmail.com' },
     template_id: 'd-29060466d3544ef7845065aad76956f3'
   };
 

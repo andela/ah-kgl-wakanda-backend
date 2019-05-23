@@ -5,12 +5,7 @@ import checkToken from '../../middlewares/checkToken';
 
 const router = express.Router();
 
-router.post(
-  '/articles/rate/:slug',
-  checkToken,
-  Validation.validateRating,
-  Ratings.create
-);
+router.post('/articles/rate/:slug', checkToken, Validation.validateRating, Ratings.create);
 router.get('/articles/:slug/ratings', Validation.queries, Ratings.findArticleRatings);
 
 export default router;

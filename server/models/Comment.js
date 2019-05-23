@@ -1,3 +1,5 @@
+
+
 module.exports = (sequelize, DataTypes) => {
   const Comment = sequelize.define('Comment', {
     body: {
@@ -41,7 +43,11 @@ module.exports = (sequelize, DataTypes) => {
     Comment.hasOne(models.Highlight, {
       foreignKey: 'id',
       targetKey: 'HighlightId',
-      onDelete: "CASCADE"
+      onDelete: 'CASCADE'
+    });
+    Comment.hasMany(models.History, {
+      foreignKey: 'commentId',
+      sourceKey: 'id'
     });
   };
   return Comment;

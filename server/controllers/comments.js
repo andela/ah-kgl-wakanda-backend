@@ -1,4 +1,4 @@
-import { Comment, User, CommentLikes } from '../models';
+import { Comment, User, CommentLikes, History } from '../models';
 import errorHandler from '../helpers/errorHandler';
 import checkSlug from '../helpers/checkSlug';
 import Notifications from './notifications';
@@ -58,11 +58,17 @@ class Comments {
       }
       const result = await Comment.findAndCountAll({
         where: { articleId, },
-        attributes: ['id', 'body', 'createdAt', 'updatedAt', 'favorited', 'favoritesCount'],
+        attributes: ['body', 'createdAt', 'updatedAt', 'favorited', 'favoritesCount'],
         include: [{
           model: User,
           attributes: ['username', 'bio', 'image', 'following'],
-        }],
+        },
+        {
+          model: History,
+          attributes: ['body', 'createdAt'],
+        }
+        ],
+
         order: [['createdAt', 'DESC']]
       });
       return res.status(200).json({
@@ -161,7 +167,10 @@ class Comments {
           message: 'This is not your comment'
         });
       }
-
+      const prevComment = History.create({
+        commentId: commentOwner.id,
+        body: commentOwner.body,
+      });
       const { body } = req.body.comment;
       const result = await Comment.update({ body, }, {
         where: { id, },
@@ -170,7 +179,10 @@ class Comments {
       });
       return res.status(200).json({
         status: 200,
-        data: { comment: result[1].get() }
+        data: {
+          comment: result[1].get(),
+          prevComment,
+        }
       });
     } catch (e) {
       if (e.message === 'Cannot read property \'length\' of null') {
@@ -251,7 +263,7 @@ class Comments {
 
   /**
      *
-     * like a comment.
+     * Unlike a comment.
      * @static
      * @param {object} req
      * @param {object} res
