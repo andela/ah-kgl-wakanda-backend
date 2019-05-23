@@ -31,6 +31,10 @@ describe('Roles endpoints', async () => {
           expect(res.body).to.be.an('object');
           expect(res.body).to.have.property('data');
           expect(res.body.data).to.be.an('array');
+          expect(res.body.data).lengthOf(3);
+          expect(res.body.data[0]).to.be.an('object');
+          expect(res.body.data[0]).to.have.any
+            .keys('id', 'name', 'description');
           done();
         });
     });
@@ -50,7 +54,7 @@ describe('Roles endpoints', async () => {
         });
     });
 
-    it('should validat the role Id', (done) => {
+    it('should validate the role Id', (done) => {
       chai
         .request(app)
         .get('/api/roles/wrong-id')

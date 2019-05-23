@@ -17,7 +17,7 @@ class Roles {
    */
   static async getAll(req, res) {
     try {
-      const roles = await Role.findAll();
+      const roles = await Role.findAll({ raw: true });
       return res.status(200).json({
         data: roles
       });

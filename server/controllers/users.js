@@ -4,6 +4,7 @@ import { User, Role } from '../models/index';
 import encrypt from '../helpers/encrypt';
 import sendMail from '../helpers/sendVerificationEmail';
 import errorHandler from '../helpers/errorHandler';
+import { defaultRoles } from '../config/constant';
 
 dotenv.config();
 
@@ -24,7 +25,7 @@ class Users {
       // get the roleId for the user
       const role = await Role.findOne({
         where: {
-          name: 'user',
+          name: defaultRoles.USER,
         }
       });
 

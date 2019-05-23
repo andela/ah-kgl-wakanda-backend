@@ -23,8 +23,8 @@ const admin = async (req, res, next) => {
   try {
     const jwtPayload = jwt.verify(token, process.env.SECRET);
     const user = await User.findOne({ where: { id: jwtPayload.id } });
-    
-    
+
+
     if (!user.isLoggedIn) {
       return res.status(403).json({
         status: 403,
