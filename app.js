@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import passport from 'passport';
 import session from 'express-session';
+import cors from 'cors';
 import routes from './server/routes';
 import { LOCAL_PORT } from './server/config/constant';
 
@@ -12,6 +13,7 @@ const app = express();
 
 // Normal express config defaults
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cors());
 app.use(bodyParser.json());
 
 app.use(express.json());
