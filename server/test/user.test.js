@@ -197,13 +197,11 @@ describe('User ', () => {
           expect(res.body.profile).to.have.property('firstname');
           expect(res.body.profile).to.have.property('lastname');
           expect(res.body.profile).to.have.property('email');
-          expect(res.body.profile).to.have.property('isLoggedIn');
-          expect(res.body.profile).to.have.property('allowEmailNotification');
           expect(res.body.profile).to.have.property('bio');
           expect(res.body.profile).to.have.property('image');
-          expect(res.body.profile).to.have.property('isFollowing');
-          expect(res.body.profile).to.have.property('followers');
-          expect(res.body.profile).to.have.property('following');
+          expect(res.body.profile).to.have.property('follows');
+          expect(res.body.profile).to.have.property('followings');
+          expect(res.body.profile).to.have.property('articles');
           expect(res.body.profile.email).equals('gisele.iradukunda@andela.com');
           expect(res.body.profile.bio).equals('I am not afraid');
           expect(res.body.profile.image).equals('https://image.jpg');

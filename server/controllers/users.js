@@ -1,11 +1,10 @@
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
-import { User, Role, Following } from '../models/index';
+import { User, Role, Following, Article } from '../models/index';
 import encrypt from '../helpers/encrypt';
 import sendMail from '../helpers/sendVerificationEmail';
 import errorHandler from '../helpers/errorHandler';
 import { defaultRoles } from '../config/constant';
-// import Followings from './following';
 
 dotenv.config();
 
@@ -309,34 +308,26 @@ class Users {
         where: { followedId: id },
         returning: true
       });
-      let followers = 0, following = 0;
-      if (follows) {
-        followers = follows;
-        return followers;
-      }
-      if (followings) {
-        following = followings;
-        return following;
-      }
+      const articles = await Article.count({
+        where: { userId: id },
+        returning: true
+      });
       return res.status(200).json({
         status: 200,
         profile: {
           username: info.username,
           firstname: info.firstname,
           lastname: info.lastname,
-          roles: info.role,
           email: info.email,
-          isLoggedIn: info.isLoggedIn,
-          allowEmailNotification: info.allowEmailNotification,
           bio: info.bio,
           image: info.image,
-          isFollowing: info.following,
-          followers,
-          following
+          follows,
+          followings,
+          articles,
         }
       });
-    } catch (error) {
-      return error;
+    } catch (e) {
+      errorHandler.errorResponse(res, e);
     }
   }
 
