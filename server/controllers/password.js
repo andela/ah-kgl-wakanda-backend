@@ -6,8 +6,8 @@ import { User } from '../models';
 
 dotenv.config();
 
-const appDomain = 'app.heroku.com';
-const resetLink = `${appDomain}/api/users/password`;
+const resetLink = `${process.env.FRONTEND_URL}/update-password`;
+
 /**
  * @author Mutombo jean-vincent
  * @class Password
