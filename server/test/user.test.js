@@ -185,6 +185,29 @@ describe('User ', () => {
           done();
         });
     });
+    // View own Profile or Display user info
+    it('Should display user information', (done) => {
+      chai.request(app)
+        .get(`/api/users/${dummyUsers.correct.username}`)
+        .set('Authorization', userToken)
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body).to.have.property('profile');
+          expect(res.body.profile).to.have.property('username');
+          expect(res.body.profile).to.have.property('firstname');
+          expect(res.body.profile).to.have.property('lastname');
+          expect(res.body.profile).to.have.property('email');
+          expect(res.body.profile).to.have.property('bio');
+          expect(res.body.profile).to.have.property('image');
+          expect(res.body.profile).to.have.property('follows');
+          expect(res.body.profile).to.have.property('followings');
+          expect(res.body.profile).to.have.property('articles');
+          expect(res.body.profile.email).equals('gisele.iradukunda@andela.com');
+          expect(res.body.profile.bio).equals('I am not afraid');
+          expect(res.body.profile.image).equals('https://image.jpg');
+          done();
+        });
+    });
   });
 
   // Following a user

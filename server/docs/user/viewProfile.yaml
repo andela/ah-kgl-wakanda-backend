@@ -1,0 +1,55 @@
+paths:
+  /users/{username}:
+    get:
+      tags:
+        - Profiles
+      summary: Get own profile
+      description:
+        Authentication required, returns the user profile. No additional
+        parameters required
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: username
+          description: The user's username
+          required: true
+          schema:
+            $ref: "#/definitions/profile"
+      responses:
+        200:
+          description: User object
+        401:
+          description: Unauthorized request
+definitions:
+  profile:
+    type: object
+    properties:
+     username: 
+      type: string
+      firstname: 
+        type: string
+      lastname:
+        type: string
+      email:
+          type: string
+          format: email
+      isLoggedIn: 
+        type: boolean
+      allowEmailNotification:
+        type: boolean
+      bio:
+        type: string
+      image:
+        type: string
+      isFollowing: 
+        type: boolean
+      followers: 
+        type: integer
+      following: 
+        type: integer
+          
+          
+          
+    

@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
-import { User, Role } from '../models/index';
+import { User, Role, Following, Article } from '../models/index';
 import encrypt from '../helpers/encrypt';
 import sendMail from '../helpers/sendVerificationEmail';
 import errorHandler from '../helpers/errorHandler';
@@ -281,6 +281,53 @@ class Users {
       return user;
     } catch (error) {
       return error;
+    }
+  }
+
+  /**
+   *
+   *
+   * @static
+   * @param {string} req
+   * @param {string} res
+   * @returns {object} response
+   * @memberof User
+   */
+  static async getUserInfo(req, res) {
+    try {
+      const { id } = req.user;
+      const info = await User.findOne({
+        where: { id },
+        returning: true
+      });
+      const follows = await Following.count({
+        where: { followerId: id },
+        returning: true
+      });
+      const followings = await Following.count({
+        where: { followedId: id },
+        returning: true
+      });
+      const articles = await Article.count({
+        where: { userId: id },
+        returning: true
+      });
+      return res.status(200).json({
+        status: 200,
+        profile: {
+          username: info.username,
+          firstname: info.firstname,
+          lastname: info.lastname,
+          email: info.email,
+          bio: info.bio,
+          image: info.image,
+          follows,
+          followings,
+          articles,
+        }
+      });
+    } catch (e) {
+      errorHandler.errorResponse(res, e);
     }
   }
 

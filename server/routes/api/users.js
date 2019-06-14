@@ -11,7 +11,7 @@ router.post('/auth/login', validate(schema.logIn), userController.logIn);
 router.delete('/users/signout', checkToken, userController.signout);
 router.get('/users', checkToken, userController.listUsers);
 router.put('/user/:username', checkToken, userController.update);
-
+router.get('/users/:username', checkToken, userController.getUserInfo);
 router.get('/auth/verification/:token', userController.verifyEmail);
 
 export default router;
