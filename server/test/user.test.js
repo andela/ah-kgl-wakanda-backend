@@ -146,7 +146,7 @@ describe('User ', () => {
         .end((err, res) => {
           expect(res.status).to.equal(401);
           expect(res).to.be.an('object');
-          expect(res.body.message).to.equal('The credentials you provided is incorrect');
+          expect(res.body.message).to.equal('The credentials you provided are incorrect');
           done();
         });
     });

@@ -66,7 +66,7 @@ class Users {
     if (!user || !encrypt.comparePassword(user.get().password, body.password)) {
       return res.status(401).json({
         status: 401,
-        message: 'The credentials you provided is incorrect',
+        message: 'The credentials you provided are incorrect',
       });
     } if (user.isDisabled) {
       return res.status(403).json({
