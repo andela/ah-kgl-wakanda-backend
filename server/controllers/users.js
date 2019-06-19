@@ -1,6 +1,8 @@
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
-import { User, Role, Following, Article } from '../models/index';
+import {
+  User, Role, Following, Article
+} from '../models/index';
 import encrypt from '../helpers/encrypt';
 import sendMail from '../helpers/sendVerificationEmail';
 import errorHandler from '../helpers/errorHandler';
@@ -212,13 +214,17 @@ class Users {
     try {
       const { username } = req.params;
       const {
-        email, bio, image
-      } = req.body;
+        body
+      } = req;
+      const { email } = req.user;
+      const { email: newEmail = '' } = body;
+      if (newEmail.length > 0 && newEmail !== email) {
+        body.verified = false;
+        body.isLoggedIn = false;
+      }
       const result = await User.update(
         {
-          email,
-          bio,
-          image,
+          ...body,
         },
         {
           where: { username },

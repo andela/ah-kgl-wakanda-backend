@@ -23,6 +23,11 @@ const users = {
     email: 'hadad_test@andela.com',
     password: 'Hadad12@'
   },
+  correct1: {
+    username: 'dusmel5',
+    email: 'hadad_test5@andela.com',
+    password: 'Hadad12@'
+  },
   correctUserForComment: {
     username: 'karl122',
     email: 'karl_test_comment@andela.com',
@@ -39,6 +44,10 @@ const users = {
   },
   correctLogInfo: {
     email: 'hadad_test@andela.com',
+    password: 'Hadad12@'
+  },
+  correctLogInfo1: {
+    email: 'hadad_test5@andela.com',
     password: 'Hadad12@'
   },
   correctLikeArticle: {
