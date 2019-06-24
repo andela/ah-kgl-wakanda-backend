@@ -1,7 +1,7 @@
 sudo: false
 language: node_js
 node_js:
-  - "11.10.1"
+  - "10.15"
 before_script:
   - NODE_ENV=test npx sequelize db:migrate
   - npm i
@@ -14,4 +14,3 @@ cache:
     - node_modules
 services:
   - postgresql
-  
