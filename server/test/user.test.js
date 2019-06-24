@@ -162,29 +162,6 @@ describe('User ', () => {
           done();
         });
     });
-
-    // Profile updating test
-
-    const user = {
-      email: 'gisele.iradukunda@andela.com',
-      bio: 'I am not afraid',
-      image: 'https://image.jpg'
-    };
-    it('Should update user information', (done) => {
-      chai.request(app)
-        .put(`/api/user/${dummyUsers.correct.username}`)
-        .set('Authorization', userToken)
-        .send(user)
-        .end((error, res) => {
-          expect(res.body.status).to.be.equal(200);
-          expect(res.body).to.have.property('user');
-          expect(res.body.user).to.have.property('email');
-          expect(res.body.user).to.have.property('bio');
-          expect(res.body.user).to.have.property('image');
-          expect(res.body.user.image).equals('https://image.jpg');
-          done();
-        });
-    });
     // View own Profile or Display user info
     it('Should display user information', (done) => {
       chai.request(app)
@@ -202,16 +179,15 @@ describe('User ', () => {
           expect(res.body.profile).to.have.property('follows');
           expect(res.body.profile).to.have.property('followings');
           expect(res.body.profile).to.have.property('articles');
-          expect(res.body.profile.email).equals('gisele.iradukunda@andela.com');
-          expect(res.body.profile.bio).equals('I am not afraid');
-          expect(res.body.profile.image).equals('https://image.jpg');
+          expect(res.body.profile.email).equals('hadad_test@andela.com');
+          expect(res.body.profile.bio).equals(null);
+          expect(res.body.profile.image).equals(null);
           done();
         });
     });
   });
 
   // Following a user
-
 
   describe('User', () => {
     describe('Following', () => {
@@ -314,6 +290,41 @@ describe('User ', () => {
             done();
           });
       });
+    });
+  });
+  describe('Profile Update', () => {
+    it('should be able to signup', (done) => {
+      chai.request(app)
+        .post('/api/auth/signup')
+        .send(dummyUsers.correct1)
+        .end((err, res) => {
+          userToken = `Bearer ${res.body.user.token}`;
+          expect(res.status).to.equal(200);
+          expect(res).to.be.an('object');
+          expect(res.body).to.have.property('user');
+          done();
+        });
+    });
+    // Profile updating test
+    const user = {
+      email: 'gisele.iradukunda@andela.com',
+      bio: 'I am not afraid',
+      image: 'https://image.jpg'
+    };
+    it('Should update user information', (done) => {
+      chai.request(app)
+        .put(`/api/user/${dummyUsers.correct.username}`)
+        .set('Authorization', userToken)
+        .send(user)
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body).to.have.property('user');
+          expect(res.body.user).to.have.property('email');
+          expect(res.body.user).to.have.property('bio');
+          expect(res.body.user).to.have.property('image');
+          expect(res.body.user.image).equals('https://image.jpg');
+          done();
+        });
     });
   });
 });
