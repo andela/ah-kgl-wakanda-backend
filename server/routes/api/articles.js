@@ -11,6 +11,7 @@ const router = express.Router();
 
 router.post('/articles', checkToken, validate(articleSchema.create), Articles.create);
 router.get('/articles', Pagination.validatePagination, Articles.getAll);
+router.get('/articles/:username/private', Pagination.validatePagination, Articles.getPrivateArticles);
 router.get('/articles/:slug', Articles.get);
 router.put('/articles/:slug', checkToken, validate(articleSchema.update), Articles.update);
 router.delete('/articles/:slug', checkToken, Articles.delete);

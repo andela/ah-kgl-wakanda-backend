@@ -2,7 +2,13 @@ import slugify from '@sindresorhus/slugify';
 import open from 'open';
 import { Op } from 'sequelize';
 import dotenv from 'dotenv';
-import { Article, User, Tags, ArticleLikes, Rating } from '../models';
+import {
+  Article,
+  User,
+  Tags,
+  ArticleLikes,
+  Rating
+} from '../models';
 import errorHandler from '../helpers/errorHandler';
 import includeQuery from '../helpers/includeQuery';
 import readTime from '../helpers/readTime';
@@ -81,6 +87,52 @@ class Articles {
         offset,
         include: includeQuery,
         where: { active: true }
+      });
+
+      result = result.map((item) => {
+        const article = Object.assign(item.dataValues, {
+          readTime: readTime(item.title, item.description, item.body)
+        });
+        return article;
+      });
+
+      return res.status(200).json({
+        status: 200,
+        data: { articles: result, articlesCount: result.length }
+      });
+    } catch (e) {
+      errorHandler.errorResponse(res, e);
+    }
+  }
+
+  /**
+   * Gets user's articles
+   *
+   * @static
+   * @param {*} req
+   * @param {*} res
+   * @returns {object} Articles
+   * @memberof Articles
+   */
+  static async getPrivateArticles(req, res) {
+    const { limit = 10, offset = 0 } = req.query;
+    const { username } = req.params;
+
+    try {
+      const user = await User.findOne({ where: { username } });
+      if (!user) {
+        res.status(404).json({
+          status: 404,
+          message: 'User not found',
+        });
+      }
+
+      let result = await Article.findAll({
+        order: [['createdAt', 'DESC']],
+        limit,
+        offset,
+        include: includeQuery,
+        where: { active: true, userId: user.id }
       });
 
       result = result.map((item) => {
