@@ -164,6 +164,10 @@ class Users {
       if (!newUser[1]) await User.update({ isLoggedIn: true }, { where: { id, } });
       const status = newUser[1] ? 201 : 200;
 
+      if (provider === 'twitter') {
+        return res.redirect(`${process.env.FRONTEND_URL}/login?token=${await Users.generateToken(data)}&username=${username}`);
+      }
+
       return res.status(status).json({
         status,
         user: {
