@@ -294,7 +294,29 @@ describe('Article endpoints', () => {
         });
     });
   });
-  // Updating an article
+
+  describe('The endpoint to get private articles', () => {
+    it('Should get private articles ', (done) => {
+      chai.request(app)
+        .get(`/api/articles/${user[0].username}/private`)
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body).to.have.property('data');
+          expect(res.body.data).to.have.property('articles');
+          done();
+        });
+    });
+
+    it('Should fail when the user is not found ', (done) => {
+      chai.request(app)
+        .get('/api/articles/fake-user/private')
+        .end((error, res) => {
+          expect(res.body.status).to.be.equal(404);
+          expect(res.body.message).to.be.equal('User not found');
+          done();
+        });
+    });
+  });
 
   describe('The endpoint to update an article', () => {
     it('Should update an article ', (done) => {

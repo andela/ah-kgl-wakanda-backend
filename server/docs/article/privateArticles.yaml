@@ -1,0 +1,18 @@
+paths:
+  /article/{username}/private:
+    get:
+      tags:
+        - Articles
+      summary: Get a private articles
+      description:
+        Authentication required, returns a article. No additional parameters
+        required
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Array of user's articles
+        401:
+          description: Unauthorized request
