@@ -7,7 +7,7 @@ import { User, Tags, Rating } from '../models';
 const includeQuery = [
   {
     model: User,
-    attributes: ['username', 'email', 'image'],
+    attributes: ['username', 'firstname', 'lastname', 'email', 'image'],
   },
   {
     model: Tags,

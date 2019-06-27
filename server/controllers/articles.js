@@ -3,11 +3,7 @@ import open from 'open';
 import { Op } from 'sequelize';
 import dotenv from 'dotenv';
 import {
-  Article,
-  User,
-  Tags,
-  ArticleLikes,
-  Rating
+  Article, User, Tags, ArticleLikes, Rating
 } from '../models';
 import errorHandler from '../helpers/errorHandler';
 import includeQuery from '../helpers/includeQuery';
@@ -163,9 +159,7 @@ class Articles {
   static async get(req, res) {
     try {
       let result = await Article.findOne({
-        include: [{
-          model: Tags
-        }],
+        include: includeQuery,
         where: { slug: req.params.slug, active: true }
       });
 
@@ -185,10 +179,7 @@ class Articles {
           readTime: readTime(result.title, result.description, result.body)
         });
 
-        article = article[1].get();
-
-        article.reads = undefined;
-
+        article = result;
         return res.status(200).json({
           status: 200,
           data: { article }
