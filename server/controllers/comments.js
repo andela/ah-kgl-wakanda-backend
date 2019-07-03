@@ -58,7 +58,7 @@ class Comments {
       }
       const result = await Comment.findAndCountAll({
         where: { articleId, },
-        attributes: ['body', 'createdAt', 'updatedAt', 'favorited', 'favoritesCount'],
+        attributes: ['body', 'createdAt', 'updatedAt', 'favorited', 'favoritesCount', 'id'],
         include: [{
           model: User,
           attributes: ['username', 'bio', 'image', 'following'],
