@@ -226,6 +226,7 @@ class Users {
         body.verified = false;
         body.isLoggedIn = false;
       }
+
       const result = await User.update(
         {
           ...body,
@@ -334,6 +335,7 @@ class Users {
           follows,
           followings,
           articles,
+          allowEmailNotification: info.allowEmailNotification,
         }
       });
     } catch (e) {
